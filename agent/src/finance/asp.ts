@@ -196,10 +196,11 @@ export function evaluateAspProgress(input: AspInput): AspResult {
 	const ruleText = `You need ${rules.requiredMonths} qualifying months with ${money(rules.minMonthlyCents).display} to ${money(rules.maxMonthlyCents).display} deposited in each month. The months do not need to be in a row, and a skipped month does not remove earlier months. For the ASP loan, your savings must also be ${rules.depositSharePercent}% of the purchase price.`;
 
 	if (!input.openedOn) {
+		const example = input.plannedMonthlyCents == null ? '' : ` Under the ${rules.version} monthly rules, a hypothetical deposit of ${money(input.plannedMonthlyCents).display} a month ${judge(input.plannedMonthlyCents, rules) === 'qualifies' ? 'qualifies' : 'does not qualify'}. This does not establish your own account progress or which transition rules apply.`;
 		return {
 			...base,
 			status: 'unknown',
-			message: `Give the ASP opening date and the verified deposit for each month to count qualifying months. ${ruleText}`,
+			message: `Give the ASP opening date and the verified deposit for each month to count qualifying months. ${ruleText}${example}`,
 		};
 	}
 	if (input.openedOn > asOf) {

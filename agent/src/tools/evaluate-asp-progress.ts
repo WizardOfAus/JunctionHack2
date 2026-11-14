@@ -38,7 +38,8 @@ them and does not give an exact count.
 Only the user knows the opening date and the ASP deposits. The transaction data does not show ASP
 deposits, so never pass saving transfers from the data. If the status is "unknown", ask the user for the
 opening date and the deposit for each month. To answer a rule question (for example "does EUR 40 count?")
-without the user's history, pass plannedMonthlyDepositEur and read projection.summary.
+without the user's history, pass plannedMonthlyDepositEur and read message. The status stays unknown;
+no personal progress or projected date is inferred. Read projection.summary only when an opening date is supplied.
 
 Quote the display values and the summary. Do not do your own arithmetic. Meeting the ASP conditions is
 not a mortgage approval.`;

@@ -135,3 +135,16 @@ describe('evaluateAspProgress', () => {
 		assert.equal(rulesInForce('2026-06-01')?.version, 'asp-2026-06-01');
 	});
 });
+
+// A general rule example must not fabricate an account opening date or progress.
+it('answers deposit-rule examples without inventing personal ASP history', () => {
+  for (const [amountCents, qualifies] of [[4000, false], [5000, true], [150000, true], [150001, false]] as const) {
+    const r = evaluateAspProgress(base({ openedOn: null, verifiedMonthlyDeposits: [], plannedMonthlyCents: amountCents }));
+    assert.equal(r.status, 'unknown');
+    assert.equal(r.progress, undefined);
+    assert.equal(r.projection, undefined);
+    assert.ok(r.message.includes(qualifies ? 'a month qualifies.' : 'a month does not qualify.'));
+    assert.match(r.message, /hypothetical/);
+    assert.match(r.message, /transition rules/);
+  }
+});

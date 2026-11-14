@@ -4,7 +4,7 @@ import {readCsv} from './read-csv.mjs';
 
 const rates=readCsv('../data/overlays/mortgage_market_rates.csv');
 
-test('only months from January to August 2026, before the 1 September demo clock',()=>{
+test('pinned historical rate snapshot contains January to August 2026 only',()=>{
   assert.ok(rates.length>0);
   for(const row of rates){
     assert.match(row.month,/^2026-0[1-8]$/,`${row.series} ${row.month}`);

@@ -65,7 +65,7 @@ How names are chosen:
 - **Chains:** for supermarkets (5411), fuel (5541, 5542), pharmacies (5912), electronics (5732), DIY (5200)
   and car rental (7512), venues with an OSM `brand` tag come first.
 - **Fair mix:** the order inside a tier is a SHA-256 hash with a fixed seed, so every venue has the same chance.
-  No brand gets more than 25% of the IDs of one venue type.
+  The brand cap is 25% of the IDs in a venue pool, rounded up to a whole venue.
 - **No duplicates:** no OSM element and no display name is used twice.
 - **Branch names:** OSM often has only the chain in `name` (for example 55 supermarkets are just "S-market") and
   the branch in the `branch` tag. The display name is `name` + `branch` ("S-market Haukilahti"). If the name repeats
@@ -130,7 +130,7 @@ This file changes the data: it selects areas and columns and adds one calculated
 
 ## `mortgage_market_rates.csv`
 
-Monthly values for Finland, January to August 2026 only. The demo clock is 1 September 2026, so no later month
+Monthly values for Finland, January to August 2026 only. This is the original, limited rate snapshot; the app now uses the shared 1 October clock. No later month
 is included.
 
 | `series` | Bank of Finland series (`MFI_PUBL`) |
@@ -148,3 +148,7 @@ Attribution: **Source: Bank of Finland.** Licence: the
 [Bank of Finland Open Data Service](https://www.suomenpankki.fi/en/bank-of-finland/contacts/open-data-service/)
 says the datasets are "freely available and reusable subject to acknowledgement of the original source".
 This is not stated as CC BY 4.0. API: `https://api.boffsaopendata.fi/v4/observations/MFI_PUBL`.
+
+### Observation time versus retrieval time
+
+These overlays are descriptive demo labels and public context, not inputs to the audited cash forecast. Merchant metadata was retrieved in November 2026, after the October demo clock. It must not be presented as evidence known at that simulation date or used in the September backtest. A statistical observation month is not its release date: before adding newer rates to an as-of simulation, verify when they were publicly available. The January–August snapshot is retained without inventing September values.
