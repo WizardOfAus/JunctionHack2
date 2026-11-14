@@ -26,7 +26,7 @@ Do not commit `.env`. See `.env.example` for all variables:
 | `ANTHROPIC_API_KEY` | none | Model provider key. Any provider Flue supports works. |
 | `KOTI_MODEL` | `anthropic/claude-sonnet-5-5` | Model id as `provider/model`. |
 | `KOTI_DB_PATH` | `data/koti.db` | Path to the imported dataset. |
-| `KOTI_DATA_CUTOFF` | `2026-08-31` | Last day of history the agent can see. |
+| `KOTI_DATA_CUTOFF` | shared demo clock | Last day of history the agent can see; an earlier override runs a backtest. |
 | `KOTI_AGENT_TOKEN` | none | When set, `/agents/*` requires `Authorization: Bearer <token>`. |
 | `PORT` | `3000` | Port for the built server (`npm start`). The dev server uses 5180. |
 
@@ -92,7 +92,7 @@ Server: `npm run dev`, then `POST /agents/koti/<conversation-id>` (see `src/app.
 
 ## Data rules
 
-- The agent sees history up to `2026-08-31` (`KOTI_DATA_CUTOFF`). The demo clock is `2026-09-01`.
+- The agent reads `app/data/demo-clock.json`: history through 30 September 2026, demo date 1 October. Set `KOTI_DATA_CUTOFF=2026-08-31` to replay the September backtest. Overrides outside the supplied history are rejected.
   September 2026 is held out for evaluation. The store enforces this on every query, and the
   forecast and goal engines reject any row on or after the demo clock.
 - Without `customerId` in `initialData`, the conversation is in analyst mode: an analyst or adviser

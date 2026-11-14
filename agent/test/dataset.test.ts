@@ -5,6 +5,10 @@ import { existsSync } from 'node:fs';
 import { describe, it } from 'node:test';
 import * as v from 'valibot';
 
+// Retain the original audited figures as an explicit backtest.
+import clock from '../../app/data/demo-clock.json' with { type: 'json' };
+process.env.KOTI_DATA_CUTOFF = clock.clocks.backtest.historyThrough;
+
 const hasData = existsSync(process.env.KOTI_DB_PATH ?? 'data/koti.db');
 const ctx = { toolCallId: 'test', log: { info() {}, warn() {}, error() {} } } as never;
 
