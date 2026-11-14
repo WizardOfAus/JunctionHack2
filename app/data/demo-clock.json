@@ -1,0 +1,8 @@
+{
+  "$comment": "Single source for Koti's demo clock. The app (lib/finance.ts), importer (scripts/import-data.py) and agent read this file. 'current' drives the app; 'backtest' replays 1 September 2026 without September data or later mortgage events.",
+  "dataStart": "2024-10-01",
+  "clocks": {
+    "current": { "demoDate": "2026-10-01", "historyThrough": "2026-09-30" },
+    "backtest": { "demoDate": "2026-09-01", "historyThrough": "2026-08-31" }
+  }
+}

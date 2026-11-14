@@ -1,9 +1,12 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {basketOf,basketProfile,classifyBasket,isConsumption,historyOnly,forecast,defaults} from '../lib/finance.ts';
+import {basketOf,basketProfile,classifyBasket,isConsumption,historyOnly,forecast,defaults,clocks} from '../lib/finance.ts';
 
-const rows=historyOnly(JSON.parse(readFileSync(new URL('../data/persona.json',import.meta.url),'utf8')).transactions);
+// The dataset analysis used history before 1 September, so these checks use the backtest clock.
+const bt=clocks.backtest;
+
+const rows=historyOnly(JSON.parse(readFileSync(new URL('../data/persona.json',import.meta.url),'utf8')).transactions,bt);
 const profile=basketProfile(rows);
 const base=rows.find(t=>t.transaction_type==='purchase');
 const purchase=(category,euros,mcc_code='')=>({...base,category,mcc_code,amountCents:-Math.round(euros*100)});
@@ -54,8 +57,8 @@ test('user corrections still win over the rules',()=>{
 });
 
 test('forecast baskets use the new rules without changing audited baseline answers',()=>{
-  const f=forecast(rows,defaults);
+  const f=forecast(rows,defaults,bt);
   assert.equal(f.balanceCents,605933);assert.equal(f.restaurantCents,11432);
-  assert.equal(forecast(rows,{...defaults,restaurantReduction:20}).reductionCents,2286);
+  assert.equal(forecast(rows,{...defaults,restaurantReduction:20},bt).reductionCents,2286);
   assert.ok(f.baskets.irregular<f.baskets.flexible);
 });

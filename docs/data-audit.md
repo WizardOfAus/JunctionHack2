@@ -32,6 +32,24 @@ The pinned upstream Git object contains `oid sha256:49b3265d8e44e751de305a074dcf
 
 The runtime subset was rechecked: 698 rows, only CUST04859, latest date 31 August 2026. This verifies use of the actual source payload, while the runtime intentionally uses only one customer's history. Additional personas require separate extraction, audits and a server-scoped catalogue; they are not enabled by the current app.
 
+## Demo clock (updated 14 November 2026)
+
+The team moved the demo clock to **1 October 2026** with history through **30 September 2026**, the end of the dataset. `app/data/demo-clock.json` is the single source for the app, importer and agent. `persona.json` now holds 719 CUST04859 rows through 26 September 2026 (the last recorded row). The importer audits two clocks from the same rows:
+
+| Measure | Current clock (history to 30 Sep) | Backtest clock (history to 31 Aug) |
+|---|---:|---:|
+| Closing balance | €7,417.39 | €6,059.33 |
+| Median monthly salary (12 months) | €2,700.99 | €2,700.99 |
+| Median monthly surplus before saving | €583.38 | €583.38 |
+| Median monthly saving outflows | €246.33 | €246.33 |
+| Mean monthly restaurants (last 3 months) | €77.30 (Jul–Sep) | €114.32 (Jun–Aug) |
+| 20% restaurant reduction | €15.46 | €22.86 |
+| Recognised taxi, last month | €0.00 (Sep) | €50.47 (Aug) |
+
+The current figures were reproduced independently with DuckDB from the raw CSV. The backtest column is the original audit below and must keep reproducing exactly. `npm run evaluate:holdout` now runs the backtest: it forecasts from history through 31 August and compares with the recorded September balances (mean absolute daily balance error €742.79, no protected-floor breaches). There is no separate `work/holdout.json` any more.
+
+The sections below describe the original 1 September audit, which is now the backtest.
+
 ## Acceptance targets
 
 All seven targets from the build brief reproduce exactly at cent precision.
