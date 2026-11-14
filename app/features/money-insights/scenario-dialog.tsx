@@ -50,7 +50,7 @@ export function ScenarioDialog({ personaId = DEFAULT_PERSONA_ID, initialKind = '
   }, [requestKey, retry]);
 
   return <dialog ref={dialog} className={styles.scenarioDialog} aria-labelledby="scenario-title" onCancel={onClose} onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
-    <div className={styles.dialogHeader}><div><span className={styles.eyebrow}>A little room to experiment</span><h2 id="scenario-title">What if life changes?</h2></div><button className="icon-button" onClick={onClose} aria-label="Close scenario"><X size={21}/></button></div>
+    <div className={styles.dialogHeader}><div><h2 id="scenario-title">What if life changes?</h2></div><button className="icon-button" onClick={onClose} aria-label="Close scenario"><X size={21}/></button></div>
     <div className={styles.dialogBody}>
       <p className={styles.dialogIntro}>Try one change against your current plan. These are editable scenarios, not predictions about you.</p>
       <div className={styles.scenarioChoices} aria-label="Scenario type">{scenarios.map(({ id, label, icon: Icon }) => <button key={id} aria-pressed={kind === id} onClick={() => setKind(id)}><Icon size={19}/>{label}</button>)}</div>

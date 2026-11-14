@@ -1,7 +1,7 @@
 .overview{min-width:0}
 .heading{display:flex;align-items:center;justify-content:space-between;gap:20px}
-.eyebrow{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.heading h1{font-size:clamp(26px,2.5vw,35px);margin-top:7px;letter-spacing:-.045em}
+.eyebrow{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--muted)}
+.heading h1{font-size:clamp(26px,2.5vw,35px);margin-top:7px;letter-spacing:-.03em}
 .datePill{display:flex;align-items:center;gap:8px;padding:8px 13px;border:1px solid var(--line);border-radius:30px;white-space:nowrap;font-size:12px;background:white}
 .contextRow{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:12px 0 20px;color:var(--muted);font-size:12px}
 .contextRow>span{display:flex;align-items:center;gap:8px}
@@ -17,16 +17,16 @@
 
 .outlookGrid{display:grid;grid-template-columns:minmax(285px,.82fr) minmax(0,1.45fr);gap:22px;align-items:stretch}
 .hero{padding:28px;background:var(--forest);color:#fffefa;border-radius:18px;display:flex;flex-direction:column}
-.heroLabel{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;color:#c1d6bf;margin-bottom:28px}
+.heroLabel{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;color:#c1d6bf;margin-bottom:18px}
 .heroLabel>span:first-child{display:flex;align-items:center;gap:8px}
 .hero h2{font-size:14px;font-weight:500;letter-spacing:0;color:#d5e3cf}
-.heroAmount{font-size:clamp(39px,3.6vw,58px);letter-spacing:-.045em;line-height:1.2;font-variant-numeric:tabular-nums;margin:8px 0 14px}
-.heroDescription{font-size:13px;color:#cbdbc8;line-height:1.7}
+.heroAmount{font-size:clamp(39px,3.6vw,58px);letter-spacing:-.03em;line-height:1.2;font-variant-numeric:tabular-nums;margin:8px 0 14px}
+.heroDescription{font-size:14px;color:#d8e6d2;line-height:1.6}
 .balanceBreakdown{display:grid;gap:12px;margin:23px 0 26px;border-top:1px solid #46614e;padding-top:20px}
 .balanceBreakdown>div{display:flex;align-items:center;justify-content:space-between;gap:14px;font-size:12px}
 .balanceBreakdown dt{color:#c9d9c4}
 .balanceBreakdown dd{margin:0;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
-.heroAction{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:auto;background:var(--lime);color:var(--forest);border:0;border-radius:10px;padding:13px 16px;font-size:13px;font-weight:750;min-height:48px}
+.heroAction{transition:background-color 150ms ease;display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:auto;background:var(--lime);color:var(--forest);border:0;border-radius:10px;padding:13px 16px;font-size:13px;font-weight:750;min-height:48px}
 .heroAction:hover{background:#c9e88e}
 .heroSecondary{background:transparent;border:0;color:#d7e5cf;min-height:44px;margin-top:4px;font-size:12px;text-decoration:underline;text-underline-offset:4px}
 .chartCard{border:1px solid var(--line);background:white;border-radius:18px;padding:26px 25px 18px;min-width:0}
@@ -55,7 +55,7 @@
 .irregular{background:var(--peach)}
 .basketBar>.irregular{background:#d5a47f}
 .basket{padding:17px 0;display:flex;gap:12px;align-items:center;width:100%;background:none;border:0;border-bottom:1px solid var(--line);text-align:left}
-.basket:hover{background:#fafbf7}
+.basket:hover{background:#eef4e7}
 .basketIcon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;flex-shrink:0}
 .basketCopy{flex:1;min-width:0}
 .basketCopy strong{display:block;font-size:13px}
@@ -70,7 +70,7 @@
 .smallPrint{font-size:12px;color:var(--muted);margin-top:18px}
 
 .nextStep{position:relative;padding:26px;background:#edf2e4;border:1px solid #e0e7d4;border-radius:18px}
-.nextIcon{display:grid;place-items:center;width:53px;height:53px;border-radius:15px;background:var(--lime);margin:24px 0 17px}
+.nextIcon{display:grid;place-items:center;width:53px;height:53px;border-radius:15px;background:var(--lime);margin:0 0 17px}
 .nextStep h2{font-size:24px;max-width:20ch;line-height:1.25}
 .nextStep>p{font-size:14px;color:#58684f;margin:13px 0 21px}
 .dismiss{position:absolute;top:17px;right:14px;background:none;border:0;color:#68765f;width:36px;height:36px;display:grid;place-items:center;border-radius:50%}
@@ -150,3 +150,12 @@
 .snapshot small{font-size:12px}
 }
 
+
+/* Local controls share the same visible interaction vocabulary. */
+.basketCopy strong,.basketAmount small{font-size:14px}
+.basketCopy>span,.supporting,.smallPrint{font-size:13px}
+.heroSecondary{font-size:13px;border-radius:8px}
+.briefing p[hidden]{display:none}
+.planLink button{border-radius:6px;padding-inline:6px}
+@media(hover:hover) and (pointer:fine){.heroSecondary:not(:disabled):hover{color:white;background:#2b5140}.planLink button:hover{background:#dfe9d2}.why summary:hover{color:var(--forest);text-decoration-thickness:2px}}
+@media(prefers-reduced-motion:reduce){.heroAction{transition:none}}
