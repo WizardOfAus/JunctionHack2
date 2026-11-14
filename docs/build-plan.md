@@ -233,7 +233,7 @@ Show second-bank behavior only if implemented, with its mode visible.
 
 ## Implementation update — 14 November 2026
 
-Koti is now implemented as an independent prototype under `app/`. See [verification](verification.md), [data audit](data-audit.md), and [design workflow](design-workflow.md). The user explicitly deferred model credentials until the UI review: the current coach is a labelled deterministic demo. Update: the selected provider is OpenAI only. The agent in `agent/` uses OpenAI GPT-6.1 Sol (`openai/gpt-6.1-sol`) through the OpenAI API, server-side. Rewards are noncash XP; sponsored benefits, real bank connectivity and payment execution remain future integration work.
+Koti is now implemented as an independent prototype under `app/`. See [verification](verification.md), [data audit](data-audit.md), and [design workflow](design-workflow.md). The user explicitly deferred model credentials until the UI review: the current coach is a labelled deterministic demo. Update: the selected provider is OpenAI only. The agent in `agent/` uses OpenAI GPT-6 Luna (`openai/gpt-6-luna`) through the OpenAI API, server-side. Rewards are noncash XP; sponsored benefits, real bank connectivity and payment execution remain future integration work.
 
 ## Collaboration and onboarding update
 
