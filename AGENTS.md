@@ -14,8 +14,8 @@ Read `README.md`, `CONTRIBUTING.md`, and your work package in `docs/workstreams.
 
 - The app offers goal-led onboarding for understanding spending, building a buffer and a first home, using one audited synthetic persona. See `docs/slices/goal-led-first-slice.md`; additional source personas remain planned.
 - Money is integer euro cents, calculated in `app/lib/finance.ts`. Models explain and call constrained tools; they do not calculate authoritative balances.
-- Use the real pinned Junction dataset, not a Git LFS pointer. Follow `docs/data-audit.md`. Keep the full CSV and September holdout under ignored `app/work/`; never deploy them.
-- Coaching history ends on 31 August 2026, before the 1 September demo clock. Keep customer scope server-controlled. Do not combine different customers into one person or fabricate source rows.
+- Use the real pinned Junction dataset, not a Git LFS pointer. Follow `docs/data-audit.md`. Keep the full CSV and other raw upstream files under ignored `app/work/`; never deploy them.
+- The demo clock lives in `app/data/demo-clock.json`: history through 30 September 2026, demo date 1 October 2026. Derive dates from it (`DEMO_DATE`, `HISTORY_THROUGH`, `recentWindow()` in `app/lib/finance.ts`); never hard-code them. The 1 September 2026 `backtest` clock must exclude later transactions and mortgage events from its inputs. Keep customer scope server-controlled. Do not combine different customers into one person or fabricate source rows.
 - Preserve original transaction values. Store scenario overlays and classification corrections separately and label them.
 - Koti is independent. The palette is custom, not an official S-Pankki design system. See `docs/brand-provenance.md` and `app/DESIGN.md`.
 - Live AI, bank consent, actual transfers and monetary rewards are not configured. Do not imply they are. Never commit credentials.

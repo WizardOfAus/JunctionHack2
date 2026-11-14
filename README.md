@@ -40,6 +40,6 @@ The application uses React, TypeScript, server routes, and Vinext's Cloudflare-c
 
 ## Scope
 
-Money, Learn, Coach and My plan are implemented, including a redesigned balance lesson and two existing lessons, evidence inspection and classification corrections, reserves, spending scenarios, salary delays, a home goal, ASP inputs, and simulated transfers. The supplied ledger is synthetic and fixed at 1 September 2026; it is not a live bank account.
+Money, Learn, Coach and My plan are implemented, including a redesigned balance lesson and two existing lessons, evidence inspection and classification corrections, reserves, spending scenarios, salary delays, a home goal, ASP inputs, and simulated transfers. The supplied ledger is synthetic and fixed at 1 October 2026 (history through 30 September); it is not a live bank account.
 
 Live AI, actual S-Pankki connectivity, authentication for real customer data, cash rewards and money movement are later integration work. OpenAI or Gemini can be connected server-side after the UX review. Never put model keys in browser code or commit them.
