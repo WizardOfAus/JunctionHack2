@@ -24,12 +24,33 @@ export const euro = (cents: number, digits = 0) => new Intl.NumberFormat('en-IE'
 export function median(values: number[]) { const s=[...values].sort((a,b)=>a-b); return !s.length?0:s.length%2?s[(s.length-1)/2]:Math.round((s[s.length/2-1]+s[s.length/2])/2); }
 export const sum = (values: number[]) => values.reduce((a,b)=>a+b,0);
 export function isSaving(t:Transaction) { return t.transaction_type === 'investment_deposit' || t.transaction_type === 'savings_transfer'; }
-export function isConsumption(t:Transaction) { return t.amountCents<0 && !isSaving(t) && t.transaction_type !== 'internal_transfer'; }
-export function basketOf(t:Transaction, corrections:Record<string,Basket>={}) : Basket {
-  if(corrections[t.id]) return corrections[t.id];
-  if(['Housing','Utilities','Groceries','Insurance'].includes(t.category)) return 'regular';
-  if(['Restaurants','Entertainment','Lifestyle'].includes(t.category)) return 'flexible';
-  return 'irregular';
+// Money moved between the customer's own accounts or into investments is not spending.
+const notSpending=new Set(['investment_deposit','savings_transfer','internal_transfer','salary_sweep']);
+export function isConsumption(t:Transaction) { return t.amountCents<0 && !notSpending.has(t.transaction_type); }
+// Basket rules derived from the full dataset; see docs/data-insights.md. First match wins.
+export type BasketProfile = { categoryMedianCents: Record<string,number> };
+export function basketProfile(rows:Transaction[]): BasketProfile {
+  const byCategory:Record<string,number[]>={};
+  for(const t of rows) if(t.transaction_type==='purchase'&&t.amountCents<0) (byCategory[t.category]??=[]).push(-t.amountCents);
+  return {categoryMedianCents:Object.fromEntries(Object.entries(byCategory).map(([c,v])=>[c,median(v)]))};
+}
+const everyday=['Groceries','Restaurants','Entertainment','Transportation'];
+const clinicalMcc=['8011','8021','8099'];
+export function classifyBasket(t:Transaction, profile?:BasketProfile): {basket:Basket; reason:string; review?:true} {
+  const spent=-t.amountCents;
+  if(t.transaction_type==='purchase'&&((everyday.includes(t.category)&&spent>=100000)||(['Lifestyle','Travel'].includes(t.category)&&spent>=300000))) return {basket:'irregular',reason:`Unusually large for ${t.category}. Check whether it was a one-off.`,review:true};
+  if(['Housing','Utilities'].includes(t.category)) return {basket:'regular',reason:'A bill that recurs every month.'};
+  if(t.category==='Groceries') return {basket:'regular',reason:'Food at home is an essential, steady cost.'};
+  if(t.category==='Transportation') return t.mcc_code==='4121'?{basket:'flexible',reason:'Taxis and rideshare are usually optional trips.'}:{basket:'regular',reason:'Commuting, fuel and parking recur with daily life.'};
+  if(t.category==='Health') return spent>=15000||(clinicalMcc.includes(t.mcc_code)&&spent>=8000)?{basket:'irregular',reason:'A larger or clinical health cost that is hard to plan for.'}:{basket:'regular',reason:'Routine pharmacy and health costs.'};
+  if(t.category==='Home & Tech') {
+    const typical=profile?.categoryMedianCents['Home & Tech']||0;
+    if(spent>=100000||spent>=Math.max(25000,3*typical)) return {basket:'irregular',reason:'Much larger than your usual Home & Tech purchase, like a replacement or repair.'};
+  }
+  return {basket:'flexible',reason:'Everyday spending you can choose to adjust.'};
+}
+export function basketOf(t:Transaction, corrections:Record<string,Basket>={}, profile?:BasketProfile) : Basket {
+  return corrections[t.id]||classifyBasket(t,profile).basket;
 }
 export function historyOnly(rows:Transaction[]) { return rows.filter(t=>t.customer_id==='CUST04859' && t.tx_date<DEMO_DATE).sort((a,b)=>a.tx_date.localeCompare(b.tx_date)||a.sourceRow-b.sourceRow); }
 export function monthlyAverage(rows:Transaction[], predicate:(t:Transaction)=>boolean, months=['2026-06','2026-07','2026-08']) {
@@ -44,13 +65,14 @@ export function summarise(rows:Transaction[],from='2026-06-01',to='2026-08-31',c
 const addDays=(iso:string,n:number)=>new Date(Date.parse(iso+'T12:00:00Z')+n*86400000).toISOString().slice(0,10);
 export function forecast(rows:Transaction[],a:Assumptions) {
   const history=historyOnly(rows);
+  const profile=basketProfile(history);
   const balance=history.at(-1)?.balanceCents||0;
   const months=Array.from({length:12},(_,i)=>new Date(Date.UTC(2025,8+i,1)).toISOString().slice(0,7));
   const salary=median(months.map(m=>sum(history.filter(t=>t.tx_date.startsWith(m)&&t.transaction_type==='salary').map(t=>t.amountCents))));
   const savings=median(months.map(m=>sum(history.filter(t=>t.tx_date.startsWith(m)&&isSaving(t)).map(t=>-t.amountCents))));
   const housing=Math.max(0,...history.filter(t=>t.tx_date>='2026-06-01'&&t.category==='Housing'&&isConsumption(t)).map(t=>-t.amountCents));
   const restaurant=monthlyAverage(history,t=>t.category==='Restaurants'&&isConsumption(t));
-  const reducibleRestaurant=monthlyAverage(history,t=>t.category==='Restaurants'&&isConsumption(t)&&basketOf(t,a.corrections)==='flexible');
+  const reducibleRestaurant=monthlyAverage(history,t=>t.category==='Restaurants'&&isConsumption(t)&&basketOf(t,a.corrections,profile)==='flexible');
   const reduction=Math.round(reducibleRestaurant*a.restaurantReduction/100);
   const otherDailyMonthly=monthlyAverage(history,t=>isConsumption(t)&&t.category!=='Housing')-reduction;
   const horizon=Math.max(35,15+a.incomeDelayDays);
@@ -77,7 +99,7 @@ export function forecast(rows:Transaction[],a:Assumptions) {
   const allocation=Math.min(capacity,a.allocationCents);
   const remaining=capacity-allocation;
   const baskets:Record<Basket,number>={regular:0,irregular:0,flexible:0};
-  for(const t of history.filter(t=>t.tx_date>='2026-06-01'&&isConsumption(t))) baskets[basketOf(t,a.corrections)]+=-t.amountCents;
+  for(const t of history.filter(t=>t.tx_date>='2026-06-01'&&isConsumption(t))) baskets[basketOf(t,a.corrections,profile)]+=-t.amountCents;
   for(const key of Object.keys(baskets) as Basket[]) baskets[key]=Math.round(baskets[key]/3);
   const monthlyIncome=salary;
   const consumption=monthlyAverage(history,isConsumption);
