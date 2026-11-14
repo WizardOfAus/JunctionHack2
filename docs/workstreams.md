@@ -1,8 +1,8 @@
 # Work packages for the next iteration
 
-Prepared 14 November 2026. All owners are unassigned. This is a handoff plan, not a claim that the proposed features are implemented.
+Updated 14 November 2026. Codex owns onboarding, money overview, the first interactive lesson and shell integration for [the first slice](slices/goal-led-first-slice.md). Claude owns coaching, Research/Exa and EDA/basket-classifier proposals. Other packages remain unassigned.
 
-The current shell, screens and lesson dialog live together in `app/components/koti-app.tsx`. They are **not yet fully modular**. Separate worktrees alone do not solve that shared-file bottleneck. Use the boundaries below, with one integration owner; extract existing screen components in a small behavior-preserving PR before multiple contributors change existing UI.
+The current shell, screens and lesson dialog live together in `app/components/koti-app.tsx`. The new onboarding, overview and first lesson are modular under `app/features/`; the remaining existing screens are **not yet fully modular**. Separate worktrees alone do not solve that shared-file bottleneck. Use the boundaries below, with one integration owner; extract existing screen components in a small behavior-preserving PR before multiple contributors change existing UI.
 
 | ID | Package | Owned paths | Shared dependency / done condition |
 | --- | --- | --- | --- |

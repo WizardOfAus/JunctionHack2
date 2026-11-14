@@ -1,0 +1,20 @@
+category,basket_current,basket_proposed,n,eur
+Entertainment,flexible,flexible,290163,16973969.0
+Entertainment,flexible,irregular,175,348611.0
+Groceries,regular,regular,832890,57766973.0
+Groceries,regular,irregular,87,231648.0
+Health,irregular,irregular,33446,7886396.0
+Health,irregular,regular,112071,5250258.0
+Home & Tech,irregular,flexible,102315,16282311.0
+Home & Tech,irregular,irregular,7993,7800125.0
+Housing,regular,regular,108237,117765157.0
+Lifestyle,flexible,flexible,106168,21001445.0
+Lifestyle,flexible,irregular,102,445000.0
+Restaurants,flexible,flexible,728195,29047333.0
+Restaurants,flexible,irregular,117,281277.0
+Transportation,irregular,regular,543770,24384253.0
+Transportation,irregular,flexible,56676,2543617.0
+Transportation,irregular,irregular,103,265225.0
+Travel,irregular,flexible,62836,14771362.0
+Travel,irregular,irregular,122,519546.0
+Utilities,regular,regular,328473,18872836.0
