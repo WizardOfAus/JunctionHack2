@@ -1,0 +1,19 @@
+import assert from 'node:assert/strict';
+import {defaults} from '../lib/finance.ts';
+const origin=process.argv[2]||'http://127.0.0.1:5173';
+async function post(path,body,status=200){const r=await fetch(origin+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});assert.equal(r.status,status,path);return r.json();}
+const base=await post('/api/finance',defaults);
+assert.equal(base.forecast.balanceCents,605933);
+const allocated=await post('/api/finance',{...defaults,allocationCents:5000});
+assert.equal(base.forecast.remainingCents-allocated.forecast.remainingCents,5000);
+const coach=await post('/api/coach',{question:'What if I spent 20% less eating out?',assumptions:defaults});
+assert.ok(coach.text.includes('€22.86'));assert.equal(coach.mode,'demo');assert.ok(coach.evidence.length);
+const custom=await post('/api/coach',{question:'Restaurants in July, 40% less',assumptions:defaults});assert.equal(custom.reductionPercent,40);assert.equal(custom.from,'2026-07-01');
+const taxi=await post('/api/coach',{question:'Taxi spending in August',assumptions:defaults});assert.ok(taxi.text.includes('€50.47'));
+const rows=await post('/api/transactions',{query:{from:'2026-08-01',to:'2026-08-31',category:'Restaurants'},assumptions:defaults});
+assert.ok(rows.rows.length);assert.ok(rows.rows.every(r=>r.category==='Restaurants'&&r.customer_id==='CUST04859'&&r.tx_date<'2026-09-01'));
+await post('/api/transactions',{query:{from:'2026-09-01',to:'2026-09-30'},assumptions:defaults},400);
+await post('/api/transactions',{query:{customerId:'CUST00001'},assumptions:defaults},400);
+await post('/api/finance',{...defaults,reserveCents:-1},400);
+await post('/api/transactions',{query:{},assumptions:{...defaults,connected:false}},409);
+console.log('API smoke: finance, allocation, coach, taxi evidence, period filters, holdout isolation, customer isolation, validation, disconnect passed.');

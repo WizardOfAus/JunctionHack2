@@ -188,3 +188,8 @@ Show second-bank behavior only if implemented, with its mode visible.
 - Impeccable: https://github.com/pbakaus/impeccable and https://impeccable.style/
 - S-Pankki: https://www.s-pankki.fi/
 - Enable Banking: https://enablebanking.com/docs/markets/fi
+
+
+## Implementation update — 14 November 2026
+
+Koti is now implemented as an independent prototype under `app/`. See [verification](verification.md), [data audit](data-audit.md), and [design workflow](design-workflow.md). The user explicitly deferred model credentials until the UI review: the current coach is a labelled deterministic demo. OpenAI or Gemini will be selected and configured server-side later. Rewards are noncash XP; sponsored benefits, real bank connectivity and payment execution remain future integration work.

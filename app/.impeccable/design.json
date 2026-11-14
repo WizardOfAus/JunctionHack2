@@ -1,0 +1,428 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-14T20:08:14.670528+00:00",
+  "title": "Design System: Koti",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Forest Ink",
+        "tonalRamp": [
+          "oklch(15% 0.0128 165.55)",
+          "oklch(26% 0.0254 165.55)",
+          "oklch(38% 0.0356 165.55)",
+          "oklch(49% 0.0407 165.55)",
+          "oklch(61% 0.0407 165.55)",
+          "oklch(72% 0.0356 165.55)",
+          "oklch(84% 0.0254 165.55)",
+          "oklch(95% 0.0128 165.55)"
+        ]
+      },
+      "forest": {
+        "role": "primary",
+        "displayName": "Forest",
+        "tonalRamp": [
+          "oklch(15% 0.0155 168.70)",
+          "oklch(26% 0.0308 168.70)",
+          "oklch(38% 0.0433 168.70)",
+          "oklch(49% 0.0494 168.70)",
+          "oklch(61% 0.0494 168.70)",
+          "oklch(72% 0.0433 168.70)",
+          "oklch(84% 0.0308 168.70)",
+          "oklch(95% 0.0155 168.70)"
+        ]
+      },
+      "green": {
+        "role": "primary",
+        "displayName": "Action Green",
+        "tonalRamp": [
+          "oklch(15% 0.0371 143.04)",
+          "oklch(26% 0.0735 143.04)",
+          "oklch(38% 0.1033 143.04)",
+          "oklch(49% 0.1179 143.04)",
+          "oklch(61% 0.1179 143.04)",
+          "oklch(72% 0.1033 143.04)",
+          "oklch(84% 0.0735 143.04)",
+          "oklch(95% 0.0371 143.04)"
+        ]
+      },
+      "lime": {
+        "role": "primary",
+        "displayName": "Lime",
+        "tonalRamp": [
+          "oklch(15% 0.0334 121.83)",
+          "oklch(26% 0.0663 121.83)",
+          "oklch(38% 0.0932 121.83)",
+          "oklch(49% 0.1063 121.83)",
+          "oklch(61% 0.1063 121.83)",
+          "oklch(72% 0.0932 121.83)",
+          "oklch(84% 0.0663 121.83)",
+          "oklch(95% 0.0334 121.83)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Warm Paper",
+        "tonalRamp": [
+          "oklch(15% 0.0017 117.92)",
+          "oklch(26% 0.0033 117.92)",
+          "oklch(38% 0.0046 117.92)",
+          "oklch(49% 0.0053 117.92)",
+          "oklch(61% 0.0053 117.92)",
+          "oklch(72% 0.0046 117.92)",
+          "oklch(84% 0.0033 117.92)",
+          "oklch(95% 0.0017 117.92)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted Sage",
+        "tonalRamp": [
+          "oklch(15% 0.0080 151.25)",
+          "oklch(26% 0.0159 151.25)",
+          "oklch(38% 0.0223 151.25)",
+          "oklch(49% 0.0254 151.25)",
+          "oklch(61% 0.0254 151.25)",
+          "oklch(72% 0.0223 151.25)",
+          "oklch(84% 0.0159 151.25)",
+          "oklch(95% 0.0080 151.25)"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Soft Divider",
+        "tonalRamp": [
+          "oklch(15% 0.0048 126.83)",
+          "oklch(26% 0.0096 126.83)",
+          "oklch(38% 0.0135 126.83)",
+          "oklch(49% 0.0153 126.83)",
+          "oklch(61% 0.0153 126.83)",
+          "oklch(72% 0.0135 126.83)",
+          "oklch(84% 0.0096 126.83)",
+          "oklch(95% 0.0048 126.83)"
+        ]
+      },
+      "lilac": {
+        "role": "secondary",
+        "displayName": "Learning Lilac",
+        "tonalRamp": [
+          "oklch(15% 0.0088 306.03)",
+          "oklch(26% 0.0175 306.03)",
+          "oklch(38% 0.0245 306.03)",
+          "oklch(49% 0.0280 306.03)",
+          "oklch(61% 0.0280 306.03)",
+          "oklch(72% 0.0245 306.03)",
+          "oklch(84% 0.0175 306.03)",
+          "oklch(95% 0.0088 306.03)"
+        ]
+      },
+      "peach": {
+        "role": "secondary",
+        "displayName": "Learning Peach",
+        "tonalRamp": [
+          "oklch(15% 0.0095 57.90)",
+          "oklch(26% 0.0188 57.90)",
+          "oklch(38% 0.0264 57.90)",
+          "oklch(49% 0.0301 57.90)",
+          "oklch(61% 0.0301 57.90)",
+          "oklch(72% 0.0264 57.90)",
+          "oklch(84% 0.0188 57.90)",
+          "oklch(95% 0.0095 57.90)"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Warm Surface",
+        "tonalRamp": [
+          "oklch(15% 0.0017 95.10)",
+          "oklch(26% 0.0033 95.10)",
+          "oklch(38% 0.0046 95.10)",
+          "oklch(49% 0.0053 95.10)",
+          "oklch(61% 0.0053 95.10)",
+          "oklch(72% 0.0046 95.10)",
+          "oklch(84% 0.0033 95.10)",
+          "oklch(95% 0.0017 95.10)"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "White",
+        "tonalRamp": [
+          "oklch(15% 0.0000 89.88)",
+          "oklch(26% 0.0000 89.88)",
+          "oklch(38% 0.0000 89.88)",
+          "oklch(49% 0.0000 89.88)",
+          "oklch(61% 0.0000 89.88)",
+          "oklch(72% 0.0000 89.88)",
+          "oklch(84% 0.0000 89.88)",
+          "oklch(95% 0.0000 89.88)"
+        ]
+      },
+      "lesson-surface": {
+        "role": "neutral",
+        "displayName": "Learning Wash",
+        "tonalRamp": [
+          "oklch(15% 0.0081 123.43)",
+          "oklch(26% 0.0161 123.43)",
+          "oklch(38% 0.0226 123.43)",
+          "oklch(49% 0.0257 123.43)",
+          "oklch(61% 0.0257 123.43)",
+          "oklch(72% 0.0226 123.43)",
+          "oklch(84% 0.0161 123.43)",
+          "oklch(95% 0.0081 123.43)"
+        ]
+      },
+      "green-hover": {
+        "role": "primary",
+        "displayName": "Deep Action Green",
+        "tonalRamp": [
+          "oklch(15% 0.0334 143.53)",
+          "oklch(26% 0.0663 143.53)",
+          "oklch(38% 0.0931 143.53)",
+          "oklch(49% 0.1063 143.53)",
+          "oklch(61% 0.1063 143.53)",
+          "oklch(72% 0.0931 143.53)",
+          "oklch(84% 0.0663 143.53)",
+          "oklch(95% 0.0334 143.53)"
+        ]
+      },
+      "secondary": {
+        "role": "neutral",
+        "displayName": "Secondary Wash",
+        "tonalRamp": [
+          "oklch(15% 0.0043 124.55)",
+          "oklch(26% 0.0085 124.55)",
+          "oklch(38% 0.0120 124.55)",
+          "oklch(49% 0.0136 124.55)",
+          "oklch(61% 0.0136 124.55)",
+          "oklch(72% 0.0120 124.55)",
+          "oklch(84% 0.0085 124.55)",
+          "oklch(95% 0.0043 124.55)"
+        ]
+      },
+      "secondary-hover": {
+        "role": "neutral",
+        "displayName": "Secondary Hover",
+        "tonalRamp": [
+          "oklch(15% 0.0076 129.90)",
+          "oklch(26% 0.0151 129.90)",
+          "oklch(38% 0.0212 129.90)",
+          "oklch(49% 0.0242 129.90)",
+          "oklch(61% 0.0242 129.90)",
+          "oklch(72% 0.0212 129.90)",
+          "oklch(84% 0.0151 129.90)",
+          "oklch(95% 0.0076 129.90)"
+        ]
+      },
+      "focus": {
+        "role": "neutral",
+        "displayName": "Focus Olive",
+        "tonalRamp": [
+          "oklch(15% 0.0371 130.31)",
+          "oklch(26% 0.0735 130.31)",
+          "oklch(38% 0.1033 130.31)",
+          "oklch(49% 0.1179 130.31)",
+          "oklch(61% 0.1179 130.31)",
+          "oklch(72% 0.1033 130.31)",
+          "oklch(84% 0.0735 130.31)",
+          "oklch(95% 0.0371 130.31)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Prominent account and learning result figures."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section and dialog headings."
+      },
+      "subtitle": {
+        "displayName": "Subtitle",
+        "purpose": "Base third-level headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Explanatory lesson, coaching and scenario prose."
+      },
+      "financial-context": {
+        "displayName": "Financial Context",
+        "purpose": "Financial footnotes, reserve explanations and field hints."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Compact field labels."
+      },
+      "input": {
+        "displayName": "Input",
+        "purpose": "Editable form and composer text."
+      },
+      "button": {
+        "displayName": "Button",
+        "purpose": "Standard primary and secondary actions."
+      }
+    },
+    "shadows": [
+      {
+        "name": "dialog",
+        "value": "0 24px 90px #152a3440",
+        "purpose": "Modal elevation."
+      },
+      {
+        "name": "toast",
+        "value": "0 8px 25px #183f3225",
+        "purpose": "Transient status elevation."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(.22,1,.36,1)",
+        "purpose": "Toast and reward entrances."
+      },
+      {
+        "name": "button",
+        "value": "150ms ease",
+        "purpose": "Background and transform response."
+      },
+      {
+        "name": "toast",
+        "value": "180ms",
+        "purpose": "Opacity and 8px entrance."
+      },
+      {
+        "name": "reward",
+        "value": "280ms",
+        "purpose": "Scale .9 to 1 and opacity .5 to 1."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "wide-min",
+        "value": "1600px"
+      },
+      {
+        "name": "compact-max",
+        "value": "1250px"
+      },
+      {
+        "name": "stack-max",
+        "value": "1050px"
+      },
+      {
+        "name": "mobile-max",
+        "value": "740px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Labelled action with a quiet hover and press response.",
+      "html": "<button class=\"ds-button-primary\">Make a plan</button>",
+      "css": ".ds-button-primary{display:inline-flex;align-items:center;justify-content:center;gap:15px;border:0;border-radius:9px;min-height:46px;padding:12px 20px;font-weight:700;font-size:13px;line-height:1.4;cursor:pointer;transition:background 150ms ease,transform 150ms ease;font-family:Manrope,Arial,sans-serif;background:var(--green,#387c36);color:#fff;}.ds-button-primary:hover{background:#2b652b;}.ds-button-primary:focus-visible{outline:3px solid #739b47;outline-offset:4px;}.ds-button-primary:active{transform:scale(.98)}.ds-button-primary:disabled{opacity:.5;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-button-primary{transition:none}}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Labelled action with a quiet hover and press response.",
+      "html": "<button class=\"ds-button-secondary\">Make a plan</button>",
+      "css": ".ds-button-secondary{display:inline-flex;align-items:center;justify-content:center;gap:15px;border:0;border-radius:9px;min-height:46px;padding:12px 20px;font-weight:700;font-size:13px;line-height:1.4;cursor:pointer;transition:background 150ms ease,transform 150ms ease;font-family:Manrope,Arial,sans-serif;background:#eef2e8;color:var(--ink,#203d31);border:1px solid #d8e1d1;}.ds-button-secondary:hover{background:#e1ead9;}.ds-button-secondary:focus-visible{outline:3px solid #739b47;outline-offset:4px;}.ds-button-secondary:active{transform:scale(.98)}.ds-button-secondary:disabled{opacity:.5;cursor:not-allowed}@media(prefers-reduced-motion:reduce){.ds-button-secondary{transition:none}}"
+    },
+    {
+      "name": "Text Action",
+      "kind": "button",
+      "refersTo": "button-text",
+      "description": "Lightweight contextual explanation or onward action.",
+      "html": "<button class=\"ds-text-button\">How it works</button>",
+      "css": ".ds-text-button{font-family:Manrope,Arial,sans-serif;padding:4px 0;min-height:44px;border:0;background:none;color:var(--green,#387c36);font-size:12px;font-weight:750;cursor:pointer}.ds-text-button:hover{text-decoration:underline}.ds-text-button:focus-visible{outline:3px solid #739b47;outline-offset:4px;}"
+    },
+    {
+      "name": "Money Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Labelled editable currency amount; source behavior commits on blur or Enter.",
+      "html": "<label class=\"ds-field\"><span>Emergency cash reserve</span><span class=\"ds-money\"><span>\u20ac</span><input type=\"number\" value=\"300\" min=\"0\" step=\"1\"></span><small>Editable demo assumption.</small></label>",
+      "css": ".ds-field{font-family:Manrope,Arial,sans-serif;display:flex;flex-direction:column;gap:7px;color:var(--ink,#203d31)}.ds-field>span:first-child{font-size:12px;font-weight:700}.ds-money{position:relative;display:flex;align-items:center}.ds-money>span{position:absolute;left:12px;font-size:13px;color:var(--muted,#617064)}.ds-money input{font-family:Manrope,Arial,sans-serif;width:100%;min-width:0;min-height:43px;border:1px solid #cfd9c5;border-radius:8px;padding:10px 12px 10px 29px;background:#fffefa;color:var(--ink,#203d31);font-size:16px;font-variant-numeric:tabular-nums;caret-color:var(--forest,#183f32)}.ds-money input:focus-visible{outline:3px solid #739b47;outline-offset:4px;}.ds-field small{font-size:13px;line-height:1.6;color:var(--muted,#617064)}"
+    },
+    {
+      "name": "Desktop Navigation",
+      "kind": "nav",
+      "refersTo": "nav-active",
+      "description": "Forest rail navigation with an explicit active destination.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Preview navigation\"><button aria-current=\"page\">Today</button><button>Coach</button><button>My plan</button></nav>",
+      "css": ".ds-nav{display:flex;flex-direction:column;gap:10px;background:var(--forest,#183f32);padding:21px;width:228px}.ds-nav button{font-family:Manrope,Arial,sans-serif;display:flex;align-items:center;min-height:47px;padding:10px 16px;border:0;border-radius:9px;background:none;color:#cad8c8;font-size:13px;text-align:left;cursor:pointer}.ds-nav button:hover{background:#28503e;color:#fff}.ds-nav button[aria-current]{background:var(--lime,#d7ef9d);color:#234b31;font-weight:750}.ds-nav button:focus-visible{outline:3px solid #739b47;outline-offset:4px;}"
+    },
+    {
+      "name": "Context Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Noninteractive scenario context label.",
+      "html": "<span class=\"ds-chip\">Scenario</span>",
+      "css": ".ds-chip{font-family:Manrope,Arial,sans-serif;display:inline-block;font-size:12px;line-height:1.65;background:#edf2e3;padding:3px 8px;border-radius:5px;color:#5d6e41}"
+    },
+    {
+      "name": "Home Goal Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Flat, warm container for a labelled goal and progress.",
+      "html": "<section class=\"ds-card\"><h2>Your first-home fund</h2><p class=\"ds-amount\"><strong>\u20ac0</strong> <span>of \u20ac20,000</span></p><div class=\"ds-track\" role=\"progressbar\" aria-label=\"Home deposit goal\" aria-valuenow=\"0\" aria-valuemin=\"0\" aria-valuemax=\"100\"><span></span></div><p class=\"ds-note\">Editable demo goal. Existing home savings are not known from transactions.</p></section>",
+      "css": ".ds-card{font-family:Manrope,Arial,sans-serif;max-width:310px;background:#fffefa;color:var(--ink,#203d31);border:1px solid var(--line,#e2e7dc);border-radius:var(--radius,16px);padding:23px}.ds-card h2{font-size:14px;line-height:1.25;font-weight:750;margin:0}.ds-amount{font-variant-numeric:tabular-nums;margin:14px 0 0}.ds-amount strong{font-size:24px;letter-spacing:-.03em;font-weight:750}.ds-amount span{font-size:12px;color:var(--muted,#617064)}.ds-track{height:7px;background:#e9eee1;border-radius:7px;overflow:hidden;margin-top:12px}.ds-track>span{display:block;background:#709445;height:100%;width:0}.ds-note{font-size:13px;line-height:1.7;color:var(--muted,#617064);margin:12px 0 0}"
+    },
+    {
+      "name": "Lesson Answer",
+      "kind": "custom",
+      "description": "Native choice control with selected and correct feedback surfaces.",
+      "html": "<label class=\"ds-answer\"><input type=\"radio\" name=\"ds-answer\"><span>A reserve protects room for surprises.</span></label>",
+      "css": ".ds-answer{font-family:Manrope,Arial,sans-serif;display:flex;align-items:center;gap:12px;padding:17px 16px;border:1px solid #d9e2cf;border-radius:10px;cursor:pointer;font-size:14px;line-height:1.65;background:#fff;color:var(--ink,#203d31)}.ds-answer input{width:17px;height:17px;flex-shrink:0;accent-color:var(--green,#387c36)}.ds-answer:has(input:checked){border-color:#71975b;background:#f0f6e8}.ds-answer input:focus-visible{outline:3px solid #739b47;outline-offset:4px;}.ds-answer.ds-correct{background:#e9f1da}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Little steps, closer to home",
+    "overview": "Koti uses forest navigation, a warm white workspace and green actions to make money decisions feel calm and approachable. Manrope provides a rounded, geometric voice; lilac and peach add playfulness to lessons without competing with financial information. The repeated home motif connects the brand mark, illustration and learning milestones.\n\nThe interface is compact but readable. Soft panels separate activities, while rules and aligned numbers make evidence inspectable. Learning rewards belong to the learning path; financial amounts retain their own labels and tabular figures. This records the implemented visual system, not a claim of bank endorsement or a completed design-process certification.",
+    "keyCharacteristics": [
+      "Forest navigation and warm, lightly bordered surfaces.",
+      "Rounded geometric typography with prominent, aligned money figures.",
+      "Pastel learning diagrams and a recurring home motif.",
+      "Short state transitions, visible focus and reduced-motion support."
+    ],
+    "rules": [
+      {
+        "name": "The Meaning Before Colour Rule",
+        "body": "Pair financial and learning states with words, amounts or icons; colour alone does not carry the answer.",
+        "section": "colors"
+      },
+      {
+        "name": "The Readable Context Rule",
+        "body": "Keep financial explanations at the implemented 13px context size or 14px body size; reserve 12px for supporting labels and metadata.",
+        "section": "typography"
+      },
+      {
+        "name": "The Quiet Surface Rule",
+        "body": "Keep content panels flat. Reserve cast shadows for dialogs and transient status feedback.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use the shared Manrope face and tabular figures for money.",
+      "Do keep meaningful labels and explanatory text beside diagrams, forecasts and progress.",
+      "Do preserve the forest, green and warm-paper relationship, using lilac and peach for learning and category distinctions.",
+      "Do retain visible keyboard focus, native control semantics and reduced-motion behavior.",
+      "Do stack the workspace and expose bottom navigation at the mobile breakpoint."
+    ],
+    "donts": [
+      "Don't replace financial context with tiny metadata styling.",
+      "Don't imply that XP is money or that an illustrative forecast is a completed transfer.",
+      "Don't add shadows to ordinary content cards.",
+      "Don't use decorative glyphs instead of the implemented SVG icon language."
+    ]
+  }
+}
