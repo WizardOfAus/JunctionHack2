@@ -1,3 +1,4 @@
+import { DemoDataUnavailableError, demoDataUnavailable } from '@/lib/server-data';
 import { z } from 'zod';
 import { assumptionsSchema } from '@/lib/contracts';
 import { personaFromRequest,unknownPersona } from '@/lib/personas/request';
@@ -10,7 +11,7 @@ import { basketContext } from '@/lib/coach/context';
 export async function POST(request:Request) {
   try {
     const body=z.object({question:z.string().min(1).max(1500),assumptions:assumptionsSchema,personaId:z.unknown().optional(),context:journeyContextSchema.optional()}).strict().parse(await request.json());
-    const persona=personaFromRequest(body.personaId);if(!persona) return unknownPersona();
+    const persona=await personaFromRequest(body.personaId);if(!persona) return unknownPersona();
     const transactions=persona.transactions,provenance={customerId:persona.customerId,accountId:persona.accountId};
     const {assumptions:a}=body;const q=body.question.toLowerCase();
     const context=body.context ?? defaultContext;
@@ -54,5 +55,5 @@ export async function POST(request:Request) {
     else if(matched==='Invest Deposit') {category=matched;const ds=transactions.filter(t=>t.tx_date>=from&&t.tx_date<=to&&t.category===matched&&t.amountCents<0);text=`Investment deposits were ${euro(ds.reduce((s,t)=>s-t.amountCents,0),2)} from ${from} to ${to}, across ${ds.length} transfer${ds.length===1?'':'s'}. Their destination and current value are not in this data.`;evidence=ds.map(t=>t.id);}
     else {category=isSpendingCategory?matched:undefined;if(category||matched==='Salary'||/transactions|categories|overview/.test(q)) {const s=summarise(transactions,from,to,category,CLOCK,persona.customerId);text=matched==='Salary'?`Recorded salary income was ${euro(s.incomeCents,2)} from ${from} to ${to}. Future salary remains an estimate until received.`:`${category||'Total consumption'} was ${euro(s.spentCents,2)} from ${from} to ${to}. Open the source rows to check the categories or correct a spending basket.`;evidence=s.evidence;} else {kind='help';text='This demo coach can calculate spending by category and period, recognised taxis, restaurant scenarios, your cash reserve and ASP progress. Try “What should I learn next?” or “Restaurants last month”. Open-ended AI coaching will be connected after the UI review.';}}
     return respond({text,kind,mode:'demo',category,basket,from,to,evidence,reductionPercent,version:VERSION,account:provenance.accountId,dataThrough:HISTORY_THROUGH});
-  }catch{return Response.json({error:'That question could not be processed. Shorten it and try again.'},{status:400});}
+  }catch(error){if(error instanceof DemoDataUnavailableError)return demoDataUnavailable(error);return Response.json({error:'That question could not be processed. Shorten it and try again.'},{status:400});}
 }

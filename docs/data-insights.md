@@ -9,7 +9,7 @@ python3 -m venv work/.venv && work/.venv/bin/pip install duckdb pandas numpy pya
 for s in load features segment personas; do work/.venv/bin/python scripts/eda/$s.py; done
 ```
 
-Outputs land in ignored `app/work/eda/`. The aggregate tables committed in [`app/data/insights/`](../app/data/insights/) contain population aggregates (percentiles, counts, medians and basket shares), plus the explicitly named synthetic CUST04859 basket-share comparison. They contain no transaction rows. The reference-persona comparison is not a population-only table.
+Outputs land in ignored `app/work/eda/`. The aggregate tables committed in [`app/data/insights/`](../app/data/insights/) contain population aggregates (percentiles, counts, medians and basket shares), plus the explicitly named synthetic CUST04859 basket-share comparison. They contain no transaction rows. The reference-persona comparison is not a population-only table. These tables are also accessible in Supabase (`csv_datasets` and `csv_rows`, see [`supabase/README.md`](../supabase/README.md)). Run the EDA from the pinned GitHub source, not from the Supabase copy.
 
 ## What the data contains
 

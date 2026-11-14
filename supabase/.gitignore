@@ -1,0 +1,5 @@
+# Generated from app/data by scripts/build-seed.mjs
+/seed.sql
+# Local CLI link state
+/.temp/
+/.branches/

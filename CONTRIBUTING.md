@@ -34,6 +34,8 @@ Copy this instruction, replacing the bracketed values:
 
 ## Runtime and data
 
-Node 24 is recommended. All npm commands run inside `app/`. The running UI needs no model key and no raw CSV; the audited historical subset is already committed. Download the large source only for dataset work, using [the pinned LFS payload instructions](docs/data-audit.md).
+Node 24 is recommended. Run npm commands inside `app/`. The default bundled provider needs no model/database key or raw CSV. `KOTI_DATA_SOURCE=supabase` explicitly opts into the server-only remote copy; see [provider setup and eight-persona seed requirements](supabase/README.md). Unknown or unavailable remote personas fail closed, without a fallback.
+
+For development processing, use the pinned GitHub dataset and [LFS instructions](docs/data-audit.md). Supabase is a derived runtime/inspection copy, not the source of truth. Do not change the canonical5174 provider until its all-persona API smoke checks pass.
 
 Live AI configuration is deferred until UI review. New provider integrations must accept server-side environment variables and keep deterministic calculations/evidence intact. Preview publication belongs to the integration owner; a new worktree must not register another Site or change `app/.openai/hosting.json`.

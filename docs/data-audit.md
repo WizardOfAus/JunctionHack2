@@ -32,6 +32,12 @@ The pinned upstream Git object contains `oid sha256:49b3265d8e44e751de305a074dcf
 
 The original September backtest subset was rechecked: 698 rows, only CUST04859, latest date 31 August 2026. This verifies use of the actual source payload, while the runtime intentionally uses only one customer's history. Additional personas require separate extraction, audits and a server-scoped catalogue; they are not enabled by the current app.
 
+## Supabase copy (updated 15 November 2026)
+
+The bundled audited artifacts remain the default runtime source. PR #18 adds an explicit `KOTI_DATA_SOURCE=supabase` option through the same allowlisted resolver. The seed generator copies all eight personas (4,607 transactions), catalogue/application metadata, clocks, insights and overlays. See [provider, seeding and verification instructions](../supabase/README.md).
+
+The hosted project originally held only the reference customer. The full seed must be loaded before enabling the remote provider; this integration does not mutate the hosted database. Remote rows must match the pinned revision, clock, account and audited artifact. Missing or changed rows fail closed. Development processing still starts from the pinned GitHub/LFS source.
+
 ## Demo clock (updated 14 November 2026)
 
 The team moved the demo clock to **1 October 2026** with history through **30 September 2026**, the end of the dataset. `app/data/demo-clock.json` is the single source for the app, importer and agent. `persona.json` now holds 719 CUST04859 rows through 26 September 2026 (the last recorded row). The importer audits two clocks from the same rows:

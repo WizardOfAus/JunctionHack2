@@ -1,13 +1,14 @@
 import { personaIdSchema } from '@/lib/contracts';
 import { DEMO_DATE } from '@/lib/finance';
-import { resolvePersona } from './index';
+import type { resolvePersona } from './index';
+import { demoData } from '../server-data';
 
 export const unknownPersona=()=>Response.json({error:'Unknown demo persona. Choose one listed by /api/personas.'},{status:400});
 
 /** Validates an optional top-level personaId; returns null when it is not allowlisted. */
 export function personaFromRequest(value:unknown) {
   const parsed=personaIdSchema.optional().safeParse(value);
-  return parsed.success?resolvePersona(parsed.data):null;
+  return parsed.success?demoData(parsed.data):Promise.resolve(null);
 }
 
 export function provenanceOf(persona:ReturnType<typeof resolvePersona>) {
