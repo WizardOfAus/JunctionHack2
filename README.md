@@ -6,6 +6,12 @@ An independent first-home learning prototype for the S-Pankki challenge. Brillia
 - [Data audit](docs/data-audit.md)
 - [Verification and limitations](docs/verification.md)
 - [Design workflow](docs/design-workflow.md)
+- [Contributor setup and Claude Code handoff](CONTRIBUTING.md)
+- [Work packages and file ownership](docs/workstreams.md)
+- [Proposed goal-led onboarding](docs/onboarding.md)
+- [Palette and brand provenance](docs/brand-provenance.md)
+
+The complete first prototype is on `main`, merged through [PR #1](https://github.com/WizardOfAus/JunctionHack2/pull/1). Onboarding and multiple source personas are planned next; the current UI still opens the first-home demo. Start collaborator branches from current `main` and follow the work-package boundaries above.
 
 ## Run locally
 

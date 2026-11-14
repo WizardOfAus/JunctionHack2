@@ -26,6 +26,12 @@ The importer preserves every original CSV field as a string, adding `id: row-N`,
 No merchant names, savings balances, ASP history, household facts or extra accounts are invented.
 The JSON is intended for server-only imports; do not serialize all transaction rows into page props.
 
+### Git LFS verification repeated on 14 November 2026
+
+The pinned upstream Git object contains `oid sha256:49b3265d8e44e751de305a074dcffcda732bb79aa1e07b46fcca774ce76f1e63` and `size 362796501`. The downloaded file was independently rehashed and its byte size checked: both match exactly. Its first line is the CSV header (`customer_id,bank_account_id,...`), not the `version https://git-lfs.github.com/spec/v1` pointer line. The existing importer also rejects a file without the expected CSV header before writing artifacts.
+
+The runtime subset was rechecked: 698 rows, only CUST04859, latest date 31 August 2026. This verifies use of the actual source payload, while the runtime intentionally uses only one customer's history. Additional personas require separate extraction, audits and a server-scoped catalogue; they are not enabled by the current app.
+
 ## Acceptance targets
 
 All seven targets from the build brief reproduce exactly at cent precision.
