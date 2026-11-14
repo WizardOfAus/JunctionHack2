@@ -61,7 +61,7 @@ Under the proposal, irregular means genuine shocks (median €94/month per custo
 These relationships were verified exactly on every row:
 - `final_requested_loan + final_equity_amount = final_property_price`.
 - `lfinal_loan_to_value = loan / price` (not loan / collateral).
-- `required_monthly_income = annuity(loan, 6%, 25 years) / 0.35`: a 6% stress payment may take at most 35% of gross monthly income. This equals 0.0184086 × loan; inversely, maximum loan ≈ 54.3 × monthly income.
+- `required_monthly_income = annuity(loan, 6%, 25 years) / 0.35`, i.e. 0.0184086 × loan; inversely, loan ≈ 54.3 × monthly income. This is **a calculation found in this synthetic dataset**, not a bank's lending rule and not an approval prediction. Present it as "in this dataset, required income was calculated as…".
 
 Other observations:
 - The event order is fixed: application created → property added (1–3, with optional price updates) → loan calculation → income received → expenses recorded → collateral added → valuation → additional collateral requested (192/200) → second valuation → document received → loan decision. Customer contacts are spread throughout.
@@ -69,7 +69,7 @@ Other observations:
 - Expense amounts are synthetic: transfer tax is 1.5–4% of price, which does not follow Finnish rules. Label them as recorded application amounts, not tax advice.
 - **Outcomes are not a reproducible rule.** The best single features reach AUC 0.55–0.64. Every collateral, equity and debt rejection belongs to a salary-sweep (pass-through) account; non-sweep applicants were rejected only for insufficient income (7 of 78). Do not build approval odds.
 - **Transactions do not reflect the mortgage.** There is no down-payment outflow, no new or changed housing payment after approval and no saving acceleration. Join the two only through the link file, and present it as an *application record*, not ledger behaviour.
-- **Demo-date rule:** only C0065 (CUST01265) is undecided on 1 September 2026; its decision is dated 8 September. At the demo clock it must appear "in progress", with events from 1 September onward hidden.
+- **Dates:** only C0065 (CUST01265) has events after 31 August; its decision is dated 8 September. The team is moving the demo clock to 1 October 2026 (history through 30 September), where every application is decided. "In progress" exists only in the 1 September **backtest**, which must exclude September transactions and later mortgage events and outcomes.
 - Applicants are older and richer than the base population: median age 45–47, 43% in the top salary quintile, and 61% are pass-through accounts. Only 3% are under 35.
 
 Mortgage status for anyone **without** an application record stays a labelled, user-declared assumption. Live rates, caps and offers come from web research (Exa).
@@ -123,13 +123,13 @@ Salary quintile edges are €2,218, €2,830, €3,423 and €4,216. Compare a u
 
 ## Demo persona shortlist
 
-Revised after adding the mortgage and customer files. Transaction figures use history before 1 September 2026, and mortgage timelines show only events visible at the demo clock.
+Revised after adding the mortgage and customer files. Transaction figures were computed on history before 1 September 2026; they will be refreshed when the demo clock moves to 1 October 2026. Mortgage information is labelled **application record**; anything the record does not contain stays unknown.
 
 | Customer | Story | Evidence | Mortgage record (as of 1 Sep 2026) |
 |---|---|---|---|
-| **CUST04767** (lead) | Approved first home | 36, Espoo; steady investor. Salary ~€3.0k; saves 33%; invests €393/month; rent €938; €15.6k balance; never overdrawn | C0689: applied 4 Apr; viewed three apartments; €174.5k apartment, loan €160k, equity €14.5k (8.3%), LTV 0.92; **approved 4 May**. Income 1.05 × required |
-| CUST02222 | Rejected: insufficient income | 36, Espoo; steady investor. Salary ~€5.0k; saves 46%; €56k balance; 2 shocks | C0137: €315k house, loan €286.5k, LTV 0.91; **rejected 12 May**. Income 0.94 × required. "What would it take?": maximum loan ≈ €270k at this income, so ~€16.5k more equity or a home ≤ ~€298k |
-| CUST01265 | Application in progress | 41, Helsinki; pass-through account | C0065: applied 3 Aug; €217.5k apartment, loan €203.5k, equity €14k (6.4%); collateral valued 30 Aug; **decision pending** at the demo date |
+| **CUST04767** (lead) | Approved home purchase ("first home" is a demo assumption; the data does not say) | 36, Espoo; steady investor. Salary ~€3.0k; saves 33%; invests €393/month; housing payment €938 (rent is an assumption; the ledger cannot tell rent from a loan); €15.6k balance; never overdrawn | C0689: applied 4 Apr; viewed three apartments; €174.5k apartment, loan €160k, equity €14.5k (8.3%), LTV 0.92; **approved 4 May**. Income 1.05 × required |
+| CUST02222 | Rejected: insufficient income | 36, Espoo; steady investor. Salary ~€5.0k; saves 46%; €56k balance; 2 shocks | C0137: €315k house, loan €286.5k, LTV 0.91; **rejected 12 May**. Income 0.94 × the dataset's required-income calculation. "What would it take?": by that calculation, ~€270k at this income, so ~€16.5k more equity or a home ≤ ~€298k (illustrative, not an approval prediction) |
+| CUST01265 | Recent approval (backtest: in progress) | 41, Helsinki; pass-through account | C0065: applied 3 Aug; €217.5k apartment, loan €203.5k, equity €14k (6.4%); **approved 8 Sep**. In the 1 September backtest only, it is in progress with collateral valued 30 Aug |
 | CUST01460 | Rejected: insufficient collateral | 41, Helsinki; pass-through, so spending is largely invisible | C0345: €186k apartment, loan €152.5k vs collateral €126k; extra collateral requested but none valued; **rejected 4 Feb**. Teaches lending value vs price and the state guarantee |
 | CUST02097 | Tight budget | Age recorded as 18 (likely floored); Espoo. Salary €1,875; 88 negative observed transaction-day balances; ~€0 surplus; housing 47% of salary | none; goal: safety cushion, no saving challenge |
 | CUST02689 | High flexible spend | 62, Helsinki. Restaurants €771/month (p98); 44% of spending flexible | none; goal: spending awareness, deal finder (Exa) |
