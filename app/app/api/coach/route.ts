@@ -2,6 +2,8 @@ import { z } from 'zod';
 import { assumptionsSchema } from '@/lib/contracts';
 import { personaFromRequest,unknownPersona } from '@/lib/personas/request';
 import { forecast,summarise,euro,evaluateAsp,basketOf,basketProfile,isConsumption,type Basket,recentWindow,latestMonthPeriod,DATA_START,HISTORY_THROUGH,VERSION,CLOCK } from '@/lib/finance';
+import { loanReadiness,readinessContext } from '@/lib/loan-readiness';
+import { latestMortgageRate } from '@/lib/market-rates';
 const readable=(iso:string)=>new Date(iso+'T12:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
 import { matchCategory,spendingCategories } from '@/lib/categories';
 import { agentConfig, askAgent, AgentUnavailableError } from '@/lib/coach/agent';
@@ -26,7 +28,9 @@ export async function POST(request:Request) {
         // Basket figures come from the app's own rules, with the user's corrections, so the coach and the UI agree.
         const window=transactions.filter(t=>t.tx_date>=recent.from&&isConsumption(t));
         const appContext=coachJourneyContext(context,a,f)+"\n"+basketContext(window.map(t=>({category:t.category,basket:basketOf(t,a.corrections,profile),spentCents:-t.amountCents})),f.baskets,{months:3,period:recent.label,corrections:Object.keys(a.corrections).length,format:c=>euro(c)});
-        const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext});
+        // Application record and loan readiness, so the agent explains the app's figures instead of guessing.
+        const readiness=loanReadiness({forecast:f,assumptions:a,mortgage:persona.view.mortgage,marketRate:latestMortgageRate(CLOCK)});
+        const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext:`${appContext}\n\n${readinessContext(readiness,persona.view.mortgage,c=>euro(c))}`});
         return respond({text:reply.text,kind:'answer',mode:'agent',conversationId:reply.conversationId,evidence:[],account:provenance.accountId,dataThrough:HISTORY_THROUGH});
       } catch(e) {
         if(e instanceof AgentUnavailableError) {console.error('Koti agent error:',e.message);return Response.json({error:'The AI coach is not available right now. Try again soon.'},{status:502});}

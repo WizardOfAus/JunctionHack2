@@ -96,3 +96,16 @@ export function loanReadiness({forecast:f,assumptions:a,mortgage,marketRate,term
   };
 }
 export type LoanReadiness=ReturnType<typeof loanReadiness>;
+
+/** Plain-text summary for the coach agent: figures the app calculated, to quote and never recompute. */
+export function readinessContext(r:LoanReadiness,mortgage:MortgageView|null,format:(cents:number)=>string) {
+  const lines=['Home loan figures calculated by the Koti app (quote them; do not recalculate; education, not a credit decision):'];
+  if(mortgage) lines.push(`- Application record ${mortgage.applicationId}: ${mortgage.status.replace('_',' ')} on ${mortgage.statusDate}${mortgage.rejectionReason?` (reason: ${mortgage.rejectionReason.replaceAll('_',' ')})`:''}; ${mortgage.propertyType??'property'} price ${mortgage.priceCents!=null?format(mortgage.priceCents):'unknown'}, loan ${mortgage.loanCents!=null?format(mortgage.loanCents):'unknown'}, own funds ${mortgage.equityCents!=null?format(mortgage.equityCents):'unknown'}.`);
+  lines.push(`- Basis: ${r.basis.source}. Price ${format(r.basis.priceCents)}, own funds ${format(r.basis.equityCents)}, loan ${format(r.basis.loanCents)}, monthly salary ${format(r.basis.incomeCents)}.`);
+  for(const c of r.checks) lines.push(`- ${c.label}: ${c.status}${'gapCents' in c&&c.gapCents?`, short by ${format(c.gapCents)}`:''}${'valueMonths' in c&&c.valueMonths!=null?`, ${c.valueMonths} months covered`:''}.`);
+  lines.push(`- Monthly payment: ${format(r.payments.stress.monthlyCents)} at the 6% stress rate${r.payments.market?`, ${format(r.payments.market.monthlyCents)} at the Bank of Finland average new-loan rate ${r.payments.market.annualPercent}% (${r.payments.market.month})`:''}.`);
+  const w=r.whatItWouldTake;
+  lines.push(`- What would close the gaps: extra own funds ${format(w.extraEquityCents)}${w.monthsToSaveExtraEquity?` (about ${w.monthsToSaveExtraEquity} months of the current monthly surplus ${format(w.monthlySurplusCents)})`:''}; or a price up to ${format(w.maxPriceCents)} with the same own funds; or extra monthly income ${format(w.extraMonthlyIncomeCents)}.`);
+  lines.push(`- Required income is a calculation found in this synthetic dataset (6%, 25 years, 35% of income), not a bank rule. Never present approval odds.`);
+  return lines.join('\n');
+}
