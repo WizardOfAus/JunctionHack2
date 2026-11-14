@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {clocks,defaults,forecast} from '../lib/finance.ts';
 import {mortgageAt,REQUIRED_INCOME_PER_LOAN_EURO} from '../lib/personas/view.ts';
-import {annuityCents,loanReadiness,LOAN_CAP_LTV} from '../lib/loan-readiness.ts';
+import {annuityCents,loanReadiness,readinessContext,LOAN_CAP_LTV} from '../lib/loan-readiness.ts';
 
 const read=path=>JSON.parse(readFileSync(new URL(path,import.meta.url),'utf8'));
 const records=read('../data/personas/records.json').personas;
@@ -78,4 +78,12 @@ test('buffer gap is explicit and absent when essentials are unknown',()=>{
   assert.equal(check(loanReadiness(input),'buffer').gapMonths,1.5);
   const unknown=loanReadiness({...input,forecast:{...input.forecast,baskets:{regular:0,irregular:0,flexible:0}}});
   assert.equal(check(unknown,'buffer').gapMonths,null);assert.equal(check(unknown,'buffer').status,'unknown');
+});
+
+test('the coach context quotes the record and the app figures for the agent',()=>{
+  const {r}=readiness('home-rejected-income');
+  const text=readinessContext(r,mortgageAt(records['home-rejected-income'].mortgage,clocks.current),c=>`EUR ${(c/100).toFixed(2)}`);
+  assert.match(text,/Application record C0137: rejected on 2026-05-12 \(reason: insufficient income\)/);
+  assert.ok(text.includes(`extra own funds EUR ${(r.whatItWouldTake.extraEquityCents/100).toFixed(2)}`));
+  assert.match(text,/do not recalculate/);assert.match(text,/not a bank rule/);
 });
