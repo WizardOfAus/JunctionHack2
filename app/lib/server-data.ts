@@ -1,35 +1,20 @@
 import 'server-only';
 import { env } from 'cloudflare:workers';
-import { historyOnly } from './finance';
+import { resolvePersona } from './personas';
+import { DEMO_DATE } from './finance';
+import { dataSource, createPersonaLoader } from './data-provider';
 import { DemoDataUnavailableError, fetchPersona, readConfig } from './supabase-data';
 
 export { DemoDataUnavailableError };
+const SOURCE_REVISION='fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f';
+const load=createPersonaLoader(resolvePersona,customerId=>fetchPersona(readConfig(env as unknown as Record<string,unknown>),customerId),SOURCE_REVISION,DEMO_DATE);
 
-/** The server sets the customer scope. The browser never chooses it. */
-export const DEMO_CUSTOMER_ID = 'CUST04859';
-export const SOURCE_URL = 'https://github.com/hackjunction/Junction-2026-S-pankki';
-
-async function load() {
-  const persona = await fetchPersona(readConfig(env as unknown as Record<string, unknown>), DEMO_CUSTOMER_ID);
-  return {
-    transactions: historyOnly(persona.transactions),
-    provenance: { customerId: persona.customerId, accountId: persona.accountId, sourceRevision: persona.sourceRevision, asOf: persona.asOf, source: SOURCE_URL, statistics: persona.statistics },
-  };
+/** One resolver for workspace bootstrap and all APIs. No implicit remote-to-bundled fallback. */
+export function demoData(personaId?:string) {
+  return load(personaId,dataSource(env as unknown as Record<string,unknown>));
 }
-
-let cached: ReturnType<typeof load> | undefined;
-
-/**
- * Loads the demo persona from Supabase (see supabase/README.md) once per server process.
- * A failed load is not kept, so the next request tries again.
- */
-export function demoData() {
-  cached ??= load().catch((error) => { cached = undefined; throw error; });
-  return cached;
-}
-
-/** The response for a route when demoData() fails. Details go to the server log only. */
-export function demoDataUnavailable(error: unknown) {
-  console.error('Demo data unavailable:', error instanceof Error ? error.message : error);
-  return Response.json({ error: 'The demo data is not available at the moment. Try again later.' }, { status: 503 });
+export function demoDataUnavailable(error:unknown) {
+  // Do not log credentials, request URLs, response bodies or arbitrary transport errors.
+  console.error('Demo data unavailable:',error instanceof DemoDataUnavailableError?error.message:'Unexpected data provider failure.');
+  return Response.json({error:'The selected demo data is not available at the moment. Try again later.'},{status:503});
 }

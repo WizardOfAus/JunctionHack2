@@ -27,6 +27,7 @@ export type TransactionRow = {
 const TX_COLUMNS = 'id,source_row,customer_id,bank_account_id,tx_date,tx_timestamp,category,tx_amount_eur,balance_after_eur,transaction_type,merchant_id,mcc_code,amount_cents,balance_cents';
 
 function cents(value: number | string, id: string) {
+  if(typeof value!=='number'&&(typeof value!=='string'||! /^-?\d+$/.test(value)))throw new DemoDataUnavailableError(`Transaction ${id} has an invalid cent value.`);
   const n = Number(value);
   if (!Number.isSafeInteger(n)) throw new DemoDataUnavailableError(`Transaction ${id} has a cent value that is not an integer.`);
   return n;
@@ -34,6 +35,7 @@ function cents(value: number | string, id: string) {
 
 /** Converts one database row back to the shape of a persona.json transaction. */
 export function toTransaction(row: TransactionRow): SourceTransaction {
+  if(!row||typeof row!=='object'||!Number.isSafeInteger(row.source_row)||row.source_row<1||['id','customer_id','bank_account_id','tx_date','tx_timestamp','category','tx_amount_eur','balance_after_eur','transaction_type'].some(key=>typeof (row as unknown as Record<string,unknown>)[key]!=='string'))throw new DemoDataUnavailableError('Supabase returned an invalid transaction row.');
   return {
     customer_id: row.customer_id, bank_account_id: row.bank_account_id, tx_date: row.tx_date, tx_timestamp: row.tx_timestamp,
     category: row.category, tx_amount_eur: row.tx_amount_eur, balance_after_eur: row.balance_after_eur,
@@ -49,6 +51,8 @@ export function readConfig(env: Record<string, unknown>): SupabaseConfig {
   const url = text(env.SUPABASE_URL).replace(/\/+$/, '');
   const apiKey = text(env.SUPABASE_SECRET_KEY) || text(env.SUPABASE_PUBLISHABLE_KEY);
   if (!url || !apiKey) throw new DemoDataUnavailableError('Set SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY (or SUPABASE_SECRET_KEY) on the server (app/.dev.vars for local development). See supabase/README.md.');
+  let parsed:URL;try{parsed=new URL(url);}catch{throw new DemoDataUnavailableError('SUPABASE_URL is not a valid URL.');}
+  if(parsed.username||parsed.password||parsed.search||parsed.hash||parsed.pathname!=='/'||(parsed.protocol!=='https:'&&!(parsed.protocol==='http:'&&['localhost','127.0.0.1','[::1]'].includes(parsed.hostname))))throw new DemoDataUnavailableError('SUPABASE_URL must be an HTTPS project origin or a local development origin.');
   return { url, apiKey };
 }
 
@@ -59,11 +63,11 @@ async function get<T>(config: SupabaseConfig, path: string, fetcher: typeof fetc
   let response: Response;
   try {
     response = await fetcher(`${config.url}/rest/v1/${path}`, { headers, signal: AbortSignal.timeout(TIMEOUT_MS) });
-  } catch (error) {
-    throw new DemoDataUnavailableError(`Supabase did not respond: ${error instanceof Error ? error.message : String(error)}`);
+  } catch {
+    throw new DemoDataUnavailableError('Supabase did not respond before the request completed.');
   }
   if (!response.ok) throw new DemoDataUnavailableError(`Supabase returned HTTP ${response.status} for ${path.split('?')[0]}.`);
-  const body: unknown = await response.json();
+  let body:unknown;try{body=await response.json();}catch{throw new DemoDataUnavailableError('Supabase returned invalid JSON.');}
   if (!Array.isArray(body)) throw new DemoDataUnavailableError(`Supabase returned an unexpected body for ${path.split('?')[0]}.`);
   return body as T[];
 }
@@ -72,17 +76,20 @@ async function get<T>(config: SupabaseConfig, path: string, fetcher: typeof fetc
 export async function fetchPersona(config: SupabaseConfig, customerId: string, fetcher: typeof fetch = fetch): Promise<PersonaRecord> {
   if (!/^CUST\d{5}$/.test(customerId)) throw new DemoDataUnavailableError('The demo customer ID is not valid.');
   const id = encodeURIComponent(customerId);
-  const [persona] = await get<PersonaRow>(config, `personas?customer_id=eq.${id}&select=customer_id,account_id,as_of,source_revision,statistics`, fetcher);
+  const personas = await get<PersonaRow>(config, `personas?customer_id=eq.${id}&select=customer_id,account_id,as_of,source_revision,statistics&limit=2`, fetcher);
+  const [persona]=personas;
   if (!persona) throw new DemoDataUnavailableError(`Persona ${customerId} is not in Supabase. Load the seed (see supabase/README.md).`);
+  if(personas.length!==1||persona.customer_id!==customerId||typeof persona.account_id!=='string')throw new DemoDataUnavailableError('Supabase returned a different customer or ambiguous persona.');
   const rows: TransactionRow[] = [];
   for (let offset = 0; ; offset += PAGE_SIZE) {
     const page = await get<TransactionRow>(config, `transactions?customer_id=eq.${id}&select=${TX_COLUMNS}&order=tx_date.asc,source_row.asc&limit=${PAGE_SIZE}&offset=${offset}`, fetcher);
+    if(page.length>PAGE_SIZE||rows.length+page.length>10000)throw new DemoDataUnavailableError('Supabase exceeded the bounded demo transaction limit.');
     rows.push(...page);
     if (page.length < PAGE_SIZE) break;
   }
   if (!rows.length) throw new DemoDataUnavailableError(`Persona ${customerId} has no transactions in Supabase.`);
   const transactions = rows.map(toTransaction);
-  if (transactions.some((t) => t.customer_id !== customerId)) throw new DemoDataUnavailableError('Supabase returned rows for a different customer.');
+  if (transactions.some((t) => t.customer_id !== customerId || t.bank_account_id !== persona.account_id)) throw new DemoDataUnavailableError('Supabase returned rows for a different customer or account.');
   return {
     customerId: persona.customer_id, accountId: persona.account_id, asOf: persona.as_of,
     sourceRevision: persona.source_revision, statistics: persona.statistics, transactions,

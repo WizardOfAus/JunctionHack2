@@ -1,9 +1,25 @@
+import { DemoDataUnavailableError, demoDataUnavailable } from '@/lib/server-data';
 import { assumptionsSchema } from '@/lib/contracts';
-import { forecast,evaluateAsp,depositReady,defaults } from '@/lib/finance';
-import { demoData,demoDataUnavailable } from '@/lib/server-data';
-export async function GET(){let data;try{data=await demoData();}catch(error){return demoDataUnavailable(error);}const {transactions,provenance}=data;const f=forecast(transactions,defaults);return Response.json({forecast:f,asp:evaluateAsp('',[]),goal:depositReady(defaults,f.challengeCents),provenance});}
+import { forecast,evaluateAsp,depositReady,defaults,CLOCK } from '@/lib/finance';
+import { personaFromRequest,provenanceOf,unknownPersona } from '@/lib/personas/request';
+import { loanReadiness } from '@/lib/loan-readiness';
+import { latestMortgageRate } from '@/lib/market-rates';
+function respond(persona:NonNullable<Awaited<ReturnType<typeof personaFromRequest>>>,a:typeof defaults){
+  const f=forecast(persona.transactions,a,CLOCK,persona.customerId);
+  return Response.json({forecast:f,asp:evaluateAsp(a.aspOpenedOn,a.aspDeposits),goal:depositReady(a,f.challengeCents),provenance:provenanceOf(persona),persona:persona.view,
+    loanReadiness:loanReadiness({forecast:f,assumptions:a,mortgage:persona.view.mortgage,marketRate:latestMortgageRate(CLOCK)})});
+}
+export async function GET(request:Request){
+  try {const persona=await personaFromRequest(new URL(request.url).searchParams.get('personaId')??undefined);return persona?respond(persona,defaults):unknownPersona();}
+  catch(error){return demoDataUnavailable(error);}
+}
 export async function POST(request:Request){
-  let data;try{data=await demoData();}catch(error){return demoDataUnavailable(error);}const {transactions,provenance}=data;
-  try {const a=assumptionsSchema.parse(await request.json()); const f=forecast(transactions,a);return Response.json({forecast:f,asp:evaluateAsp(a.aspOpenedOn,a.aspDeposits),goal:depositReady(a,f.challengeCents),provenance});}
-  catch{return Response.json({error:'Check the amounts and dates, then try again.'},{status:400});}
+  try {
+    // personaId sits beside the assumption fields at the top level of this request.
+    const {personaId,...fields}=await request.json() as Record<string,unknown>;
+    const a=assumptionsSchema.parse(fields);
+    const persona=await personaFromRequest(personaId);if(!persona) return unknownPersona();
+    return respond(persona,a);
+  }
+  catch(error){if(error instanceof DemoDataUnavailableError)return demoDataUnavailable(error);return Response.json({error:'Check the amounts and dates, then try again.'},{status:400});}
 }

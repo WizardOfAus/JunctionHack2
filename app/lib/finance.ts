@@ -75,24 +75,28 @@ export function classifyBasket(t:Transaction, profile?:BasketProfile): {basket:B
 export function basketOf(t:Transaction, corrections:Record<string,Basket>={}, profile?:BasketProfile) : Basket {
   return corrections[t.id]||classifyBasket(t,profile).basket;
 }
-export function historyOnly(rows:Transaction[],clock:Clock=CLOCK) { return rows.filter(t=>t.customer_id==='CUST04859' && t.tx_date<=clock.historyThrough).sort((a,b)=>a.tx_date.localeCompare(b.tx_date)||a.sourceRow-b.sourceRow); }
+export const REFERENCE_CUSTOMER_ID='CUST04859';
+/** One customer's rows up to the clock; the server chooses the customer from the persona catalogue. */
+export function historyOnly(rows:Transaction[],clock:Clock=CLOCK,customerId=REFERENCE_CUSTOMER_ID) { return rows.filter(t=>t.customer_id===customerId && t.tx_date<=clock.historyThrough).sort((a,b)=>a.tx_date.localeCompare(b.tx_date)||a.sourceRow-b.sourceRow); }
 export function monthlyAverage(rows:Transaction[], predicate:(t:Transaction)=>boolean, months=recentMonths(3)) {
   return Math.round(sum(rows.filter(t=>months.includes(t.tx_date.slice(0,7))&&predicate(t)).map(t=>Math.abs(t.amountCents)))/months.length);
 }
-export function summarise(rows:Transaction[],from=recentWindow().from,to=recentWindow().to,category?:string,clock:Clock=CLOCK) {
-  const selected=historyOnly(rows,clock).filter(t=>t.tx_date>=from&&t.tx_date<=to&&(!category||t.category===category));
+export function summarise(rows:Transaction[],from=recentWindow().from,to=recentWindow().to,category?:string,clock:Clock=CLOCK,customerId=REFERENCE_CUSTOMER_ID) {
+  const selected=historyOnly(rows,clock,customerId).filter(t=>t.tx_date>=from&&t.tx_date<=to&&(!category||t.category===category));
   const groups:Record<string,number>={};
   for(const t of selected) if(isConsumption(t)) groups[t.category]=(groups[t.category]||0)-t.amountCents;
   return {from,to,count:selected.length,spentCents:sum(selected.filter(isConsumption).map(t=>-t.amountCents)),incomeCents:sum(selected.filter(t=>t.transaction_type==='salary').map(t=>t.amountCents)),groups,evidence:selected.map(t=>t.id),rows:selected};
 }
-export function forecast(rows:Transaction[],a:Assumptions,clock:Clock=CLOCK) {
-  const history=historyOnly(rows,clock);
+export function forecast(rows:Transaction[],a:Assumptions,clock:Clock=CLOCK,customerId=REFERENCE_CUSTOMER_ID) {
+  const history=historyOnly(rows,clock,customerId);
   const recent=recentWindow(clock);
   const profile=basketProfile(history);
   const balance=history.at(-1)?.balanceCents||0;
   const months=recentMonths(12,clock);
   const salary=median(months.map(m=>sum(history.filter(t=>t.tx_date.startsWith(m)&&t.transaction_type==='salary').map(t=>t.amountCents))));
   const savings=median(months.map(m=>sum(history.filter(t=>t.tx_date.startsWith(m)&&isSaving(t)).map(t=>-t.amountCents))));
+  // Salary sweeps move pay on to the customer's other account soon after payday.
+  const sweep=median(months.map(m=>sum(history.filter(t=>t.tx_date.startsWith(m)&&t.transaction_type==='salary_sweep').map(t=>-t.amountCents))));
   const housing=Math.max(0,...history.filter(t=>t.tx_date>=recent.from&&t.category==='Housing'&&isConsumption(t)).map(t=>-t.amountCents));
   const restaurant=monthlyAverage(history,t=>t.category==='Restaurants'&&isConsumption(t),recent.months);
   const reducibleRestaurant=monthlyAverage(history,t=>t.category==='Restaurants'&&isConsumption(t)&&basketOf(t,a.corrections,profile)==='flexible',recent.months);
@@ -113,6 +117,7 @@ export function forecast(rows:Transaction[],a:Assumptions,clock:Clock=CLOCK) {
     if(dom===2) {cost+=housing;label='Housing + everyday costs';}
     if(dom===20) {cost+=savings;label='Existing saving transfer + everyday costs';}
     const income=incomeDates.includes(date)?salary:0;
+    if(sweep&&incomeDates.some(d=>addDays(d,2)===date)) {cost+=sweep;label='Transfer to your other account + everyday costs';}
     running+=income-cost;minimum=Math.min(minimum,running);
     points.push({date,balanceCents:running,incomeCents:income,costCents:cost,label:income?'Estimated salary + everyday costs':label});
   }
@@ -129,10 +134,10 @@ export function forecast(rows:Transaction[],a:Assumptions,clock:Clock=CLOCK) {
   const monthlyIncome=salary;
   const consumption=monthlyAverage(history,isConsumption,recent.months);
   // The 28-day challenge is additional to existing investment deposits.
-  const recurringCapacity=Math.max(0,monthlyIncome-consumption-savings+reduction);
+  const recurringCapacity=Math.max(0,monthlyIncome-consumption-savings-sweep+reduction);
   const challenge=Math.min(a.monthlyHomeCents,capacity,recurringCapacity);
-  const warnings=[...(!a.connected?['Source disconnected. Reconnect the synthetic dataset to calculate.']:[]),...(!a.coverageConfirmed?['Confirm other obligations and account coverage before relying on this estimate.']:[]),...(a.stale?['Data marked stale. Refresh or review the source before allocating.']:[]),...(minimum<floor?['The projected balance falls below your protected reserve. Pause extra saving.']:[]),...(a.allocationCents>capacity?['Your requested allocation is above current capacity. The available amount has been reduced.']:[])];
-  return {version:VERSION,asOf:clock.demoDate,dataThrough:clock.historyThrough,recentPeriod:recent.label,accountId:history[0]?.bank_account_id||'',balanceCents:balance,minimumCents:minimum,protectedCents:floor,capacityCents:capacity,allocationCents:allocation,remainingCents:remaining,weeklyExtraCents:Math.floor(remaining/5),salaryCents:salary,existingSavingsCents:savings,housingCents:housing,consumptionCents:consumption,restaurantCents:restaurant,protectedRestaurantCents:restaurant-reducibleRestaurant,reductionCents:reduction,baskets,points,warnings,blocked,horizonDays:horizon,challengeCents:challenge,assumptions:['Salary on the 15th, based on the past 12 months.',`Housing on the 2nd at the highest amount in ${recent.label}.`,`Other spending spread daily using ${recent.label} averages.`,'Existing saving transfers on the 20th; their destination is unknown.','Goal, reserves and account coverage are editable demo assumptions.'],evidence:history.filter(t=>t.tx_date>=recent.from).map(t=>t.id)};
+  const warnings=[...(!a.connected?['Source disconnected. Reconnect the synthetic dataset to calculate.']:[]),...(!a.coverageConfirmed?['Confirm other obligations and account coverage before relying on this estimate.']:[]),...(a.stale?['Data marked stale. Refresh or review the source before allocating.']:[]),...(minimum<floor?['The projected balance falls below your protected reserve. Pause extra saving.']:[]),...(a.allocationCents>capacity?['Your requested allocation is above current capacity. The available amount has been reduced.']:[]),...(sweep?['Most of your salary moves on to another account. Spending there is not visible, so this estimate covers this account only.']:[])];
+  return {version:VERSION,asOf:clock.demoDate,dataThrough:clock.historyThrough,recentPeriod:recent.label,accountId:history[0]?.bank_account_id||'',balanceCents:balance,minimumCents:minimum,protectedCents:floor,capacityCents:capacity,allocationCents:allocation,remainingCents:remaining,weeklyExtraCents:Math.floor(remaining/5),salaryCents:salary,existingSavingsCents:savings,salarySweepCents:sweep,housingCents:housing,consumptionCents:consumption,restaurantCents:restaurant,protectedRestaurantCents:restaurant-reducibleRestaurant,reductionCents:reduction,baskets,points,warnings,blocked,horizonDays:horizon,challengeCents:challenge,assumptions:['Salary on the 15th, based on the past 12 months.',`Housing on the 2nd at the highest amount in ${recent.label}.`,`Other spending spread daily using ${recent.label} averages.`,'Existing saving transfers on the 20th; their destination is unknown.','Goal, reserves and account coverage are editable demo assumptions.'],evidence:history.filter(t=>t.tx_date>=recent.from).map(t=>t.id)};
 }
 export type Forecast=ReturnType<typeof forecast>;
 export function evaluateAsp(openedOn:string,deposits:{date:string;amountCents:number}[],asOf=DEMO_DATE) {

@@ -67,20 +67,25 @@ for (const [name, c] of Object.entries(clock.clocks)) {
 }
 lines.push('');
 
-const persona = JSON.parse(readFileSync(join(dataDir, 'persona.json'), 'utf8'));
-lines.push(`insert into public.personas (customer_id, account_id, as_of, source_revision, provenance, statistics, synthetic) values (${[
-	persona.customerId, persona.accountId, persona.asOf, persona.sourceRevision, persona.provenance, persona.statistics, persona.provenance?.synthetic !== false,
-].map(sql).join(', ')});`, '');
-
+const catalogue=JSON.parse(readFileSync(join(dataDir,'personas/catalogue.json'),'utf8'));
+const records=JSON.parse(readFileSync(join(dataDir,'personas/records.json'),'utf8')).personas;
 const txColumns = ['id', 'source_row', 'customer_id', 'bank_account_id', 'tx_date', 'tx_timestamp', 'category', 'tx_amount_eur', 'balance_after_eur', 'transaction_type', 'merchant_id', 'mcc_code', 'amount_cents', 'balance_cents'];
-const txValues = persona.transactions.map((t) => {
-	if (t.customer_id !== persona.customerId) throw new Error(`Transaction ${t.id} belongs to ${t.customer_id}, not ${persona.customerId}.`);
-	if (!Number.isInteger(t.amountCents) || !Number.isInteger(t.balanceCents)) throw new Error(`Transaction ${t.id} has non-integer cents.`);
-	return `(${[t.id, t.sourceRow, t.customer_id, t.bank_account_id, t.tx_date, t.tx_timestamp, t.category, t.tx_amount_eur, t.balance_after_eur, t.transaction_type, t.merchant_id || null, t.mcc_code || null, t.amountCents, t.balanceCents].map(sql).join(', ')})`;
-});
-for (let i = 0; i < txValues.length; i += 200) {
-	lines.push(`insert into public.transactions (${txColumns.join(', ')}) values\n${txValues.slice(i, i + 200).join(',\n')};`);
+const txValues=[];
+const seen=new Set();
+for(const entry of catalogue.personas){
+ const persona=JSON.parse(readFileSync(join(dataDir,entry.id===catalogue.defaultId?'persona.json':`personas/${entry.id}.json`),'utf8'));
+ const record=records[entry.id];
+ if(persona.customerId!==entry.customerId||record.customerId!==entry.customerId||record.rowCount!==persona.transactions.length)throw new Error(`Invalid catalogue metadata for ${entry.id}.`);
+ const provenance={...(persona.provenance??{}),synthetic:true,personaId:entry.id,catalogue:entry,record};
+ lines.push(`insert into public.personas (customer_id, account_id, as_of, source_revision, provenance, statistics, synthetic) values (${[entry.customerId,record.accountId,clock.clocks.current.demoDate,persona.sourceRevision,provenance,persona.statistics??{},true].map(sql).join(', ')});`, '');
+ for(const t of persona.transactions){
+  if(t.customer_id!==entry.customerId||t.bank_account_id!==record.accountId||t.tx_date>clock.clocks.current.historyThrough)throw new Error(`Wrong customer, account or history date in ${entry.id}.`);
+  if(seen.has(t.id)||!Number.isSafeInteger(t.amountCents)||!Number.isSafeInteger(t.balanceCents))throw new Error(`Duplicate row or invalid cents in ${entry.id}.`);
+  seen.add(t.id);
+  txValues.push(`(${[t.id,t.sourceRow,t.customer_id,t.bank_account_id,t.tx_date,t.tx_timestamp,t.category,t.tx_amount_eur,t.balance_after_eur,t.transaction_type,t.merchant_id||null,t.mcc_code||null,t.amountCents,t.balanceCents].map(sql).join(', ')})`);
+ }
 }
+for(let i=0;i<txValues.length;i+=200)lines.push(`insert into public.transactions (${txColumns.join(', ')}) values\n${txValues.slice(i,i+200).join(',\n')};`);
 lines.push('');
 
 const csvCounts = {};
@@ -111,4 +116,4 @@ for (const folder of ['insights', 'overlays']) {
 
 lines.push('', 'commit;', '');
 writeFileSync(args.out, lines.join('\n'));
-console.log(JSON.stringify({ out: args.out, clocks: Object.keys(clock.clocks).length, personas: 1, transactions: txValues.length, csv: csvCounts }, null, 2));
+console.log(JSON.stringify({ out: args.out, clocks: Object.keys(clock.clocks).length, personas: catalogue.personas.length, transactions: txValues.length, csv: csvCounts }, null, 2));

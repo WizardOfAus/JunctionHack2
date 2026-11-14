@@ -40,7 +40,7 @@ test('bigint cents returned as strings stay exact integers',()=>{
 });
 
 test('transactions load across pages',async()=>{
-  const rows=Array.from({length:PAGE_SIZE+5},(_,i)=>({...dbRow(persona.transactions[0]),id:`row-${i}`,source_row:i}));
+  const rows=Array.from({length:PAGE_SIZE+5},(_,i)=>({...dbRow(persona.transactions[0]),id:`row-${i+1}`,source_row:i+1}));
   const {fetcher,calls}=stub(rows);
   const loaded=await fetchPersona(config,'CUST04859',fetcher);
   assert.equal(loaded.transactions.length,PAGE_SIZE+5);
@@ -72,4 +72,13 @@ test('live Supabase data matches app/data/persona.json',{skip:!(process.env.SUPA
   const loaded=await fetchPersona(readConfig(process.env),'CUST04859');
   assert.deepEqual(loaded.transactions,persona.transactions,'Supabase is out of date: run supabase/scripts/build-seed.mjs and load the seed');
   assert.deepEqual(loaded.statistics,persona.statistics);
+});
+
+test('malformed metadata, account scope, cents and JSON fail without exposing secrets',async()=>{
+ const rows=persona.transactions.map(dbRow);
+ await assert.rejects(fetchPersona(config,'CUST04859',stub(rows,{personas:[{...personaRow,customer_id:'CUST00001'}]}).fetcher),/different customer/);
+ await assert.rejects(fetchPersona(config,'CUST04859',stub([{...rows[0],bank_account_id:'ACC000001'}]).fetcher),/different customer or account/);
+ for(const value of ['',null,true,'1.5','Infinity'])assert.throws(()=>toTransaction({...rows[0],amount_cents:value}),DemoDataUnavailableError);
+ await assert.rejects(fetchPersona(config,'CUST04859',async()=>new Response('not-json')),/invalid JSON/);
+ for(const url of ['ftp://x','https://user:password@example.com','https://example.com?key=secret'])assert.throws(()=>readConfig({SUPABASE_URL:url,SUPABASE_PUBLISHABLE_KEY:'test'}),DemoDataUnavailableError);
 });

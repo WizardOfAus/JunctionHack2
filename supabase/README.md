@@ -1,61 +1,64 @@
 # Supabase demo data
 
-The demo data is accessible in the Supabase project at <https://ighxaiiqgtpsgioqwamp.supabase.co> (project ref `ighxaiiqgtpsgioqwamp`). It is a copy of the committed demo data in `app/data`. The app server reads the demo persona and its transactions from Supabase (see [App runtime](#app-runtime)).
+Supabase is an optional runtime copy of the pinned synthetic artifacts in `app/data`. The canonical local review stays usable without credentials or network access.
 
-## App runtime
+## Choose a data source
 
-`app/lib/server-data.ts` loads persona `CUST04859` and its transactions from the `personas` and `transactions` tables through the Supabase REST API, with the publishable key. The finance page, `/api/finance`, `/api/transactions` and `/api/coach` all use it. The server sets the customer; the browser never chooses it. The browser receives calculated results and scoped rows from the API only, as before. The build no longer includes `persona.json`.
-
-Set these server variables. For local development, put them in `app/.dev.vars` (Git ignores it):
+`KOTI_DATA_SOURCE=bundled` is the default. Merely setting Supabase credentials does not switch providers. To opt in, configure ignored server-only `app/.dev.vars`:
 
 ```sh
+KOTI_DATA_SOURCE=supabase
 SUPABASE_URL=https://ighxaiiqgtpsgioqwamp.supabase.co
-SUPABASE_PUBLISHABLE_KEY=sb_publishable_...   # Supabase dashboard > Project Settings > API Keys > Publishable key
+SUPABASE_PUBLISHABLE_KEY=<publishable key>
+# SUPABASE_SECRET_KEY may be used instead, only on the server.
 ```
 
-A hosted preview needs the same two values as server variables. The server uses `SUPABASE_SECRET_KEY` instead if you set it; never put a secret key in browser code or commit it. The app does not send either key to the browser: only the server calls Supabase.
+Restart the server after changing providers or reseeding. Never commit credentials or put secret keys in browser code. No hosted preview is published by this integration.
 
-- The server loads the data once per server process. Restart the dev server after you load a new seed.
-- If the variables are missing or Supabase does not respond, the API routes return HTTP 503 and the page shows "The demo data is not available". The server log tells you the cause.
-- The demo clock (`app/data/demo-clock.json`) is configuration, not customer data. The app and the agent still read it from the file. The `demo_clocks` table is a copy.
-- Unit tests and `app/scripts/evaluate-holdout.mjs` still read `app/data/persona.json`, so `npm test` needs no network. `app/tests/supabase-data.test.mjs` also compares the live Supabase data with `persona.json` when the two variables are set:
+The workspace and all finance, transaction and coach requests use `lib/server-data.ts` through the same allowlisted persona resolver. Browser requests still send catalogue keys, never raw customer identifiers. Unknown keys fail with 400 before any network request. In Supabase mode, missing configuration, unavailable data, an unseeded persona, wrong customer/account, stale clock/revision, missing or changed rows produce 503. There is no silent fallback to another customer or the bundled provider. Failed loads can retry; successful loads cache separately per persona for the process lifetime.
 
-  ```sh
-  cd app && (set -a; . ./.dev.vars; set +a; node --test tests/supabase-data.test.mjs)
-  ```
+The remote copy is checked against the committed audited artifact before use. Both providers produce identical source rows and finance inputs. Bundled transactions remain in the server build to support the default mode and parity checks; no raw persona transaction artifact is imported into client code. Catalogue/application metadata and the demo clock remain versioned server artifacts. The SQL seed also stores the metadata in `personas.provenance` for inspection.
 
-## Which source to use
+## Seed coverage
 
-- **To look at or query the demo data, and for the app runtime:** use the Supabase project.
-- **To process the data for development:** do not use the Supabase copy. Use the source dataset on GitHub, [hackjunction/Junction-2026-S-pankki](https://github.com/hackjunction/Junction-2026-S-pankki), at the pinned revision `fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f`. Follow [the data audit](../docs/data-audit.md) to download the real Git LFS payload, check it and run the importers. The importers and `app/scripts/build-overlays.py` write `app/data`. Then make the seed again (see below) so that Supabase agrees with `app/data`.
+The generator now includes all eight catalogue personas and 4,607 transactions. It copies original values, integer cents, source rows, the catalogue and application records, plus the existing insights/overlays. It validates customer/account ownership, row counts and history cutoff before writing SQL.
 
-Supabase holds one audited customer, the aggregate insight tables and the public-data overlays. It does not hold the full source, so new personas, audits, EDA and importer changes must start from the GitHub source.
+| Table | Generated contents |
+| --- | --- |
+| `demo_clocks` | Current and backtest clocks |
+| `personas` | Eight allowlisted customers; catalogue/application metadata in provenance |
+| `transactions` | 4,607 audited source rows |
+| `csv_datasets`, `csv_rows` | Existing aggregate insights and public overlays |
 
-| Table | Source | Rows |
-| --- | --- | --- |
-| `demo_clocks` | `app/data/demo-clock.json` | 2 (`current`, `backtest`) |
-| `personas` | `app/data/persona.json` (provenance and statistics) | 1 (`CUST04859`) |
-| `transactions` | `app/data/persona.json` transactions | 719 |
-| `csv_datasets`, `csv_rows` | `app/data/insights/*.csv` | 8 datasets, 111 rows |
-| `csv_datasets`, `csv_rows` | `app/data/overlays/*.csv` | 4 datasets, 1,336 rows |
+The original PR reported that the hosted project contained only the reference customer's 719 transactions. **This integration generates the complete seed but does not apply it to the hosted database. Load and verify the eight-persona seed before enabling Supabase for team review.** The full 3.6-million-row upstream source is not part of this runtime copy.
 
-Transactions keep the original source text (`tx_amount_eur`, `tx_timestamp`, …) and the integer cent values (`amount_cents`, `balance_cents`). CSV rows are JSON objects in `csv_rows.data`; `csv_datasets.folder` is `insights` or `overlays`. Numeric cells are JSON numbers. Columns named `*_code` or `*_id`, and values with a leading zero (postal codes such as `00100`), stay text. Blank cells are `null`. Blank CSV headers are named `metric` (first column) or `quantile` (`benchmarks_by_age`).
+## Generate and inspect
 
-The overlay rows are public data assigned to synthetic IDs. They keep their `label`, `licence` and source columns. Follow [the overlay README](../app/data/overlays/README.md) for the licence terms (`merchants.csv` is ODbL 1.0) and show the `label` text with any name or value from them.
-
-Row level security is on for all tables. `20261114180000_koti_demo_data_public_read.sql` adds one read-only policy per table for the `anon` and `authenticated` roles, so the publishable key can read the demo data. The key cannot insert, update or delete: those privileges are revoked and there are no write policies. This is acceptable because the data is synthetic and its source is public on GitHub. Anyone with the publishable key can read these tables, so do not add real or private data to them. The app still calls Supabase from the server only and chooses the customer there.
-
-The full 3.6 million-row source dataset (`agent/data/koti.db`) is not in Supabase. It is larger than the free plan's 500 MB database limit.
-
-## Update the data
-
-From the repository root, with the Supabase CLI logged in and linked to the project:
+From the repository root:
 
 ```sh
-node supabase/scripts/build-seed.mjs        # writes supabase/seed.sql (ignored by Git)
-supabase db query --linked -f supabase/migrations/20261114120000_koti_demo_data.sql
-supabase db query --linked -f supabase/migrations/20261114180000_koti_demo_data_public_read.sql
-supabase db query --linked -f supabase/seed.sql
+node supabase/scripts/build-seed.mjs
 ```
 
-The migration uses `create table if not exists`. The seed deletes and inserts all demo rows in one transaction, so you can run it again after `app/data` changes.
+This writes ignored `supabase/seed.sql` and reports counts. Generation does not contact Supabase. The seed replaces the named demo tables inside one transaction; inspect its destination and contents before applying it through your established database workflow. The migration files are idempotent SQL; the original project was provisioned using direct SQL, so do not assume Supabase migration-history records are populated.
+
+RLS is enabled. The public-read migration permits `anon` and `authenticated` SELECT on these synthetic demo tables and revokes mutation privileges. Anyone with the publishable key can read this public synthetic data; never add private customer data to these tables. This change does not apply migrations or expand hosted permissions.
+
+## Verify
+
+`npm test` in `app/` checks provider selection, all-eight-persona transport and finance parity, cache isolation, retry/failure behavior, stale/mixed data rejection and seed coverage. These tests need no network. A separate live reference-parity test runs only when Supabase environment variables are supplied; absence is reported as a skip.
+
+After reseeding and configuring an isolated Supabase preview, run:
+
+```sh
+cd app
+npm run test:api -- http://127.0.0.1:<preview-port>
+```
+
+That API suite checks all eight personas, scoped evidence, unknown IDs, shared coach context and readiness outputs. Keep `KOTI_DATA_SOURCE=bundled` on the canonical5174 review until the remote eight-persona check passes.
+
+## Source and licences
+
+Development processing uses the pinned [Junction source](https://github.com/hackjunction/Junction-2026-S-pankki/tree/fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f), not the Supabase copy. See [data audit](../docs/data-audit.md) for LFS/import steps. Rebuild and reseed after changing audited artifacts.
+
+CSV codes/IDs and leading-zero postal codes stay text. Numeric cells become numbers; blanks become null. Overlay labels, sources and licences are preserved; see [overlay provenance](../app/data/overlays/README.md), including ODbL attribution for merchants.

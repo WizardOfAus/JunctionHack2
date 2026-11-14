@@ -32,11 +32,11 @@ The pinned upstream Git object contains `oid sha256:49b3265d8e44e751de305a074dcf
 
 The original September backtest subset was rechecked: 698 rows, only CUST04859, latest date 31 August 2026. This verifies use of the actual source payload, while the runtime intentionally uses only one customer's history. Additional personas require separate extraction, audits and a server-scoped catalogue; they are not enabled by the current app.
 
-## Supabase copy (added 14 November 2026)
+## Supabase copy (updated 15 November 2026)
 
-The committed demo data (`app/data/demo-clock.json`, `app/data/persona.json`, `app/data/insights/*.csv` and `app/data/overlays/*.csv`) is accessible in the Supabase project at <https://ighxaiiqgtpsgioqwamp.supabase.co>. The tables, row counts, access rules and update steps are in [`supabase/README.md`](../supabase/README.md). The app server reads the demo persona and its transactions from Supabase. `app/data/persona.json` stays the audited source for the seed and for the unit tests.
+The bundled audited artifacts remain the default runtime source. PR #18 adds an explicit `KOTI_DATA_SOURCE=supabase` option through the same allowlisted resolver. The seed generator copies all eight personas (4,607 transactions), catalogue/application metadata, clocks, insights and overlays. See [provider, seeding and verification instructions](../supabase/README.md).
 
-Use the Supabase copy to look at or query the demo data, and for the app runtime. To process the data for development, use the pinned GitHub source, [hackjunction/Junction-2026-S-pankki](https://github.com/hackjunction/Junction-2026-S-pankki) at revision `fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f`, with the steps above. The Supabase copy is a derived artifact: it holds one customer, not the full 3,626,755-row source. After the importers change `app/data`, make the seed again and load it.
+The hosted project originally held only the reference customer. The full seed must be loaded before enabling the remote provider; this integration does not mutate the hosted database. Remote rows must match the pinned revision, clock, account and audited artifact. Missing or changed rows fail closed. Development processing still starts from the pinned GitHub/LFS source.
 
 ## Demo clock (updated 14 November 2026)
 
@@ -55,6 +55,24 @@ The team moved the demo clock to **1 October 2026** with history through **30 Se
 The current figures were reproduced independently with DuckDB from the raw CSV. The backtest column is the original audit below and must keep reproducing exactly. `npm run evaluate:holdout` now runs the backtest: it forecasts from history through 31 August and compares with the recorded September balances (mean absolute daily balance error €742.79, no protected-floor breaches). There is no separate `work/holdout.json` any more.
 
 The sections below describe the original 1 September audit, which is now the backtest.
+
+## Demo personas
+
+`app/data/personas/catalogue.json` allowlists eight personas by stable key (`reference` = CUST04859 is the default). The importer extracts each persona's rows through the current clock into `app/data/personas/<id>.json` (`reference` keeps `app/data/persona.json`), and writes `records.json` with:
+- the recorded age and postcode;
+- the Paavo area name from `data/overlays/postal_areas.csv`;
+- the mortgage application record, where one exists.
+
+Rows keep every original field, as described above. Mortgage events after the clock's last history day are dropped at import, and the backtest clock hides events after 31 August at runtime (`lib/personas/view.ts`).
+
+The importer also needs the three small upstream files in `app/work/upstream/`:
+
+```sh
+mkdir -p work/upstream && for f in tx_customers_junction.csv mtg_negotiation_history.csv mtg_tx_customer_link_and_final_mtg_infio.csv; do
+  curl -fL "https://raw.githubusercontent.com/hackjunction/Junction-2026-S-pankki/fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f/$f" -o "work/upstream/$f"; done
+```
+
+Requests name a persona with an optional top-level `personaId`; unknown keys return 400 and never fall back. Mortgage data is shown as an **application record**. The required-income figure is a dataset calculation (a 6%, 25-year annuity payment divided by 0.35), not a lending rule or an approval prediction.
 
 ## Acceptance targets
 
