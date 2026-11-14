@@ -116,3 +116,28 @@ describe('projectGoal', () => {
 		assert.throws(() => projectGoal(base({ rows })), /Future data must not enter/);
 	});
 });
+
+describe('goal allocation regressions',()=>{
+  it('rejects duplicate and category-plus-MCC cuts in either order',()=>{
+    const category={type:'changeSpending' as const,category:'Restaurants' as const,percentChange:-100};
+    const cafe={...category,mcc:'5814'};
+    for(const changes of [[category,category],[category,cafe],[cafe,category],[cafe,cafe]]) {
+      assert.throws(()=>projectGoal(base({changes})),/must not overlap/);
+    }
+  });
+  it('allows distinct MCC cuts and agrees with the forecast total effect',()=>{
+    const changes=[{type:'changeSpending' as const,category:'Restaurants' as const,mcc:'5814',percentChange:-100},{type:'changeSpending' as const,category:'Restaurants' as const,mcc:'5812',percentChange:-100}];
+    const g=projectGoal(base({changes}));
+    const f=forecastCashflow({customerId:'TEST',asOf:'2026-09-01',rows:makeRows(),floorCents:0,runs:100,changes});
+    assert.equal(g.difference!.monthlySaving.cents,-f.difference!.spendingChanges.reduce((n,c)=>n+c.monthlySpendChange.cents,0));
+  });
+  it('warns about unaffordable explicit and inferred baseline saving without a scenario',()=>{
+    for(const input of [base({monthlySavingCents:1_000_000}),base({rows:makeRows({saving:1_000_000})})]) {
+      const g=projectGoal(input);
+      assert.match(g.warnings.join(' '),/baseline saves.*more than the usual monthly surplus/);
+    }
+  });
+  it('rejects multiple replacements of the same salary',()=>{
+    assert.throws(()=>projectGoal(base({changes:[{type:'changeIncome',percentChange:5},{type:'changeIncome',percentChange:10}]})),/only one changeIncome/);
+  });
+});

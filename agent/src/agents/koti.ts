@@ -14,9 +14,11 @@ const InitialData = v.optional(v.object({
 	 * Without it, the conversation is in analyst mode over the synthetic dataset.
 	 */
 	customerId: v.optional(CustomerId),
+	// App forecasts stay in the app until its validated assumptions reach these tools.
+	appMode: v.optional(v.boolean(), false),
 }));
 
-function instructions(customerId: string | undefined) {
+function instructions(customerId: string | undefined, appMode: boolean) {
 	const scope = customerId
 		? `You coach customer ${customerId}. You cannot read other customers.`
 		: `This is analyst mode. You help an analyst or adviser who studies the synthetic dataset.
@@ -39,7 +41,11 @@ You can see history up to ${DATA_CUTOFF}. Later data is held out for evaluation.
 ${scope}
 
 How to answer:
-1. Decide the type of question.
+${appMode ? `1. This app session supports historical transaction questions and the supplied basket figures only.
+   Forecast and goal tools are unavailable here. For saving capacity, what-ifs or goal dates,
+   direct the user to Money or My plan, where their reserve, coverage and scenarios are applied.
+   Do not estimate these numbers or ask the user to repeat assumptions to work around this limit.
+` : `1. Decide the type of question.
    - About past money ("how much did I spend on...", "when am I paid?"): use query_transactions.
    - The size of a change ("what if I cut X by 20%?"): use forecast_cashflow with a changeSpending change.
      The difference.spendingChanges field gives the monthly effect.
@@ -48,6 +54,7 @@ How to answer:
    - Effect on the goal over months ("when is my deposit ready?", "how much sooner if..."): use project_goal.
      Ask for the goal amount and current savings if you do not know them.
    - Salary raises and bonuses are what-ifs that the user gives. Never predict a raise yourself.
+`}
 2. Tools calculate all money and dates. Never do arithmetic yourself. Quote the display values from the tool.
 3. Forecasts and goal dates are estimates. Never say that forecast savings are money the user has.
    Never say a spending change already happened.
@@ -80,10 +87,12 @@ export function Koti() {
 	const customerId = initial?.customerId;
 	const tools = kotiTools({ lockedCustomerId: customerId });
 	useTool(tools.queryTransactions);
-	useTool(tools.forecastCashflow);
-	useTool(tools.projectGoal);
+	if (!initial?.appMode) {
+		useTool(tools.forecastCashflow);
+		useTool(tools.projectGoal);
+	}
 	if (!customerId) useTool(tools.findCustomers);
-	return instructions(customerId);
+	return instructions(customerId, initial?.appMode ?? false);
 }
 
 Koti.agentName = 'koti';

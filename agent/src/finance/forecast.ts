@@ -437,8 +437,9 @@ export function forecastCashflow(input: ForecastInput): ForecastResult {
 	for (let r = 0; r < runs; r++) {
 		let balB = startCents;
 		let balS = startCents;
-		let minB = Infinity;
-		let minS = Infinity;
+		// Immediate saving capacity must include cash held before predicted income.
+		let minB = startCents;
+		let minS = startCents;
 		let dayB = 0;
 		let dayS = 0;
 		for (let w = 0; w < weeksAhead; w++) {

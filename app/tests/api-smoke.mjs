@@ -8,6 +8,7 @@ const allocated=await post('/api/finance',{...defaults,allocationCents:5000});
 assert.equal(base.forecast.remainingCents-allocated.forecast.remainingCents,5000);
 const coach=await post('/api/coach',{question:'What if I spent 20% less eating out?',assumptions:defaults});
 assert.ok(coach.text.includes('€22.86'));assert.equal(coach.mode,'demo');assert.ok(coach.evidence.length);
+await post('/api/coach',{question:'Continue',assumptions:defaults,conversationId:'analyst-demo'},400);
 const custom=await post('/api/coach',{question:'Restaurants in July, 40% less',assumptions:defaults});assert.equal(custom.reductionPercent,40);assert.equal(custom.from,'2026-07-01');
 const taxi=await post('/api/coach',{question:'Taxi spending in August',assumptions:defaults});assert.ok(taxi.text.includes('€50.47'));
 const rows=await post('/api/transactions',{query:{from:'2026-08-01',to:'2026-08-31',category:'Restaurants'},assumptions:defaults});

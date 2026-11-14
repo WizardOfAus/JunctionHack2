@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {basketOf,defaults,euro,forecast,historyOnly,isConsumption} from '../lib/finance.ts';
+import {basketOf,basketProfile,defaults,euro,forecast,historyOnly,isConsumption} from '../lib/finance.ts';
 import {basketContext,basketNames} from '../lib/coach/context.ts';
 
 const rows=historyOnly(JSON.parse(readFileSync(new URL('../data/persona.json',import.meta.url),'utf8')).transactions);
@@ -9,7 +9,7 @@ const rows=historyOnly(JSON.parse(readFileSync(new URL('../data/persona.json',im
 // Same row selection as the coach route (app/api/coach/route.ts) and forecast().
 function coachContext(a){
   const window=rows.filter(t=>t.tx_date>='2026-06-01'&&isConsumption(t));
-  const basketRows=window.map(t=>({category:t.category,basket:basketOf(t,a.corrections),spentCents:-t.amountCents}));
+  const basketRows=window.map(t=>({category:t.category,basket:basketOf(t,a.corrections,basketProfile(rows)),spentCents:-t.amountCents}));
   const totals=forecast(rows,a).baskets;
   return {basketRows,totals,text:basketContext(basketRows,totals,{months:3,period:'June–August 2026',corrections:Object.keys(a.corrections).length,format:c=>euro(c)})};
 }

@@ -169,3 +169,23 @@ describe('forecastCashflow', () => {
 		for (let i = 1; i < risks.length; i++) assert.ok(risks[i] >= risks[i - 1], `risks ${risks}`);
 	});
 });
+
+describe('opening liquidity regression', () => {
+  function paydayRows(closingCents: number) {
+    const rows = makeRows().map(r => ({ ...r, date: r.type === 'salary' ? `${r.date.slice(0,7)}-01` : r.date }));
+    rows.sort((a,b)=>a.date.localeCompare(b.date)||a.seq-b.seq);
+    let balance = closingCents - rows.reduce((n,r)=>n+r.amountCents,0);
+    return rows.map((r,i)=>({ ...r, seq:i+1, balanceAfterCents:balance+=r.amountCents }));
+  }
+  it('does not allocate day-one predicted salary before it arrives',()=>{
+    const f=forecastCashflow(base({rows:paydayRows(100_000)}));
+    assert.equal(f.baseline.safeToSetAside.cents,0);
+    assert.ok(f.baseline.lowestBalanceP10.cents<=f.startBalance.cents);
+  });
+  it('counts an opening reserve breach even when day-one income repairs it',()=>{
+    const f=forecastCashflow(base({rows:paydayRows(90_000),changes:[{type:'addIncome',label:'Bonus',date:'2026-09-01',amountCents:300_000}]}));
+    assert.equal(f.baseline.breachRisk,1);
+    assert.equal(f.scenario!.breachRisk,1);
+    assert.equal(f.scenario!.safeToSetAside.cents,0);
+  });
+});

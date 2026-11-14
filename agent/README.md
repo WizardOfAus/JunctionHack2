@@ -55,6 +55,12 @@ The raw CSVs and the database are in `data/`, which Git ignores.
 takes more than 60 seconds, the route returns HTTP 502. Without `KOTI_AGENT_URL`, the route keeps
 the deterministic demo answers (`mode: "demo"`).
 
+### App bridge boundaries
+
+App questions are stateless: the server creates a fresh conversation and sends `uid: null`, so an existing analyst/other-customer instance is never resumed. Browser-supplied `conversationId` is rejected. A server-owned session binding is required before adding conversation continuity.
+
+The bridge sets `appMode: true`. These sessions expose historical queries and app-calculated basket explanations only. Monte Carlo and goal tools remain available when using the agent directly, but are not registered for app sessions until a validated contract carries coverage, reserves, existing allocations and scenarios. Use Money / My plan for the app's projections. This avoids substituting an unrelated six-month forecast for the app's current calculation. The live coach mode label/evidence UI is still an integration follow-up.
+
 ## Talk to the agent directly
 
 ```sh
