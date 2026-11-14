@@ -58,7 +58,7 @@ the deterministic demo answers (`mode: "demo"`).
 ## Talk to the agent directly
 
 ```sh
-# Any customer (research mode)
+# Analyst mode: an analyst or adviser studies one synthetic customer at a time
 npx flue run src/agents/koti.ts -m "How much did CUST04859 spend on taxis in August 2026?"
 
 # One customer only (coaching mode): the tools refuse other customers
@@ -82,15 +82,21 @@ Server: `npm run dev`, then `POST /agents/koti/<conversation-id>` (see `src/app.
 | `query_transactions` | Questions about the past | Filters: dates, categories, types, MCC, merchant, direction, amount. Group by category, type, month, week, weekday, MCC or merchant. Every row has a `row:<line>` reference to the source CSV. |
 | `forecast_cashflow` | "Is it safe this month?", "What if...?" | 35-day Monte Carlo forecast. Changes: `changeSpending`, `addExpense`, `moveToSavings`, `delayIncome`, `changeIncome` (percent or new monthly amount), `addIncome` (one-off). Returns risk, P10 lowest balance, tightest day, safe amount, and the difference from the baseline. |
 | `project_goal` | "When is my deposit ready?", "How much sooner if...?" | Month-by-month arithmetic to a savings goal. Default monthly saving = median of the existing saving transfers in the last 6 months (the same window as the forecast). Changes: `changeSpending`, `changeIncome` (with `toGoalPercent`), `addMonthlySaving`, `oneOffDeposit`. Warns when a plan saves more than the usual monthly surplus. |
-| `find_customers` | Research across customers | Only in research mode (no `customerId` in `initialData`). |
+| `find_customers` | Pick synthetic customers to study | Analyst mode only (no `customerId` in `initialData`). Not for browsing customers. |
 
 ## Data rules
 
 - The agent sees history up to `2026-08-31` (`KOTI_DATA_CUTOFF`). The demo clock is `2026-09-01`.
   September 2026 is held out for evaluation. The store enforces this on every query, and the
   forecast and goal engines reject any row on or after the demo clock.
-- Without `customerId` in `initialData`, the agent can read any synthetic customer.
-  With it, the conversation is locked to that customer. The app always sends it.
+- Without `customerId` in `initialData`, the conversation is in analyst mode: an analyst or adviser
+  studies synthetic customers, one at a time. This is not a pattern for real customers. A real bank
+  needs consented, scoped, expiring and audited adviser access, and aggregates-only analyst views
+  (see [data insights](../docs/data-insights.md#advisor-and-analyst-views)).
+- With `customerId`, the conversation is locked to that customer (coaching mode). The app always sends it.
+- Basket figures are not calculated here. The app sends them with each question in a
+  `<koti_app_context>` block, calculated by `app/lib/finance.ts` with the user's basket changes.
+  Do not add basket rules to the agent. `forecast_cashflow` and `project_goal` do not use baskets.
 - All SQL is fixed and parameterised. The model selects filter values, never SQL.
 
 ## Forecast method (`src/finance/forecast.ts`)

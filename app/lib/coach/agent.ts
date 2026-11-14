@@ -29,8 +29,10 @@ export class AgentUnavailableError extends Error {}
 /**
  * Sends one question to the agent and waits for its reply.
  * The server sets the customer scope. The browser never chooses it.
+ * `appContext` is text that the app server calculates (see context.ts). It goes after the question
+ * in a <koti_app_context> block, so the agent can tell it apart from the user's words.
  */
-export async function askAgent(config: AgentConfig, input: { conversationId: string; customerId: string; question: string }) {
+export async function askAgent(config: AgentConfig, input: { conversationId: string; customerId: string; question: string; appContext?: string }) {
   const conversation = createFlueClient({
     url: `${config.url}/${encodeURIComponent(input.conversationId)}`,
     token: config.token,
@@ -38,7 +40,10 @@ export async function askAgent(config: AgentConfig, input: { conversationId: str
   const signal = AbortSignal.timeout(REPLY_TIMEOUT_MS);
   try {
     const admission = await conversation.send({
-      message: { kind: 'user', body: input.question },
+      message: {
+        kind: 'user',
+        body: input.appContext ? `${input.question}\n\n<koti_app_context>\n${input.appContext}\n</koti_app_context>` : input.question,
+      },
       // Used only when this message creates the conversation. It locks the tools to one customer.
       initialData: { customerId: input.customerId },
       signal,

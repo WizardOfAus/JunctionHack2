@@ -20,6 +20,8 @@ Read the repository `AGENTS.md` first. Setup and environment variables are in `R
 - Money is integer cents. Tools calculate; the model never does arithmetic.
 - Never let data after `KOTI_DATA_CUTOFF` (default 2026-08-31) reach the agent, the forecast or the goal projection.
 - No arbitrary SQL. Add new filters or groupings as fixed, parameterised SQL.
+- Basket rules live only in `app/lib/finance.ts`. The app sends basket figures with each question; never copy the rules here.
+- Without `customerId` the agent is in analyst mode over synthetic data only.
 - Never commit `.env` or keys. Add new variables to `.env.example` and `README.md`.
 
 ## Commands

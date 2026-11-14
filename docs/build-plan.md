@@ -154,7 +154,10 @@ All tools:
 - Tools in this version: `query_transactions`, `forecast_cashflow` and `project_goal`. Next: the
   other suggested tools above, when each one is ready.
 - All tools means all tools for one customer. The server sets the customer; the agent and the
-  browser cannot change it. `find_customers` is for research mode only, not for the coach chat.
+  browser cannot change it. `find_customers` is for analyst mode only (synthetic data,
+  see [data insights](data-insights.md#advisor-and-analyst-views)), not for the coach chat.
+- Basket figures come from the app (`app/lib/finance.ts`) with each question. The agent explains
+  them and has no copy of the basket rules, so the coach and the screens agree.
 
 Purpose:
 - Help the user save as much money as possible, without risk to everyday life. Find the largest

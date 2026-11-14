@@ -1,0 +1,79 @@
+.overview { min-width:0; }
+.money { background:white; border:1px solid var(--line); border-radius:16px; padding:28px 30px; }
+.sectionTop { display:flex; justify-content:space-between; gap:16px; align-items:center; }
+.sectionTop h2 { font-size:19px; }
+.sectionTop>span { color:var(--muted); font-size:12px; text-align:right; }
+.room { display:flex; align-items:center; gap:25px; padding:28px 0; border-bottom:1px solid var(--line); margin-bottom:26px; }
+.room>div { flex:1; min-width:0; }
+.room>div>span { font-size:13px; color:var(--muted); }
+.room strong { font-size:clamp(32px,3.8vw,49px); line-height:1.2; letter-spacing:-.035em; display:block; margin-top:9px; font-variant-numeric:tabular-nums; }
+.room>p { max-width:28ch; font-size:14px; flex:1; color:var(--muted); }
+.bridge { display:grid; gap:18px; }
+.rowLabel { display:flex; justify-content:space-between; gap:16px; font-size:14px; margin-bottom:7px; }
+.rowLabel strong { font-variant-numeric:tabular-nums; }
+.track { height:9px; background:var(--paper); border-radius:3px; overflow:hidden; }
+.track>span { display:block; height:100%; border-radius:3px; }
+.balance { background:var(--forest); }
+.forecast { background:var(--green); }
+.protected { background:var(--lilac); border:1px solid #b3a3c6; }
+.bridgeRow>p { margin-top:5px; font-size:12px; color:var(--muted); }
+.moneyAction { margin-top:27px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+.moneyAction>p { font-size:13px; }
+.moneyAction>p>span { color:var(--muted); font-size:12px; }
+.pause { display:flex; gap:12px; margin-top:24px; padding:18px; background:var(--peach); border-radius:12px; }
+.pause p { font-size:13px; margin-top:5px; }
+.allocation { margin-top:16px; font-size:13px; }
+.lessonInvite { width:100%; display:flex; text-align:left; align-items:center; gap:23px; border:0; border-radius:16px; background:var(--lime); padding:25px 28px; margin-top:24px; }
+.lessonInvite:hover { background:#cce88c; }
+.lessonDrawing { display:grid; grid-template-columns:repeat(4,1fr); gap:3px; width:76px; height:76px; flex-shrink:0; }
+.lessonDrawing i { border-radius:3px; }
+.cellBills { background:var(--forest); }
+.cellReserve { background:#89709f; }
+.cellRoom { background:white; border:1px solid var(--forest); }
+.inviteCopy { flex:1; display:grid; gap:5px; }
+.inviteCopy>span { font-size:13px; }
+.inviteCopy>span:nth-child(2) { font-size:12px; }
+.inviteCopy strong { font-size:19px; line-height:1.35; }
+.spending { margin-top:38px; }
+.basketBar { display:flex; gap:4px; height:8px; overflow:hidden; border-radius:4px; margin:22px 0 8px; }
+.regular { background:var(--mint); }
+.basketBar>.regular { background:var(--green); }
+.irregular { background:var(--peach); }
+.flexible { background:var(--lilac); }
+.basket { padding:18px 0; display:flex; gap:13px; align-items:center; width:100%; background:none; border:0; border-bottom:1px solid var(--line); text-align:left; }
+.basket:hover { background:var(--mint); }
+.basketIcon { width:42px; height:42px; display:grid; place-items:center; border-radius:12px; flex-shrink:0; }
+.basketCopy { flex:1; }
+.basketCopy strong { font-size:14px; display:block; }
+.basketCopy>span { font-size:12px; color:var(--muted); }
+.amount { font-size:16px; white-space:nowrap; font-variant-numeric:tabular-nums; }
+.sourceNote { font-size:13px; color:var(--muted); margin-top:16px; }
+.bottomNote { display:flex; gap:10px; color:var(--muted); font-size:12px; margin-top:28px; }
+@media(max-width:740px) {
+ .money { padding:23px 20px; }
+ .sectionTop { align-items:flex-start; flex-wrap:wrap; gap:8px; }
+ .sectionTop h2 { font-size:18px; }
+ .sectionTop .text-button { min-height:30px; }
+ .room { display:block; padding:22px 0; }
+ .room strong { font-size:45px; }
+ .room>p { max-width:35ch; margin-top:17px; }
+ .rowLabel { font-size:13px; }
+ .bridgeRow>p { font-size:12px; }
+ .moneyAction { flex-direction:column; align-items:stretch; }
+ .moneyAction>p { font-size:13px; }
+ .moneyAction .button { justify-content:space-between; }
+ .lessonInvite { gap:14px; padding:23px 19px; align-items:flex-start; position:relative; }
+ .lessonDrawing { width:43px; height:43px; margin-top:4px; gap:2px; }
+ .lessonInvite>svg { width:19px; position:absolute; bottom:20px; right:17px; }
+ .inviteCopy { padding-right:4px; }
+ .inviteCopy strong { font-size:19px; }
+ .inviteCopy>span:last-child { padding-right:20px; }
+ .basket { gap:10px; }
+ .basketIcon { width:34px; height:38px; border-radius:8px; }
+ .basketIcon svg { width:19px; }
+ .basketCopy strong { font-size:13px; }
+ .basketCopy>span { display:block; font-size:12px; }
+ .amount { font-size:14px; }
+ .spending .sectionTop { display:block; }
+ .spending .sectionTop>span { display:block; text-align:left; margin-top:7px; }
+}
