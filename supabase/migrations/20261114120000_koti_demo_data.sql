@@ -2,9 +2,10 @@
 -- The JSON and CSV files in app/data stay the source of truth.
 -- supabase/scripts/build-seed.mjs makes supabase/seed.sql from them.
 --
--- Row level security is on and there are no policies, so the anon and
--- authenticated keys cannot read these tables. Read them on the server only
--- (secret / service role key), so customer scope stays server-controlled.
+-- Row level security is on. This migration adds no policies; the next one
+-- (20261114180000_koti_demo_data_public_read.sql) allows read-only access for
+-- the publishable key. The app reads the tables on the server only, so the
+-- server keeps control of customer scope.
 
 create table if not exists public.demo_clocks (
   name text primary key check (name in ('current', 'backtest')),

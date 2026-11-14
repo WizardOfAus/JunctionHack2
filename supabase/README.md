@@ -4,16 +4,16 @@ The demo data is accessible in the Supabase project at <https://ighxaiiqgtpsgioq
 
 ## App runtime
 
-`app/lib/server-data.ts` loads persona `CUST04859` and its transactions from the `personas` and `transactions` tables through the Supabase REST API, with the secret key. The finance page, `/api/finance`, `/api/transactions` and `/api/coach` all use it. The server sets the customer; the browser never chooses it. The browser receives calculated results and scoped rows from the API only, as before. The build no longer includes `persona.json`.
+`app/lib/server-data.ts` loads persona `CUST04859` and its transactions from the `personas` and `transactions` tables through the Supabase REST API, with the publishable key. The finance page, `/api/finance`, `/api/transactions` and `/api/coach` all use it. The server sets the customer; the browser never chooses it. The browser receives calculated results and scoped rows from the API only, as before. The build no longer includes `persona.json`.
 
 Set these server variables. For local development, put them in `app/.dev.vars` (Git ignores it):
 
 ```sh
 SUPABASE_URL=https://ighxaiiqgtpsgioqwamp.supabase.co
-SUPABASE_SECRET_KEY=sb_secret_...   # Supabase dashboard > Project Settings > API Keys > Secret keys
+SUPABASE_PUBLISHABLE_KEY=sb_publishable_...   # Supabase dashboard > Project Settings > API Keys > Publishable key
 ```
 
-Never put the secret key in browser code or commit it. A hosted preview needs the same two values as server secrets.
+A hosted preview needs the same two values as server variables. The server uses `SUPABASE_SECRET_KEY` instead if you set it; never put a secret key in browser code or commit it. The app does not send either key to the browser: only the server calls Supabase.
 
 - The server loads the data once per server process. Restart the dev server after you load a new seed.
 - If the variables are missing or Supabase does not respond, the API routes return HTTP 503 and the page shows "The demo data is not available". The server log tells you the cause.
@@ -43,7 +43,7 @@ Transactions keep the original source text (`tx_amount_eur`, `tx_timestamp`, …
 
 The overlay rows are public data assigned to synthetic IDs. They keep their `label`, `licence` and source columns. Follow [the overlay README](../app/data/overlays/README.md) for the licence terms (`merchants.csv` is ODbL 1.0) and show the `label` text with any name or value from them.
 
-Row level security is on for all tables, with no policies. The publishable/anon key cannot read them. Use the secret (service role) key on the server only, so customer scope stays server-controlled. Do not commit keys.
+Row level security is on for all tables. `20261114180000_koti_demo_data_public_read.sql` adds one read-only policy per table for the `anon` and `authenticated` roles, so the publishable key can read the demo data. The key cannot insert, update or delete: those privileges are revoked and there are no write policies. This is acceptable because the data is synthetic and its source is public on GitHub. Anyone with the publishable key can read these tables, so do not add real or private data to them. The app still calls Supabase from the server only and chooses the customer there.
 
 The full 3.6 million-row source dataset (`agent/data/koti.db`) is not in Supabase. It is larger than the free plan's 500 MB database limit.
 
@@ -54,6 +54,7 @@ From the repository root, with the Supabase CLI logged in and linked to the proj
 ```sh
 node supabase/scripts/build-seed.mjs        # writes supabase/seed.sql (ignored by Git)
 supabase db query --linked -f supabase/migrations/20261114120000_koti_demo_data.sql
+supabase db query --linked -f supabase/migrations/20261114180000_koti_demo_data_public_read.sql
 supabase db query --linked -f supabase/seed.sql
 ```
 

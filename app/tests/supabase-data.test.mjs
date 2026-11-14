@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 import {fetchPersona,readConfig,toTransaction,DemoDataUnavailableError,PAGE_SIZE} from '../lib/supabase-data.ts';
 
 const persona=JSON.parse(readFileSync(new URL('../data/persona.json',import.meta.url),'utf8'));
-const config={url:'https://example.supabase.co',secretKey:'sb_secret_test'};
+const config={url:'https://example.supabase.co',apiKey:'sb_publishable_test'};
 
 // The same row shape that supabase/scripts/build-seed.mjs writes: blank codes become null.
 const dbRow=t=>({id:t.id,source_row:t.sourceRow,customer_id:t.customer_id,bank_account_id:t.bank_account_id,tx_date:t.tx_date,tx_timestamp:t.tx_timestamp,category:t.category,tx_amount_eur:t.tx_amount_eur,balance_after_eur:t.balance_after_eur,transaction_type:t.transaction_type,merchant_id:t.merchant_id||null,mcc_code:t.mcc_code||null,amount_cents:t.amountCents,balance_cents:t.balanceCents});
@@ -29,7 +29,7 @@ test('Supabase rows convert back to the exact persona.json transactions',async()
   assert.deepEqual(loaded.transactions,persona.transactions);
   assert.deepEqual(loaded.statistics,persona.statistics);
   assert.equal(loaded.accountId,'ACC004859');
-  assert.ok(calls.every(c=>c.headers.apikey==='sb_secret_test'&&!c.headers.Authorization),'secret keys use the apikey header only');
+  assert.ok(calls.every(c=>c.headers.apikey==='sb_publishable_test'&&!c.headers.Authorization),'sb_ keys use the apikey header only');
   assert.ok(calls.every(c=>c.url.includes('customer_id=eq.CUST04859')),'every request is scoped to the server-chosen customer');
 });
 
@@ -47,15 +47,17 @@ test('transactions load across pages',async()=>{
   assert.equal(calls.filter(c=>c.url.includes('/transactions')).length,2);
 });
 
-test('legacy service_role JWTs also send a Bearer header',async()=>{
+test('legacy JWT keys also send a Bearer header',async()=>{
   const {fetcher,calls}=stub(persona.transactions.map(dbRow));
-  await fetchPersona({...config,secretKey:'eyJlegacy'},'CUST04859',fetcher);
+  await fetchPersona({...config,apiKey:'eyJlegacy'},'CUST04859',fetcher);
   assert.ok(calls.every(c=>c.headers.Authorization==='Bearer eyJlegacy'));
 });
 
 test('missing configuration, errors and wrong scope fail closed',async()=>{
   assert.throws(()=>readConfig({}),DemoDataUnavailableError);
-  assert.deepEqual(readConfig({SUPABASE_URL:'https://x.supabase.co/ ',SUPABASE_SECRET_KEY:' k '}),{url:'https://x.supabase.co',secretKey:'k'});
+  assert.throws(()=>readConfig({SUPABASE_URL:'https://x.supabase.co'}),/SUPABASE_PUBLISHABLE_KEY/);
+  assert.deepEqual(readConfig({SUPABASE_URL:'https://x.supabase.co/ ',SUPABASE_PUBLISHABLE_KEY:' pk '}),{url:'https://x.supabase.co',apiKey:'pk'});
+  assert.deepEqual(readConfig({SUPABASE_URL:'https://x.supabase.co',SUPABASE_PUBLISHABLE_KEY:'pk',SUPABASE_SECRET_KEY:'sk'}).apiKey,'sk','a secret key wins when both are set');
   await assert.rejects(fetchPersona(config,'CUST04859',stub([],{status:500}).fetcher),DemoDataUnavailableError);
   await assert.rejects(fetchPersona(config,'CUST04859',stub(persona.transactions.map(dbRow),{personas:[]}).fetcher),/not in Supabase/);
   await assert.rejects(fetchPersona(config,'CUST04859',stub([]).fetcher),/no transactions/);
@@ -64,9 +66,9 @@ test('missing configuration, errors and wrong scope fail closed',async()=>{
   await assert.rejects(fetchPersona(config,'CUST04859',async()=>{throw new Error('offline');}),/did not respond/);
 });
 
-// Runs only when SUPABASE_URL and SUPABASE_SECRET_KEY are set, for example:
+// Runs only when SUPABASE_URL and a key are set, for example:
 //   set -a; . ./.dev.vars; set +a; npm test
-test('live Supabase data matches app/data/persona.json',{skip:!(process.env.SUPABASE_URL&&process.env.SUPABASE_SECRET_KEY)&&'SUPABASE_URL and SUPABASE_SECRET_KEY are not set'},async()=>{
+test('live Supabase data matches app/data/persona.json',{skip:!(process.env.SUPABASE_URL&&(process.env.SUPABASE_PUBLISHABLE_KEY||process.env.SUPABASE_SECRET_KEY))&&'SUPABASE_URL and a Supabase key are not set'},async()=>{
   const loaded=await fetchPersona(readConfig(process.env),'CUST04859');
   assert.deepEqual(loaded.transactions,persona.transactions,'Supabase is out of date: run supabase/scripts/build-seed.mjs and load the seed');
   assert.deepEqual(loaded.statistics,persona.statistics);

@@ -1,9 +1,10 @@
 // Reads the demo persona and its transactions from the Supabase copy of app/data
-// (see supabase/README.md). Server only: the secret key must never reach the browser.
+// (see supabase/README.md). Server only: the server chooses the customer, and a secret key
+// must never reach the browser.
 // This module has no runtime imports, so tests can run it with a stub fetch.
 import type { Transaction } from './finance';
 
-export type SupabaseConfig = { url: string; secretKey: string };
+export type SupabaseConfig = { url: string; apiKey: string };
 /** A persona.json transaction: the finance fields plus the original source text. */
 export type SourceTransaction = Transaction & { tx_amount_eur: string; balance_after_eur: string };
 export type PersonaRecord = {
@@ -41,17 +42,20 @@ export function toTransaction(row: TransactionRow): SourceTransaction {
   };
 }
 
+const text = (value: unknown) => (typeof value === 'string' ? value.trim() : '');
+
+/** Uses SUPABASE_SECRET_KEY when set, else SUPABASE_PUBLISHABLE_KEY (the demo tables allow public reads). */
 export function readConfig(env: Record<string, unknown>): SupabaseConfig {
-  const url = typeof env.SUPABASE_URL === 'string' ? env.SUPABASE_URL.trim().replace(/\/+$/, '') : '';
-  const secretKey = typeof env.SUPABASE_SECRET_KEY === 'string' ? env.SUPABASE_SECRET_KEY.trim() : '';
-  if (!url || !secretKey) throw new DemoDataUnavailableError('Set SUPABASE_URL and SUPABASE_SECRET_KEY on the server (app/.dev.vars for local development). See supabase/README.md.');
-  return { url, secretKey };
+  const url = text(env.SUPABASE_URL).replace(/\/+$/, '');
+  const apiKey = text(env.SUPABASE_SECRET_KEY) || text(env.SUPABASE_PUBLISHABLE_KEY);
+  if (!url || !apiKey) throw new DemoDataUnavailableError('Set SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY (or SUPABASE_SECRET_KEY) on the server (app/.dev.vars for local development). See supabase/README.md.');
+  return { url, apiKey };
 }
 
 async function get<T>(config: SupabaseConfig, path: string, fetcher: typeof fetch): Promise<T[]> {
-  // Secret (sb_secret_…) keys go in the apikey header only. Legacy service_role JWTs also need a Bearer header.
-  const headers: Record<string, string> = { apikey: config.secretKey, Accept: 'application/json' };
-  if (config.secretKey.startsWith('eyJ')) headers.Authorization = `Bearer ${config.secretKey}`;
+  // sb_publishable_… and sb_secret_… keys go in the apikey header only. Legacy JWT keys also need a Bearer header.
+  const headers: Record<string, string> = { apikey: config.apiKey, Accept: 'application/json' };
+  if (config.apiKey.startsWith('eyJ')) headers.Authorization = `Bearer ${config.apiKey}`;
   let response: Response;
   try {
     response = await fetcher(`${config.url}/rest/v1/${path}`, { headers, signal: AbortSignal.timeout(TIMEOUT_MS) });
