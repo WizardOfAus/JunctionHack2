@@ -85,7 +85,8 @@ export const GoalOutput = v.object({
 	method: v.object({ calcVersion: v.string(), annualInterestPercent: v.number(), maxMonths: v.number() }),
 });
 
-const DESCRIPTION = `Project when a savings goal (for example a home deposit) is reached, and how a change moves that date.
+const DESCRIPTION = `Project when one synthetic customer's savings goal (for example a home deposit) is reached,
+and how a change moves that date. In coaching mode this is always the bound customer.
 
 Use it for: "When will my deposit be ready?", "How much sooner if I cut cafés by 20%?",
 "What if I get a 5% raise?", "What if I add my EUR 1,000 bonus?", "How long to save EUR 30,000?".

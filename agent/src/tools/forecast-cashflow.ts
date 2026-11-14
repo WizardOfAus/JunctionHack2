@@ -119,8 +119,9 @@ export const ForecastOutput = v.object({
 	}),
 });
 
-const FORECAST_DESCRIPTION = `Forecast one customer's balance for the next 35 days (from ${AS_OF}) with a
-Monte Carlo simulation, and say how much they can safely set aside without going below their emergency floor.
+const FORECAST_DESCRIPTION = `Forecast the balance of one synthetic customer for the next 35 days (from ${AS_OF})
+with a Monte Carlo simulation, and say how much they can safely set aside without going below their emergency floor.
+In coaching mode this is always the bound customer.
 
 Use it for: "Can I save EUR X?", "Is it safe to...?", "What if I cut / spend / add...?",
 "What if my salary is late / goes up 5%?", "What if I get a EUR 500 bonus on 25 Sep?",
