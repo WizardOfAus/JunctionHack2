@@ -1,10 +1,32 @@
 # Supabase demo data
 
-The demo data is accessible in the Supabase project at <https://ighxaiiqgtpsgioqwamp.supabase.co> (project ref `ighxaiiqgtpsgioqwamp`). It is a copy of the committed demo data in `app/data`. The app still reads the files in `app/data`; it does not read Supabase yet.
+The demo data is accessible in the Supabase project at <https://ighxaiiqgtpsgioqwamp.supabase.co> (project ref `ighxaiiqgtpsgioqwamp`). It is a copy of the committed demo data in `app/data`. The app server reads the demo persona and its transactions from Supabase (see [App runtime](#app-runtime)).
+
+## App runtime
+
+`app/lib/server-data.ts` loads persona `CUST04859` and its transactions from the `personas` and `transactions` tables through the Supabase REST API, with the secret key. The finance page, `/api/finance`, `/api/transactions` and `/api/coach` all use it. The server sets the customer; the browser never chooses it. The browser receives calculated results and scoped rows from the API only, as before. The build no longer includes `persona.json`.
+
+Set these server variables. For local development, put them in `app/.dev.vars` (Git ignores it):
+
+```sh
+SUPABASE_URL=https://ighxaiiqgtpsgioqwamp.supabase.co
+SUPABASE_SECRET_KEY=sb_secret_...   # Supabase dashboard > Project Settings > API Keys > Secret keys
+```
+
+Never put the secret key in browser code or commit it. A hosted preview needs the same two values as server secrets.
+
+- The server loads the data once per server process. Restart the dev server after you load a new seed.
+- If the variables are missing or Supabase does not respond, the API routes return HTTP 503 and the page shows "The demo data is not available". The server log tells you the cause.
+- The demo clock (`app/data/demo-clock.json`) is configuration, not customer data. The app and the agent still read it from the file. The `demo_clocks` table is a copy.
+- Unit tests and `app/scripts/evaluate-holdout.mjs` still read `app/data/persona.json`, so `npm test` needs no network. `app/tests/supabase-data.test.mjs` also compares the live Supabase data with `persona.json` when the two variables are set:
+
+  ```sh
+  cd app && (set -a; . ./.dev.vars; set +a; node --test tests/supabase-data.test.mjs)
+  ```
 
 ## Which source to use
 
-- **To look at or query the demo data:** use the Supabase project.
+- **To look at or query the demo data, and for the app runtime:** use the Supabase project.
 - **To process the data for development:** do not use the Supabase copy. Use the source dataset on GitHub, [hackjunction/Junction-2026-S-pankki](https://github.com/hackjunction/Junction-2026-S-pankki), at the pinned revision `fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f`. Follow [the data audit](../docs/data-audit.md) to download the real Git LFS payload, check it and run the importers. The importers and `app/scripts/build-overlays.py` write `app/data`. Then make the seed again (see below) so that Supabase agrees with `app/data`.
 
 Supabase holds one audited customer, the aggregate insight tables and the public-data overlays. It does not hold the full source, so new personas, audits, EDA and importer changes must start from the GitHub source.

@@ -34,9 +34,9 @@ The original September backtest subset was rechecked: 698 rows, only CUST04859, 
 
 ## Supabase copy (added 14 November 2026)
 
-The committed demo data (`app/data/demo-clock.json`, `app/data/persona.json`, `app/data/insights/*.csv` and `app/data/overlays/*.csv`) is accessible in the Supabase project at <https://ighxaiiqgtpsgioqwamp.supabase.co>. The tables, row counts, access rules and update steps are in [`supabase/README.md`](../supabase/README.md). The app does not read Supabase yet.
+The committed demo data (`app/data/demo-clock.json`, `app/data/persona.json`, `app/data/insights/*.csv` and `app/data/overlays/*.csv`) is accessible in the Supabase project at <https://ighxaiiqgtpsgioqwamp.supabase.co>. The tables, row counts, access rules and update steps are in [`supabase/README.md`](../supabase/README.md). The app server reads the demo persona and its transactions from Supabase. `app/data/persona.json` stays the audited source for the seed and for the unit tests.
 
-Use the Supabase copy to look at or query the demo data only. To process the data for development, use the pinned GitHub source, [hackjunction/Junction-2026-S-pankki](https://github.com/hackjunction/Junction-2026-S-pankki) at revision `fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f`, with the steps above. The Supabase copy is a derived artifact: it holds one customer, not the full 3,626,755-row source. After the importers change `app/data`, make the seed again and load it.
+Use the Supabase copy to look at or query the demo data, and for the app runtime. To process the data for development, use the pinned GitHub source, [hackjunction/Junction-2026-S-pankki](https://github.com/hackjunction/Junction-2026-S-pankki) at revision `fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f`, with the steps above. The Supabase copy is a derived artifact: it holds one customer, not the full 3,626,755-row source. After the importers change `app/data`, make the seed again and load it.
 
 ## Demo clock (updated 14 November 2026)
 

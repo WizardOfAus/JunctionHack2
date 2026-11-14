@@ -1,12 +1,13 @@
 import { z } from 'zod';
 import { assumptionsSchema } from '@/lib/contracts';
-import { provenance,transactions } from '@/lib/server-data';
+import { demoData,demoDataUnavailable } from '@/lib/server-data';
 import { forecast,summarise,euro,evaluateAsp,basketOf,basketProfile,isConsumption,recentWindow,latestMonthPeriod,DATA_START,HISTORY_THROUGH,VERSION } from '@/lib/finance';
 const readable=(iso:string)=>new Date(iso+'T12:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
 import { matchCategory,spendingCategories } from '@/lib/categories';
 import { agentConfig, askAgent, AgentUnavailableError } from '@/lib/coach/agent';
 import { basketContext } from '@/lib/coach/context';
 export async function POST(request:Request) {
+  let data;try{data=await demoData();}catch(error){return demoDataUnavailable(error);}const {transactions,provenance}=data;
   try {
     const body=z.object({question:z.string().min(1).max(1500),assumptions:assumptionsSchema}).strict().parse(await request.json());
     const {assumptions:a}=body;const q=body.question.toLowerCase();

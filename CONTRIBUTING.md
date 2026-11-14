@@ -34,8 +34,8 @@ Copy this instruction, replacing the bracketed values:
 
 ## Runtime and data
 
-Node 24 is recommended. All npm commands run inside `app/`. The running UI needs no model key and no raw CSV; the audited historical subset is already committed. Download the large source only for dataset work, using [the pinned LFS payload instructions](docs/data-audit.md).
+Node 24 is recommended. All npm commands run inside `app/`. The running UI needs no model key and no raw CSV. It loads the audited demo persona from Supabase, so put `SUPABASE_URL` and `SUPABASE_SECRET_KEY` in ignored `app/.dev.vars` (see [`supabase/README.md`](supabase/README.md#app-runtime); ask the team for the key, never commit it). The audited historical subset is also committed in `app/data`. Download the large source only for dataset work, using [the pinned LFS payload instructions](docs/data-audit.md).
 
-The demo data is also accessible in Supabase at <https://ighxaiiqgtpsgioqwamp.supabase.co> (see [`supabase/README.md`](supabase/README.md)). Use it to look at the data only. To process data for development, use the source on GitHub, [hackjunction/Junction-2026-S-pankki](https://github.com/hackjunction/Junction-2026-S-pankki) at the pinned revision, not the Supabase copy.
+The demo data is also accessible in Supabase at <https://ighxaiiqgtpsgioqwamp.supabase.co> (see [`supabase/README.md`](supabase/README.md)). The app server reads it at runtime. To process data for development, use the source on GitHub, [hackjunction/Junction-2026-S-pankki](https://github.com/hackjunction/Junction-2026-S-pankki) at the pinned revision, not the Supabase copy.
 
 Live AI configuration is deferred until UI review. New provider integrations must accept server-side environment variables and keep deterministic calculations/evidence intact. Preview publication belongs to the integration owner; a new worktree must not register another Site or change `app/.openai/hosting.json`.
