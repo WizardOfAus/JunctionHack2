@@ -139,8 +139,9 @@ const FindInput = v.object({
 export function makeFindCustomersTool(scope: ToolScope) {
 	return defineTool({
 		name: 'find_customers',
-		description: `List synthetic customers in the dataset by age and postal code prefix.
-Use it to find customers to compare or to research patterns across many customers.
+		description: `Analyst mode only. Pick synthetic customers to study, by age and postal code prefix.
+The dataset is synthetic: no real person is behind these ids. Use it to choose a demo persona or a
+case to compare, then study that one customer. Do not use it to browse customers.
 Returns customer ids with age and postal code, plus the total number of matches.`,
 		input: FindInput,
 		annotations: { readOnlyHint: true, idempotentHint: true },

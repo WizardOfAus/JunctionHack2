@@ -1,9 +1,10 @@
 import { z } from 'zod';
 import { assumptionsSchema } from '@/lib/contracts';
 import { provenance,transactions } from '@/lib/server-data';
-import { forecast,summarise,euro,evaluateAsp,VERSION } from '@/lib/finance';
+import { forecast,summarise,euro,evaluateAsp,basketOf,isConsumption,VERSION } from '@/lib/finance';
 import { matchCategory,spendingCategories } from '@/lib/categories';
 import { agentConfig, askAgent, AgentUnavailableError, CONVERSATION_ID_PATTERN } from '@/lib/coach/agent';
+import { basketContext } from '@/lib/coach/context';
 export async function POST(request:Request) {
   try {
     const body=z.object({question:z.string().min(1).max(1500),assumptions:assumptionsSchema,conversationId:z.string().regex(CONVERSATION_ID_PATTERN).optional()}).strict().parse(await request.json());
@@ -14,7 +15,10 @@ export async function POST(request:Request) {
       // Live agent mode: the Flue agent answers. The server fixes the customer scope.
       const conversationId=body.conversationId??`koti-app-${crypto.randomUUID()}`;
       try {
-        const reply=await askAgent(agent,{conversationId,customerId:provenance.customerId,question:body.question});
+        // Basket figures come from the app's own rules, with the user's corrections, so the coach and the UI agree.
+        const window=transactions.filter(t=>t.tx_date>='2026-06-01'&&isConsumption(t));
+        const appContext=basketContext(window.map(t=>({category:t.category,basket:basketOf(t,a.corrections),spentCents:-t.amountCents})),forecast(transactions,a).baskets,{months:3,period:'June–August 2026',corrections:Object.keys(a.corrections).length,format:c=>euro(c)});
+        const reply=await askAgent(agent,{conversationId,customerId:provenance.customerId,question:body.question,appContext});
         return Response.json({text:reply.text,kind:'answer',mode:'agent',conversationId,evidence:[],account:provenance.accountId,dataThrough:'2026-08-31'});
       } catch(e) {
         if(e instanceof AgentUnavailableError) {console.error('Koti agent error:',e.message);return Response.json({error:'The AI coach is not available right now. Try again soon.'},{status:502});}
