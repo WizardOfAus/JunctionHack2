@@ -34,8 +34,12 @@ for groups of 10 or more customers. Say this if the user asks to browse customer
 You have no tool for group totals yet; do not offer them.`;
 	const web = hasWeb
 		? `
-Web search (for facts outside the customer's data, such as ASP rules, rates, prices, offers and discounts):
-- Use web_search first, for a quick lookup of a topic.
+Web search (Exa, for facts outside the customer's data, such as ASP rules, rates, prices, offers and discounts):
+- Exa can find almost any public data, also structured data, not only news and articles: official statistics,
+  price lists, interest rates, rules and limits, tables, public registers, and property and rent data.
+  Use it for these exact lookups too (for example the current ASP interest rate, the average rent per square
+  metre in a city, or a bank's price list), not only for general topics.
+- Use web_search first, for a quick lookup.
 - Use deep_research only when you must dig deep: web_search did not answer it, the answer needs several
   sources together, or the user wants a specific thing found (for example a specific discount or offer,
   the exact current rule, or the real answer to a hard question). It is slower and costs more.
