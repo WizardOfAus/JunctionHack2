@@ -81,7 +81,7 @@ Mortgage status for anyone **without** an application record stays a labelled, u
 - **Region:** all postal codes are in the capital region (prefixes 00/01/02). Approximate split: Helsinki 2,557, Espoo 1,251, Vantaa 945, Kauniainen 38, and an outer ring of 309. Regional effects are mild: Vantaa has the lowest salaries, Kauniainen and central Helsinki the highest.
 - **Age:** 18–90, median 44. Age is the stronger driver (Spearman 0.46 with salary). The share of "Running on empty" falls from 42% (18–24) to 12% (55–64).
 - **Caveats:**
-  - 150 customers are exactly 18, about three times the neighbouring ages, which suggests a floor. Show it as "18 or under", not as a fact.
+  - 150 customers are exactly 18, about three times the neighbouring ages, which suggests a floor. Keep the recorded value as 18 and label the suspected floor as a dataset limitation; do not infer an unrecorded age below 18.
   - People aged 65+ still receive "salary", probably pension.
   - The edge block skews old.
 - **Benchmarks by age band and age × region** (groups of n ≥ 16): [`benchmarks_by_age.csv`](../app/data/insights/benchmarks_by_age.csv) and [`benchmarks_age_region.csv`](../app/data/insights/benchmarks_age_region.csv). Lead with age band and income quintile; region adds little.
@@ -125,7 +125,7 @@ Salary quintile edges are €2,218, €2,830, €3,423 and €4,216. Compare a u
 
 Revised after adding the mortgage and customer files. Transaction figures were computed on history before 1 September 2026; they will be refreshed when the demo clock moves to 1 October 2026. Mortgage information is labelled **application record**; anything the record does not contain stays unknown.
 
-| Customer | Story | Evidence | Mortgage record (as of 1 Sep 2026) |
+| Customer | Story | Evidence | Application record (dated outcome; September backtest noted) |
 |---|---|---|---|
 | **CUST04767** (lead) | Approved home purchase ("first home" is a demo assumption; the data does not say) | 36, Espoo; steady investor. Salary ~€3.0k; saves 33%; invests €393/month; housing payment €938 (rent is an assumption; the ledger cannot tell rent from a loan); €15.6k balance; never overdrawn | C0689: applied 4 Apr; viewed three apartments; €174.5k apartment, loan €160k, equity €14.5k (8.3%), LTV 0.92; **approved 4 May**. Income 1.05 × required |
 | CUST02222 | Rejected: insufficient income | 36, Espoo; steady investor. Salary ~€5.0k; saves 46%; €56k balance; 2 shocks | C0137: €315k house, loan €286.5k, LTV 0.91; **rejected 12 May**. Income 0.94 × the dataset's required-income calculation. "What would it take?": by that calculation, ~€270k at this income, so ~€16.5k more equity or a home ≤ ~€298k (illustrative, not an approval prediction) |
