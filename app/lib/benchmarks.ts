@@ -63,6 +63,7 @@ export function benchmarks(input:{rows:Transaction[];salaryCents:number;age:numb
   });
   return {
     label:'People like you (a comparison, not advice)' as const,
+    statfinYear:tables.statfin.year,
     period:{months,from:rows[0]?.tx_date??null,to:rows.at(-1)?.tx_date??null},
     groups:{
       dataset:'Synthetic Junction population (4,736 customers; monthly means per customer, October 2024–August 2026)',
@@ -78,3 +79,29 @@ export function benchmarks(input:{rows:Transaction[];salaryCents:number;age:numb
   };
 }
 export type Benchmarks=ReturnType<typeof benchmarks>;
+
+type Format=(cents:number)=>string;
+
+/** Plain-text comparison for the coach agent: figures the app calculated, to quote and never recompute. */
+export function benchmarkContext(b:Benchmarks,format:Format) {
+  const lines=[`${b.label}, calculated by the Koti app from ${b.period.months} months of this account (quote these figures; do not recalculate):`];
+  for(const c of b.categories) {
+    const parts=[`you ${format(c.youCents)} a month`,`synthetic customers' median ${format(c.dataset.p50)} (you are in the ${c.dataset.band}, ${c.dataset.words})`];
+    if(c.incomeQuintileMedianCents!==null) parts.push(`median in ${b.groups.incomeQuintile.label.toLowerCase()} ${format(c.incomeQuintileMedianCents)}`);
+    if(c.ageBandMedianCents!==null&&b.groups.ageBand) parts.push(`median at age ${b.groups.ageBand.band} ${format(c.ageBandMedianCents)}`);
+    if(c.national) parts.push(`${b.groups.national.label}: ${format(c.national.cents)}${c.national.note?` (${c.national.note})`:''}`);
+    lines.push(`- ${c.category}: ${parts.join('; ')}.`);
+  }
+  lines.push(...b.notes.map(n=>`- ${n}`),'- This describes; it does not judge. Spending more than others is not wrong in itself.');
+  return lines.join('\n');
+}
+
+/** Short answer for the demo coach: one category, or up to three at or above the dataset's 75th percentile. */
+export function benchmarkAnswer(b:Benchmarks,category:string|undefined,format:Format) {
+  const above=(c:Benchmarks['categories'][number])=>c.youCents-c.dataset.p50;
+  const picked=category?b.categories.filter(c=>c.category===category)
+    :b.categories.filter(c=>c.youCents>=c.dataset.p75).sort((x,y)=>above(y)-above(x)).slice(0,3);
+  const sentences=picked.map(c=>`${c.category}: ${format(c.youCents)} a month, ${c.dataset.words} in the synthetic dataset (median ${format(c.dataset.p50)})${c.national?`; Finnish households averaged ${format(c.national.cents)} per adult in ${b.statfinYear}`:''}.`);
+  const lead=category?'':picked.length?'Compared with people like you, these categories stand out most. ':'None of your categories is higher than most people’s in the synthetic dataset. ';
+  return `${lead}${sentences.join(' ')} This is a comparison, not advice: dataset figures describe synthetic customers, and national figures include all accounts and cash.`.trim();
+}
