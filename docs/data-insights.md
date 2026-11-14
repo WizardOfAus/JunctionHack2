@@ -5,11 +5,11 @@ Prepared 14 November 2026 from the pinned Junction dataset (`fbdecde…`, 3,626,
 Reproduce from `app/` (needs the full CSV in `work/transactions.csv`, see [data audit](data-audit.md)):
 
 ```sh
-python3 -m venv work/.venv && work/.venv/bin/pip install duckdb pandas numpy
+python3 -m venv work/.venv && work/.venv/bin/pip install duckdb pandas numpy pyarrow scikit-learn
 for s in load features segment personas; do work/.venv/bin/python scripts/eda/$s.py; done
 ```
 
-Outputs land in ignored `app/work/eda/`. The aggregate tables committed in [`app/data/insights/`](../app/data/insights/) contain population percentiles only, with no rows or per-customer values.
+Outputs land in ignored `app/work/eda/`. The aggregate tables committed in [`app/data/insights/`](../app/data/insights/) contain population aggregates (percentiles, counts, medians and basket shares), plus the explicitly named synthetic CUST04859 basket-share comparison. They contain no transaction rows. The reference-persona comparison is not a population-only table.
 
 ## What the data contains
 
@@ -64,11 +64,13 @@ Salary is stable (monthly coefficient of variation about 8%). Investing is all o
 
 Ordered rules for "What kind of spender am I?":
 
+Here, `neg_days` counts observed transaction dates whose last recorded balance is negative, not every calendar day spent overdrawn. The archetypes are descriptive demo rules, not creditworthiness assessments.
+
 | Archetype | Rule | Customers |
 |---|---|---:|
 | Pass-through account | any salary sweep. Exclude from coaching, because spending is not visible here | 264 |
 | Variable earner | edge block, salary CV > 0.3, or other income > 25% | 77 |
-| Running on empty | ≥ 20 overdrawn days, or negative surplus with < 1 month buffer | 1,153 |
+| Running on empty | ≥ 20 negative observed transaction-day balances, or negative surplus with < 1 month buffer | 1,153 |
 | Steady investor | investment deposits in ≥ 12 months | 1,193 |
 | Lifestyle spender | flexible ≥ 35% of spending | 433 |
 | Quiet cushion-builder | surplus ≥ 15% or ≥ 3 months buffer | 677 |
@@ -96,7 +98,7 @@ Salary quintile edges are €2,218, €2,830, €3,423 and €4,216. Compare a u
 | Customer | Story | Pre-September evidence | Declared demo goal (assumption, not data) |
 |---|---|---|---|
 | **CUST03375** | First-home saver (lead) | Salary ~€2.9k; saves 31% before investing; invests €521/month; €12.4k cushion; never overdrawn | **Preparing a first-mortgage application**: ASP, deposit, stress test |
-| CUST02097 | Tight budget | Salary €1,875; 88 overdrawn days; ~€0 surplus; housing 47% of salary; restaurants €295/month | Build a safety cushion; no saving challenge |
+| CUST02097 | Tight budget | Salary €1,875; 88 negative observed transaction-day balances; ~€0 surplus; housing 47% of salary; restaurants €295/month | Build a safety cushion; no saving challenge |
 | CUST04617 | Irregular shocks | Saves 3%; Home & Tech €2,242 and €2,705, Travel €2,145 | Understand spending; irregular reserve |
 | CUST02689 | High flexible spend | Restaurants €771/month (p98); 44% of spending flexible; salary ~€3.9k | Understand spending; deal finder (Exa) |
 | CUST03846 | Large fixed housing | Housing 55% of salary; invests €390/month | **Existing mortgage holder (declared)**: refinance and rate-change research |
@@ -107,11 +109,11 @@ Mortgage-related goals are user-declared demo assumptions and must be labelled a
 
 ## Advisor and analyst views
 
-Research summary (not legal advice): bank secrecy (Credit Institutions Act 610/2014, ch. 15 §14) binds staff and lifts with customer consent. In CJEU C-579/21 *Pankki S*, the court held that the dates and purposes of staff lookups are the customer's personal data. A production design therefore needs customer-initiated, scoped and expiring advisor access, plus a customer-visible audit log. An analyst sees aggregates only (groups of ≥ 10) or synthetic data.
+Research summary (not legal advice): bank secrecy (Credit Institutions Act 610/2014, ch. 15 §14) binds staff and lifts with customer consent. In [CJEU C-579/21 *Pankki S*](https://eur-lex.europa.eu/legal-content/EN/TXT/PDF/?uri=celex%3A62021CJ0579), the court held that the dates and purposes of staff lookups are the customer's personal data. A production design therefore needs customer-initiated, scoped and expiring advisor access, plus a customer-visible audit log. An analyst sees aggregates only (groups of ≥ 10) or synthetic data.
 
 For the demo this means:
 - an **analyst insights view** built from the committed aggregate tables (archetypes, benchmarks, basket shifts), with no row-level browsing of arbitrary customers;
 - a **demo persona switcher** over the allowlisted catalogue above, clearly labelled synthetic;
 - an optional **consented advisor session** mock that shows the production access pattern.
 
-Credit scoring is out of scope: creditworthiness AI is high-risk under the EU AI Act, and the Consumer Credit Directive 2 applies from 20 November 2026. Offer rule-based "loan readiness" education instead, with no score or approval odds.
+Credit scoring is out of scope: creditworthiness AI is high-risk under the EU AI Act, and [Consumer Credit Directive 2](https://eur-lex.europa.eu/eli/dir/2023/2225/oj/eng) applies from 20 November 2026. Offer rule-based "loan readiness" education instead, with no score or approval odds.
