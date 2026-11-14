@@ -1,0 +1,97 @@
+# Koti agent
+
+A [Flue](https://flueframework.com) agent that answers questions about the
+synthetic S-Pankki Junction 2026 dataset. It runs as its own Node server. The
+Koti app coach chat calls it from the app server when `KOTI_AGENT_URL` is set.
+Tools calculate all money and dates; the model selects the tools and explains
+the results.
+
+This is the first setup only: project, environment, data access, the
+transaction query tools and the chat connection. Forecast and goal tools are
+not in this version.
+
+## Setup
+
+Node 22.18 or later. All commands run in `agent/`.
+
+```sh
+npm ci
+npm run import-data      # downloads the pinned dataset (about 350 MB) and builds data/koti.db
+cp .env.example .env     # then set ANTHROPIC_API_KEY
+```
+
+Do not commit `.env`. See `.env.example` for all variables:
+
+| Variable | Default | Use |
+|---|---|---|
+| `ANTHROPIC_API_KEY` | none | Model provider key. Any provider Flue supports works. |
+| `KOTI_MODEL` | `anthropic/claude-sonnet-5-5` | Model id as `provider/model`. |
+| `KOTI_DB_PATH` | `data/koti.db` | Path to the imported dataset. |
+| `KOTI_DATA_CUTOFF` | `2026-08-31` | Last day of history the agent can see. |
+| `KOTI_AGENT_TOKEN` | none | When set, `/agents/*` requires `Authorization: Bearer <token>`. |
+| `PORT` | `3000` | Port for the built server (`npm start`). The dev server uses 5180. |
+
+`import-data` gets the dataset from
+[hackjunction/Junction-2026-S-pankki](https://github.com/hackjunction/Junction-2026-S-pankki)
+at revision `fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f`. It checks the row counts
+(3,626,755 transactions, 5,100 customers) and records the SHA-256 of each file.
+The raw CSVs and the database are in `data/`, which Git ignores.
+
+## Connect the app coach chat
+
+1. Start the agent: `npm run dev` (serves `http://127.0.0.1:5180`).
+2. In `app/`, make `app/.dev.vars` (Git ignores it):
+
+   ```sh
+   KOTI_AGENT_URL=http://127.0.0.1:5180/agents/koti
+   # Same value as KOTI_AGENT_TOKEN in agent/.env, if you set one:
+   KOTI_AGENT_TOKEN=
+   ```
+
+3. Start the app: `npm run dev` in `app/`, then ask a question in the Coach tab.
+
+`POST /api/coach` (`app/app/api/coach/route.ts`) then sends the question to the agent through
+`app/lib/coach/agent.ts` and returns `mode: "agent"`. The app server sets the customer
+(`CUST04859`, from `app/lib/server-data.ts`); the browser cannot choose it. If the agent fails or
+takes more than 60 seconds, the route returns HTTP 502. Without `KOTI_AGENT_URL`, the route keeps
+the deterministic demo answers (`mode: "demo"`).
+
+## Talk to the agent directly
+
+```sh
+# Any customer (research mode)
+npx flue run src/agents/koti.ts -m "How much did CUST04859 spend on taxis in August 2026?"
+
+# One customer only (coaching mode): the tools refuse other customers
+npx flue run src/agents/koti.ts --data '{"customerId":"CUST04859"}' \
+  -m "How much did I spend on restaurants from June to August?"
+```
+
+Server: `npm run dev`, then `POST /agents/koti/<conversation-id>` (see `src/app.ts`).
+`GET /health` returns `{"ok":true}`.
+
+## Tools
+
+| Tool | Use | Notes |
+|---|---|---|
+| `query_transactions` | Questions about the past | Filters: dates, categories, types, MCC, merchant, direction, amount. Group by category, type, month, week, weekday, MCC or merchant. Every row has a `row:<line>` reference to the source CSV. |
+| `find_customers` | Research across customers | Only in research mode (no `customerId` in `initialData`). |
+
+## Data rules
+
+- The agent sees history up to `2026-08-31` (`KOTI_DATA_CUTOFF`). The demo clock is `2026-09-01`.
+  September 2026 is held out for evaluation. The store enforces this on every query.
+- Without `customerId` in `initialData`, the agent can read any synthetic customer.
+  With it, the conversation is locked to that customer. The app always sends it.
+- All SQL is fixed and parameterised. The model selects filter values, never SQL.
+
+## Commands
+
+```sh
+npm test              # dataset and tool checks (they need data/koti.db, else they are skipped)
+npm run check:types
+npm run build && npm start
+```
+
+Dependency note: `@earendil-works/pi-ai` and `pi-agent-core` are pinned to 1.4.0 (`overrides` in
+`package.json`). Version 1.5.x removed an export that `@flue/runtime` 2.3.0 needs.

@@ -1,13 +1,26 @@
 import { z } from 'zod';
 import { assumptionsSchema } from '@/lib/contracts';
-import { transactions } from '@/lib/server-data';
+import { provenance,transactions } from '@/lib/server-data';
 import { forecast,summarise,euro,evaluateAsp,VERSION } from '@/lib/finance';
 import { matchCategory,spendingCategories } from '@/lib/categories';
+import { agentConfig, askAgent, AgentUnavailableError, CONVERSATION_ID_PATTERN } from '@/lib/coach/agent';
 export async function POST(request:Request) {
   try {
-    const body=z.object({question:z.string().min(1).max(1500),assumptions:assumptionsSchema}).strict().parse(await request.json());
+    const body=z.object({question:z.string().min(1).max(1500),assumptions:assumptionsSchema,conversationId:z.string().regex(CONVERSATION_ID_PATTERN).optional()}).strict().parse(await request.json());
     const {assumptions:a}=body;const q=body.question.toLowerCase();
     if(!a.connected)return Response.json({text:'Your demo source is disconnected. Reconnect it in Your data to explore transactions.',mode:'demo',kind:'help',evidence:[]});
+    const agent=agentConfig();
+    if(agent) {
+      // Live agent mode: the Flue agent answers. The server fixes the customer scope.
+      const conversationId=body.conversationId??`koti-app-${crypto.randomUUID()}`;
+      try {
+        const reply=await askAgent(agent,{conversationId,customerId:provenance.customerId,question:body.question});
+        return Response.json({text:reply.text,kind:'answer',mode:'agent',conversationId,evidence:[],account:provenance.accountId,dataThrough:'2026-08-31'});
+      } catch(e) {
+        if(e instanceof AgentUnavailableError) {console.error('Koti agent error:',e.message);return Response.json({error:'The AI coach is not available right now. Try again soon.'},{status:502});}
+        throw e;
+      }
+    }
     const f=forecast(transactions,a);
     const matched=matchCategory(q);const isSpendingCategory=(spendingCategories as readonly string[]).includes(matched||'');
     let from='2026-06-01',to='2026-08-31';
