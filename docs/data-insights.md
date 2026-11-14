@@ -54,9 +54,37 @@ Under the proposal, irregular means genuine shocks (median €94/month per custo
 
 ## Housing and mortgages
 
-Every one of the 4,882 housing payers pays a fixed amount with ±5% noise (max/min ≤ 1.105) on days 1–8. There is no drift, no step change and no Euribor-like movement. **The data cannot distinguish rent from a mortgage**, and it contains no loan balances or interest. Housing takes a median 33% of salary (p90 47%).
+**In transactions:** each of the 4,882 housing payers pays a fixed amount with ±5% noise (max/min ≤ 1.105) on days 1–8. There is no drift, no step change and no Euribor-like movement, so **the ledger cannot distinguish rent from a mortgage**. Housing takes a median 33% of salary (p90 47%).
 
-So any mortgage status must be a **labelled, user-declared assumption**: "I am applying for a mortgage", or "my housing payment is a mortgage of €X at margin Y". Never infer it from the ledger. Live rates, caps and offers come from web research (Exa), not this data.
+**Mortgage application files.** The upstream repository also ships `mtg_negotiation_history.csv` (3,452 events) and `mtg_tx_customer_link_and_final_mtg_infio.csv` (200 applications). Each application links one-to-one to a `customer_id`. Applications were created 2 January–7 August 2026, and decisions took a median of 24 days (range 12–44). Outcomes: 150 approved and 50 rejected (34 insufficient collateral, 8 insufficient income, 6 insufficient equity, 2 existing debt).
+
+These relationships were verified exactly on every row:
+- `final_requested_loan + final_equity_amount = final_property_price`.
+- `lfinal_loan_to_value = loan / price` (not loan / collateral).
+- `required_monthly_income = annuity(loan, 6%, 25 years) / 0.35`: a 6% stress payment may take at most 35% of gross monthly income. This equals 0.0184086 × loan; inversely, maximum loan ≈ 54.3 × monthly income.
+
+Other observations:
+- The event order is fixed: application created → property added (1–3, with optional price updates) → loan calculation → income received → expenses recorded → collateral added → valuation → additional collateral requested (192/200) → second valuation → document received → loan decision. Customer contacts are spread throughout.
+- Valued collateral for the purchased home is 65–80% of price (median 72%, a lending-value haircut). That is why almost every application gets a request for extra collateral.
+- Expense amounts are synthetic: transfer tax is 1.5–4% of price, which does not follow Finnish rules. Label them as recorded application amounts, not tax advice.
+- **Outcomes are not a reproducible rule.** The best single features reach AUC 0.55–0.64. Every collateral, equity and debt rejection belongs to a salary-sweep (pass-through) account; non-sweep applicants were rejected only for insufficient income (7 of 78). Do not build approval odds.
+- **Transactions do not reflect the mortgage.** There is no down-payment outflow, no new or changed housing payment after approval and no saving acceleration. Join the two only through the link file, and present it as an *application record*, not ledger behaviour.
+- **Demo-date rule:** only C0065 (CUST01265) is undecided on 1 September 2026; its decision is dated 8 September. At the demo clock it must appear "in progress", with events from 1 September onward hidden.
+- Applicants are older and richer than the base population: median age 45–47, 43% in the top salary quintile, and 61% are pass-through accounts. Only 3% are under 35.
+
+Mortgage status for anyone **without** an application record stays a labelled, user-declared assumption. Live rates, caps and offers come from web research (Exa).
+
+## Customer attributes
+
+`tx_customers_junction.csv` gives `customer_postal_code` and `customer_age` for all 5,100 customers, with nothing missing.
+
+- **Region:** all postal codes are in the capital region (prefixes 00/01/02). Approximate split: Helsinki 2,557, Espoo 1,251, Vantaa 945, Kauniainen 38, and an outer ring of 309. Regional effects are mild: Vantaa has the lowest salaries, Kauniainen and central Helsinki the highest.
+- **Age:** 18–90, median 44. Age is the stronger driver (Spearman 0.46 with salary). The share of "Running on empty" falls from 42% (18–24) to 12% (55–64).
+- **Caveats:**
+  - 150 customers are exactly 18, about three times the neighbouring ages, which suggests a floor. Show it as "18 or under", not as a fact.
+  - People aged 65+ still receive "salary", probably pension.
+  - The edge block skews old.
+- **Benchmarks by age band and age × region** (groups of n ≥ 16): [`benchmarks_by_age.csv`](../app/data/insights/benchmarks_by_age.csv) and [`benchmarks_age_region.csv`](../app/data/insights/benchmarks_age_region.csv). Lead with age band and income quintile; region adds little.
 
 ## Income, saving and spender archetypes
 
@@ -95,17 +123,25 @@ Salary quintile edges are €2,218, €2,830, €3,423 and €4,216. Compare a u
 
 ## Demo persona shortlist
 
-| Customer | Story | Pre-September evidence | Declared demo goal (assumption, not data) |
-|---|---|---|---|
-| **CUST03375** | First-home saver (lead) | Salary ~€2.9k; saves 31% before investing; invests €521/month; €12.4k cushion; never overdrawn | **Preparing a first-mortgage application**: ASP, deposit, stress test |
-| CUST02097 | Tight budget | Salary €1,875; 88 negative observed transaction-day balances; ~€0 surplus; housing 47% of salary; restaurants €295/month | Build a safety cushion; no saving challenge |
-| CUST04617 | Irregular shocks | Saves 3%; Home & Tech €2,242 and €2,705, Travel €2,145 | Understand spending; irregular reserve |
-| CUST02689 | High flexible spend | Restaurants €771/month (p98); 44% of spending flexible; salary ~€3.9k | Understand spending; deal finder (Exa) |
-| CUST03846 | Large fixed housing | Housing 55% of salary; invests €390/month | **Existing mortgage holder (declared)**: refinance and rate-change research |
-| CUST05030 | Variable income | 7 months without salary; other income; large cushion | Safety cushion with irregular income |
-| CUST04859 | Current reference | Clean but middling; restaurants €94/month (p16); almost no irregular spending | Keep for baseline tests |
+Revised after adding the mortgage and customer files. Transaction figures use history before 1 September 2026, and mortgage timelines show only events visible at the demo clock.
 
-Mortgage-related goals are user-declared demo assumptions and must be labelled as such in the UI. Loan size, rate type and margin are user-entered or researched, never presented as ledger facts. Do not infer age, occupation, dependants or home ownership.
+| Customer | Story | Evidence | Mortgage record (as of 1 Sep 2026) |
+|---|---|---|---|
+| **CUST04767** (lead) | Approved first home | 36, Espoo; steady investor. Salary ~€3.0k; saves 33%; invests €393/month; rent €938; €15.6k balance; never overdrawn | C0689: applied 4 Apr; viewed three apartments; €174.5k apartment, loan €160k, equity €14.5k (8.3%), LTV 0.92; **approved 4 May**. Income 1.05 × required |
+| CUST02222 | Rejected: insufficient income | 36, Espoo; steady investor. Salary ~€5.0k; saves 46%; €56k balance; 2 shocks | C0137: €315k house, loan €286.5k, LTV 0.91; **rejected 12 May**. Income 0.94 × required. "What would it take?": maximum loan ≈ €270k at this income, so ~€16.5k more equity or a home ≤ ~€298k |
+| CUST01265 | Application in progress | 41, Helsinki; pass-through account | C0065: applied 3 Aug; €217.5k apartment, loan €203.5k, equity €14k (6.4%); collateral valued 30 Aug; **decision pending** at the demo date |
+| CUST01460 | Rejected: insufficient collateral | 41, Helsinki; pass-through, so spending is largely invisible | C0345: €186k apartment, loan €152.5k vs collateral €126k; extra collateral requested but none valued; **rejected 4 Feb**. Teaches lending value vs price and the state guarantee |
+| CUST02097 | Tight budget | Age recorded as 18 (likely floored); Espoo. Salary €1,875; 88 negative observed transaction-day balances; ~€0 surplus; housing 47% of salary | none; goal: safety cushion, no saving challenge |
+| CUST02689 | High flexible spend | 62, Helsinki. Restaurants €771/month (p98); 44% of spending flexible | none; goal: spending awareness, deal finder (Exa) |
+| CUST04617 | Irregular shocks | 44, Helsinki. Saves 3%; Home & Tech €2,242 and €2,705, Travel €2,145 | none; goal: irregular reserve |
+| CUST04859 | Current reference | Clean but middling; almost no irregular spending | none; keep for baseline tests |
+
+Alternatives:
+- CUST02003: approved despite income at 0.92 × required, so outcomes are not formulaic.
+- CUST00161: a non-sweep income rejection on 20 August.
+- CUST03375: a non-applicant strong saver, usable only with a declared intent.
+
+Mortgage records are application data, not ledger behaviour; show them as such. Every collateral and equity rejection is a pass-through account with a thin spending story. Do not infer occupation, dependants or home ownership. Use age only as the recorded (possibly floored) value.
 
 ## Advisor and analyst views
 
