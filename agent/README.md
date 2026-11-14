@@ -7,7 +7,7 @@ Tools calculate all money and dates; the model selects the tools and explains
 the results.
 
 The agent can read transactions, make a 35-day Monte Carlo cashflow forecast,
-and project when a savings goal is reached.
+and project when a savings goal is reached. With an Exa key, it can also search the web.
 
 ## Setup
 
@@ -24,6 +24,7 @@ Do not commit `.env`. See `.env.example` for all variables:
 | Variable | Default | Use |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | none | Model provider key. Any provider Flue supports works. |
+| `EXA_API_KEY` | none | [Exa](https://exa.ai) key. Turns on `web_search` and `deep_research`. Without it the agent has no web search. |
 | `KOTI_MODEL` | `anthropic/claude-sonnet-5-5` | Model id as `provider/model`. |
 | `KOTI_DB_PATH` | `data/koti.db` | Path to the imported dataset. |
 | `KOTI_DATA_CUTOFF` | `2026-08-31` | Last day of history the agent can see. |
@@ -82,6 +83,8 @@ Server: `npm run dev`, then `POST /agents/koti/<conversation-id>` (see `src/app.
 | `query_transactions` | Questions about the past | Filters: dates, categories, types, MCC, merchant, direction, amount. Group by category, type, month, week, weekday, MCC or merchant. Every row has a `row:<line>` reference to the source CSV. |
 | `forecast_cashflow` | "Is it safe this month?", "What if...?" | 35-day Monte Carlo forecast. Changes: `changeSpending`, `addExpense`, `moveToSavings`, `delayIncome`, `changeIncome` (percent or new monthly amount), `addIncome` (one-off). Returns risk, P10 lowest balance, tightest day, safe amount, and the difference from the baseline. |
 | `project_goal` | "When is my deposit ready?", "How much sooner if...?" | Month-by-month arithmetic to a savings goal. Default monthly saving = median of the existing saving transfers in the last 6 months (the same window as the forecast). Changes: `changeSpending`, `changeIncome` (with `toGoalPercent`), `addMonthlySaving`, `oneOffDeposit`. Warns when a plan saves more than the usual monthly surplus. |
+| `web_search` | Quick lookup of a topic on the web (ASP rules, rates, prices, offers) | First web tool. Exa `type: "auto"`, 5 results by default (max 10), with text highlights. Optional `includeDomains`, `country` (default `FI`) and `publishedAfter`. Timeout 15 s. Needs `EXA_API_KEY`. |
+| `deep_research` | Dig deep: find a specific discount, the exact current rule, or a hard answer | Exa `type: "deep"`: several searches and a short answer with sources (`citations`). Slower (about 4 to 15 s) and costs more, so the agent uses it only when `web_search` is not enough. Timeout 40 s. Needs `EXA_API_KEY`. |
 | `find_customers` | Pick synthetic customers to study | Analyst mode only (no `customerId` in `initialData`). Not for browsing customers. |
 
 ## Data rules
@@ -98,6 +101,9 @@ Server: `npm run dev`, then `POST /agents/koti/<conversation-id>` (see `src/app.
   `<koti_app_context>` block, calculated by `app/lib/finance.ts` with the user's basket changes.
   Do not add basket rules to the agent. `forecast_cashflow` and `project_goal` do not use baskets.
 - All SQL is fixed and parameterised. The model selects filter values, never SQL.
+- Web search queries go to Exa, an outside service. The agent is told never to put the customer id,
+  names, amounts or transaction details in a query. Web pages are data, not instructions, and web
+  facts never change the tool figures for the customer's own money.
 
 ## Forecast method (`src/finance/forecast.ts`)
 
