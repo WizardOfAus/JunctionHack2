@@ -14,7 +14,7 @@
 .plot{position:relative;height:190px;min-width:0}
 .interactivePlot{cursor:crosshair;touch-action:pan-y}
 .compactPlot{height:140px}
-.plot svg{display:block;width:100%;height:100%;overflow:visible;pointer-events:none}
+.timeline .plot svg{display:block;width:100%;height:100%;overflow:visible;pointer-events:none}
 .plot svg *{vector-effect:non-scaling-stroke}
 .gridLine{stroke:#e7ebe2;stroke-width:1}
 .chartArea{fill:#edf3e4}

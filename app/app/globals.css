@@ -57,3 +57,6 @@ button:disabled:hover{transform:none}
 .coach-panel:has(.messages:empty) .messages{display:none}
 .coach-panel:has(.messages:empty) .composer{margin:14px 0}
 .coach-prompts{margin-top:12px}
+
+.primary-column>.life-panel:first-child{margin-top:0}
+.cash-chart{padding-top:0;margin-top:24px}
