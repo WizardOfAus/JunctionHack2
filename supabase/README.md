@@ -5,18 +5,21 @@ The demo data is accessible in the Supabase project at <https://ighxaiiqgtpsgioq
 ## Which source to use
 
 - **To look at or query the demo data:** use the Supabase project.
-- **To process the data for development:** do not use the Supabase copy. Use the source dataset on GitHub, [hackjunction/Junction-2026-S-pankki](https://github.com/hackjunction/Junction-2026-S-pankki), at the pinned revision `fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f`. Follow [the data audit](../docs/data-audit.md) to download the real Git LFS payload, check it and run the importers. The importers write `app/data`. Then make the seed again (see below) so that Supabase agrees with `app/data`.
+- **To process the data for development:** do not use the Supabase copy. Use the source dataset on GitHub, [hackjunction/Junction-2026-S-pankki](https://github.com/hackjunction/Junction-2026-S-pankki), at the pinned revision `fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f`. Follow [the data audit](../docs/data-audit.md) to download the real Git LFS payload, check it and run the importers. The importers and `app/scripts/build-overlays.py` write `app/data`. Then make the seed again (see below) so that Supabase agrees with `app/data`.
 
-Supabase holds one audited customer and the aggregate insight tables. It does not hold the full source, so new personas, audits, EDA and importer changes must start from the GitHub source.
+Supabase holds one audited customer, the aggregate insight tables and the public-data overlays. It does not hold the full source, so new personas, audits, EDA and importer changes must start from the GitHub source.
 
 | Table | Source | Rows |
 | --- | --- | --- |
 | `demo_clocks` | `app/data/demo-clock.json` | 2 (`current`, `backtest`) |
 | `personas` | `app/data/persona.json` (provenance and statistics) | 1 (`CUST04859`) |
 | `transactions` | `app/data/persona.json` transactions | 719 |
-| `insight_datasets`, `insight_rows` | `app/data/insights/*.csv` | 8 datasets, 111 rows |
+| `csv_datasets`, `csv_rows` | `app/data/insights/*.csv` | 8 datasets, 111 rows |
+| `csv_datasets`, `csv_rows` | `app/data/overlays/*.csv` | 4 datasets, 1,336 rows |
 
-Transactions keep the original source text (`tx_amount_eur`, `tx_timestamp`, …) and the integer cent values (`amount_cents`, `balance_cents`). Insight rows are JSON objects. Numeric cells are JSON numbers. Blank CSV headers are named `metric` (first column) or `quantile` (`benchmarks_by_age`).
+Transactions keep the original source text (`tx_amount_eur`, `tx_timestamp`, …) and the integer cent values (`amount_cents`, `balance_cents`). CSV rows are JSON objects in `csv_rows.data`; `csv_datasets.folder` is `insights` or `overlays`. Numeric cells are JSON numbers. Columns named `*_code` or `*_id`, and values with a leading zero (postal codes such as `00100`), stay text. Blank cells are `null`. Blank CSV headers are named `metric` (first column) or `quantile` (`benchmarks_by_age`).
+
+The overlay rows are public data assigned to synthetic IDs. They keep their `label`, `licence` and source columns. Follow [the overlay README](../app/data/overlays/README.md) for the licence terms (`merchants.csv` is ODbL 1.0) and show the `label` text with any name or value from them.
 
 Row level security is on for all tables, with no policies. The publishable/anon key cannot read them. Use the secret (service role) key on the server only, so customer scope stays server-controlled. Do not commit keys.
 

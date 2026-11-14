@@ -14,6 +14,8 @@ transaction. Show the `label` text with any name or value that comes from these 
 | `postal_areas.csv` | 290 | `postal_code` | Statistics Finland, Paavo | CC BY 4.0 |
 | `mortgage_market_rates.csv` | 16 | `month`, `series` | Bank of Finland open data | Free reuse with acknowledgement of the source |
 
+These overlays are also accessible in Supabase at <https://ighxaiiqgtpsgioqwamp.supabase.co> (`csv_datasets` and `csv_rows`, see [`supabase/README.md`](../../../supabase/README.md)). Use that copy to look at the data only. To build or change the overlays, use the steps below with the pinned GitHub source.
+
 ## Regenerate
 
 From `app/`:

@@ -47,23 +47,25 @@ comment on table public.transactions is 'Original source rows from app/data/pers
 comment on column public.transactions.source_row is 'Line number in the pinned upstream CSV.';
 create index if not exists transactions_customer_date_idx on public.transactions (customer_id, tx_date, source_row);
 
-create table if not exists public.insight_datasets (
+create table if not exists public.csv_datasets (
   name text primary key,
-  source_file text not null,
+  folder text not null check (folder in ('insights', 'overlays')),
+  source_file text not null unique,
   columns text[] not null
 );
-comment on table public.insight_datasets is 'One row per CSV in app/data/insights. See docs/data-insights.md.';
+comment on table public.csv_datasets is 'One row per CSV in app/data/insights (see docs/data-insights.md) and app/data/overlays (see app/data/overlays/README.md).';
 
-create table if not exists public.insight_rows (
-  dataset text not null references public.insight_datasets (name) on delete cascade,
+create table if not exists public.csv_rows (
+  dataset text not null references public.csv_datasets (name) on delete cascade,
   row_index integer not null,
   data jsonb not null,
   primary key (dataset, row_index)
 );
-comment on table public.insight_rows is 'CSV rows as JSON objects. Numeric cells are JSON numbers; blank headers are named (metric, quantile).';
+comment on table public.csv_rows is 'CSV rows as JSON objects. Numeric cells are JSON numbers, except *_code, *_id and leading-zero values, which stay text. Blank cells are null. Blank headers are named (metric, quantile). Overlay rows keep their label and licence columns.';
+create index if not exists csv_rows_data_idx on public.csv_rows using gin (data jsonb_path_ops);
 
 alter table public.demo_clocks enable row level security;
 alter table public.personas enable row level security;
 alter table public.transactions enable row level security;
-alter table public.insight_datasets enable row level security;
-alter table public.insight_rows enable row level security;
+alter table public.csv_datasets enable row level security;
+alter table public.csv_rows enable row level security;
