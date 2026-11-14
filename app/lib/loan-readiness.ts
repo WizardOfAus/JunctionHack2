@@ -60,7 +60,7 @@ export function loanReadiness({forecast:f,assumptions:a,mortgage,marketRate,term
      explanation:`In this dataset, required income is the monthly payment at 6% over 25 years divided by 0.35. It tests whether payments stay manageable if rates rise; it is not a lending rule.`,
      source:'Synthetic Junction mortgage dataset calculation'},
     {id:'buffer',label:'Cash buffer for essentials',status:status(bufferMonths===null?null:bufferMonths>=BUFFER_TARGET_MONTHS),
-     valueMonths:bufferMonths,targetMonths:BUFFER_TARGET_MONTHS,
+     valueMonths:bufferMonths,targetMonths:BUFFER_TARGET_MONTHS,gapMonths:bufferMonths===null?null:Math.max(0,Math.round((BUFFER_TARGET_MONTHS-bufferMonths)*10)/10),
      explanation:'Months of regular essentials this account balance would cover. Buying a home brings new costs, so a cushion matters after the deposit too.',
      source:'Recorded balance and regular basket'},
   ];

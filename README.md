@@ -12,7 +12,7 @@ An independent financial learning prototype for the S-Pankki challenge. Brillian
 - [Onboarding and future persona plan](docs/onboarding.md)
 - [Palette and brand provenance](docs/brand-provenance.md)
 
-The complete first prototype is on `main`, merged through [PR #1](https://github.com/WizardOfAus/JunctionHack2/pull/1). Goal-led onboarding now offers spending clarity, a safety net or a first home. All three use one audited demo account; multiple source personas are still planned. Start collaborator branches from current `main` and follow the work-package boundaries above.
+The complete first prototype is on `main`, merged through [PR #1](https://github.com/WizardOfAus/JunctionHack2/pull/1). Goal-led onboarding now offers spending clarity, a safety net or a first home. Choose among eight allowlisted synthetic demo situations. The goal, lessons, assumptions and current scenario are shared across the workspace; see [the shared journey contract](docs/shared-journey-context.md). Start collaborator branches from current `main` and follow the work-package boundaries above.
 
 ## Run locally
 

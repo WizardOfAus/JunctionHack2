@@ -14,5 +14,5 @@ export function outlook(f: Forecast) {
   const lowest = f.points.reduce<Forecast['points'][number] | undefined>((best, point) => !best || point.balanceCents < best.balanceCents ? point : best, undefined);
   if (f.minimumCents < f.protectedCents) return { kind: 'attention', title: 'Your reserve could come under pressure.', detail: `The forecast dips below your protected amount${lowest ? ` around ${dateLabel(lowest.date)}` : ''}. Review the timing before adding extra saving.` } as const;
   if (f.remainingCents <= 0) return { kind: 'steady', title: 'Your money already has a job.', detail: 'There is no extra room in this forecast after protection and any planned allocation. You can explore without committing to a change.' } as const;
-  return { kind: 'steady', title: 'A little room for what comes next.', detail: `Your projected balance stays above your reserve over the next ${f.horizonDays} days. Explore the timing before choosing your next step.` } as const;
+  return { kind: 'steady', title: lowest ? `Lowest balance expected on ${dateLabel(lowest.date)}.` : 'A little room for what comes next.', detail: `Your projected balance stays above your reserve over the next ${f.horizonDays} days. Explore the timing before choosing your next step.` } as const;
 }

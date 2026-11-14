@@ -6,8 +6,8 @@ import { euro, type Forecast } from '@/lib/finance';
 import { checkPrediction, lessonRoom, practice } from './balance-model';
 import styles from './balance-lesson.module.css';
 
-type Props = { completed: boolean; forecast: Forecast; unavailable: boolean; onComplete: () => void; onMoney: () => void; onNext: () => void };
-export function BalanceLesson({ completed, forecast, unavailable, onComplete, onMoney, onNext }: Props) {
+type Props = { nextDiscovery?: { title:string; xp:number }; completed: boolean; forecast: Forecast; unavailable: boolean; onComplete: () => void; onMoney: () => void; onNext: () => void };
+export function BalanceLesson({ nextDiscovery = {title:'Build your safety net',xp:50}, completed, forecast, unavailable, onComplete, onMoney, onNext }: Props) {
   const [stage, setStage] = useState(0);
   const [reserve, setReserve] = useState(30000);
   const [answer, setAnswer] = useState<number | null>(null);
@@ -18,7 +18,7 @@ export function BalanceLesson({ completed, forecast, unavailable, onComplete, on
   useEffect(() => { heading.current?.focus({ preventScroll: true }); window.scrollTo({ top: 0, behavior: 'instant' }); }, [stage]);
 
   return <section className={styles.studio} aria-labelledby="balance-heading">
-    <aside className={styles.path}><h2>Money foundations</h2><p>Learn by trying.</p><ol><li className={styles.current}><span>{completed ? <Check size={19}/> : <Wallet size={19}/>}</span><div><strong>Your balance has a job</strong><small>{completed ? 'Completed · revisit any time' : 'Interactive · 2 min · 40 XP'}</small></div></li><li><span><ShieldCheck size={18}/></span><div><button onClick={onNext}>Build your safety net<ArrowRight size={14}/></button><small>Up next · 3 min · 50 XP</small></div></li></ol><p className={styles.noPressure}>Progress saved. Come back whenever you like.</p><button className="text-button" onClick={onMoney}><ArrowLeft size={16}/>Back to my money</button></aside>
+    <aside className={styles.path}><h2>Money foundations</h2><p>Learn by trying.</p><ol><li className={styles.current}><span>{completed ? <Check size={19}/> : <Wallet size={19}/>}</span><div><strong>Your balance has a job</strong><small>{completed ? 'Completed · revisit any time' : 'Interactive · 2 min · 40 XP'}</small></div></li><li><span><ShieldCheck size={18}/></span><div><button onClick={onNext}>{nextDiscovery.title}<ArrowRight size={14}/></button><small>Up next · 3 min · {nextDiscovery.xp} XP</small></div></li></ol><p className={styles.noPressure}>Progress saved. Come back whenever you like.</p><button className="text-button" onClick={onMoney}><ArrowLeft size={16}/>Back to my money</button></aside>
     <div className={styles.lesson}>
       <div className={styles.progress}><ol aria-label="Lesson progress">{['Explore', 'Predict', 'Connect'].map((name, i) => <li key={name} aria-current={stage === i ? 'step' : undefined} className={stage >= i ? styles.reached : ''}><span>{i < stage ? <Check size={13}/> : i + 1}</span>{name}</li>)}</ol><span><Zap size={15}/>{completed ? '40 XP saved' : '40 XP'}</span></div>
       <h1 id="balance-heading" ref={heading} tabIndex={-1}>{stage === 0 ? 'Give every euro a job.' : stage === 1 ? 'What’s left to choose with?' : 'See it in your own numbers.'}</h1>

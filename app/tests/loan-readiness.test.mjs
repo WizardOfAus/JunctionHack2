@@ -71,3 +71,11 @@ test('pass-through accounts are told their savings elsewhere are not visible',()
   const {r}=readiness('home-recent-approval');
   assert.ok(r.notes.some(n=>/another account/.test(n)));
 });
+
+test('buffer gap is explicit and absent when essentials are unknown',()=>{
+  const {f}=readiness('reference');
+  const input={forecast:{...f,balanceCents:15000,baskets:{regular:10000,irregular:0,flexible:0}},assumptions:defaults,mortgage:null,marketRate:null};
+  assert.equal(check(loanReadiness(input),'buffer').gapMonths,1.5);
+  const unknown=loanReadiness({...input,forecast:{...input.forecast,baskets:{regular:0,irregular:0,flexible:0}}});
+  assert.equal(check(unknown,'buffer').gapMonths,null);assert.equal(check(unknown,'buffer').status,'unknown');
+});
