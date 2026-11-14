@@ -19,6 +19,8 @@ CUSTOMER = "CUST04859"
 REVISION = "fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f"
 EXPECTED_CURRENT = [741739, 270099, 58338, 24633, 7730, 1546, 0]  # verified independently with DuckDB
 CLOCK_FILE = Path(__file__).resolve().parent.parent / "data" / "demo-clock.json"
+CATALOGUE_FILE = Path(__file__).resolve().parent.parent / "data" / "personas" / "catalogue.json"
+MONTHS = {m: i + 1 for i, m in enumerate(["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"])}
 SOURCE_URL = f"https://media.githubusercontent.com/media/hackjunction/Junction-2026-S-pankki/{REVISION}/tx_junction_transactions.csv"
 
 
@@ -112,10 +114,89 @@ def audit(rows, clock):
     return {"targets": targets, "statistics": statistics}
 
 
+def iso_timestamp(value):
+    """'26MAY26:19:36:59' -> '2026-05-26T19:36:59'."""
+    day, mon, year, clock = value[:2], value[2:5], value[5:7], value[8:]
+    return f"20{year}-{MONTHS[mon]:02d}-{day}T{clock}"
+
+
+def optional_cents(value):
+    return cents(value) if value not in ("", None) else None
+
+
+def read_upstream(path):
+    with path.open(encoding="utf-8-sig", newline="") as source:
+        return list(csv.DictReader(source))
+
+
+def export_personas(source_csv, upstream, out_dir, history_through):
+    """Write each allowlisted persona's rows, customer attributes and mortgage application record."""
+    catalogue = json.loads(CATALOGUE_FILE.read_text())
+    wanted = {p["customerId"]: p["id"] for p in catalogue["personas"]}
+    rows = defaultdict(list)
+    with source_csv.open(encoding="utf-8-sig", newline="") as source:
+        for source_row, raw in enumerate(csv.DictReader(source), start=2):
+            if raw["customer_id"] in wanted and raw["tx_date"] <= history_through:
+                rows[raw["customer_id"]].append({**raw, "id": f"row-{source_row}", "sourceRow": source_row,
+                                                 "amountCents": cents(raw["tx_amount_eur"]),
+                                                 "balanceCents": cents(raw["balance_after_eur"])})
+    customers = {r["customer_id"]: r for r in read_upstream(upstream / "tx_customers_junction.csv")}
+    areas = {r["postal_code"]: r for r in read_upstream(CATALOGUE_FILE.parent.parent / "overlays" / "postal_areas.csv")}
+    links = {r["customer_id"]: r for r in read_upstream(upstream / "mtg_tx_customer_link_and_final_mtg_infio.csv")}
+    events = defaultdict(list)
+    for r in read_upstream(upstream / "mtg_negotiation_history.csv"):
+        timestamp = iso_timestamp(r["timestamp"])
+        if timestamp[:10] <= history_through:
+            events[r["mortgage_customer_id"]].append({
+                "timestamp": timestamp, "eventType": r["event_type"],
+                "propertyId": r["property_id"] or None, "propertyType": r["property_type"] or None,
+                "priceCents": optional_cents(r["property_price_estimate"]), "loanCents": optional_cents(r["loan_amount"]),
+                "equityCents": optional_cents(r["equity_amount"]), "collateralType": r["collateral_type"] or None,
+                "collateralValueCents": optional_cents(r["collateral_value"]), "collateralStatus": r["collateral_status"] or None,
+                "decision": r["decision"] or None, "rejectionReason": r["rejection_reason"] or None,
+                "expenseType": r["expense_type"] or None, "expenseCents": optional_cents(r["expense_amount"]),
+                "note": r["note"]})
+    records = {}
+    for customer_id, persona_id in wanted.items():
+        history = rows[customer_id]
+        assert history, f"{customer_id} has no rows"
+        assert len({row["bank_account_id"] for row in history}) == 1
+        link = links.get(customer_id)
+        mortgage = None
+        if link:
+            mortgage = {"applicationId": link["mortgage_customer_id"],
+                        "final": {"decision": link["final_decision"], "rejectionReason": link["rejection_reason"] or None,
+                                  "priceCents": cents(link["final_property_price_eur"]),
+                                  "loanCents": cents(link["final_requested_loan_eur"]),
+                                  "equityCents": cents(link["final_equity_amount_eur"]),
+                                  "collateralValueCents": cents(link["final_collateral_value_eur"]),
+                                  "requiredMonthlyIncomeCents": cents(link["required_monthly_income_eur"])},
+                        "events": sorted(events[link["mortgage_customer_id"]], key=lambda e: e["timestamp"])}
+        customer = customers[customer_id]
+        area = areas.get(customer["customer_postal_code"], {})
+        records[persona_id] = {"customerId": customer_id, "accountId": history[0]["bank_account_id"],
+                               "rowCount": len(history), "lastRowDate": history[-1]["tx_date"],
+                               "customer": {"age": int(customer["customer_age"]), "postalCode": customer["customer_postal_code"],
+                                            "area": {"nameFi": area.get("area_name_fi") or None, "nameSv": area.get("area_name_sv") or None,
+                                                     "municipality": area.get("municipality_fi") or None,
+                                                     "source": area.get("source") or None, "licence": area.get("licence") or None}},
+                               "mortgage": mortgage}
+        if persona_id != catalogue["defaultId"]:
+            write_json(out_dir / f"{persona_id}.json", {"id": persona_id, "customerId": customer_id,
+                                                        "sourceRevision": REVISION, "historyThrough": history_through,
+                                                        "transactions": history})
+    write_json(out_dir / "records.json", {"sourceRevision": REVISION, "historyThrough": history_through,
+                                          "personas": records})
+    return {pid: {"rows": r["rowCount"], "mortgage": r["mortgage"]["applicationId"] if r["mortgage"] else None}
+            for pid, r in records.items()}
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input", type=Path, default=Path("work/transactions.csv"))
     parser.add_argument("--output", type=Path, default=Path("data/persona.json"))
+    parser.add_argument("--upstream", type=Path, default=Path("work/upstream"))
+    parser.add_argument("--personas", type=Path, default=Path("data/personas"))
     args = parser.parse_args()
     rows, customers, accounts, previous = [], set(), defaultdict(set), {}
     count, reconciliation_errors = 0, 0
@@ -168,7 +249,8 @@ def main():
                "accountId": history[0]["bank_account_id"], "provenance": provenance,
                "transactions": history, "statistics": statistics}
     write_json(args.output, payload)
-    print(json.dumps({"output": str(args.output), "historyRows": len(history),
+    personas = export_personas(args.input, args.upstream, args.personas, current["historyThrough"])
+    print(json.dumps({"output": str(args.output), "historyRows": len(history), "personas": personas,
                       "backtestTargets": statistics["backtestTargets"],
                       "audit": provenance, "targets": targets,
                       "conservativeForecastInputs": statistics["conservativeForecastInputs"]}, indent=2))

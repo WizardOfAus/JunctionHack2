@@ -50,6 +50,24 @@ The current figures were reproduced independently with DuckDB from the raw CSV. 
 
 The sections below describe the original 1 September audit, which is now the backtest.
 
+## Demo personas
+
+`app/data/personas/catalogue.json` allowlists eight personas by stable key (`reference` = CUST04859 is the default). The importer extracts each persona's rows through the current clock into `app/data/personas/<id>.json` (`reference` keeps `app/data/persona.json`), and writes `records.json` with:
+- the recorded age and postcode;
+- the Paavo area name from `data/overlays/postal_areas.csv`;
+- the mortgage application record, where one exists.
+
+Rows keep every original field, as described above. Mortgage events after the clock's last history day are dropped at import, and the backtest clock hides events after 31 August at runtime (`lib/personas/view.ts`).
+
+The importer also needs the three small upstream files in `app/work/upstream/`:
+
+```sh
+mkdir -p work/upstream && for f in tx_customers_junction.csv mtg_negotiation_history.csv mtg_tx_customer_link_and_final_mtg_infio.csv; do
+  curl -fL "https://raw.githubusercontent.com/hackjunction/Junction-2026-S-pankki/fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f/$f" -o "work/upstream/$f"; done
+```
+
+Requests name a persona with an optional top-level `personaId`; unknown keys return 400 and never fall back. Mortgage data is shown as an **application record**. The required-income figure is a dataset calculation (a 6%, 25-year annuity payment divided by 0.35), not a lending rule or an approval prediction.
+
 ## Acceptance targets
 
 All seven targets from the build brief reproduce exactly at cent precision.
