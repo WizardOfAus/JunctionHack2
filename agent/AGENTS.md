@@ -6,10 +6,10 @@ Read the repository `AGENTS.md` first. Setup and environment variables are in `R
 ## Layout
 
 - `src/agents/koti.ts` — the Koti agent (`'use agent'`). `initialData.customerId` locks a conversation to one customer.
-- `src/tools/` — Flue tools: `query_transactions`, `forecast_cashflow`, `project_goal`, `find_customers`,
+- `src/tools/` — Flue tools: `query_transactions`, `forecast_cashflow`, `project_goal`, `evaluate_asp_progress`, `find_customers`,
   and the Exa web tools `web_search` and `deep_research` (`web-search.ts`, only when `EXA_API_KEY` is set).
 - `src/finance/` — pure finance code (integer cents, dates, dataset vocabulary). No I/O.
-  `forecast.ts` is the Monte Carlo engine, `goal.ts` the goal projection, `history.ts` the shared
+  `forecast.ts` is the Monte Carlo engine, `goal.ts` the goal projection, `asp.ts` the versioned ASP rules, `history.ts` the shared
   statistics both use (`RECENT_MONTHS` = 6).
 - `src/data/store.ts` — read-only SQLite access (`node:sqlite`). Every query stops at the data cutoff.
 - `scripts/import-data.ts` — builds `data/koti.db` from the pinned upstream dataset.

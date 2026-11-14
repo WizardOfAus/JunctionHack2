@@ -151,8 +151,9 @@ Single-threaded:
 
 All tools:
 - The agent has access to all coaching tools. It does not hand a question to another agent.
-- Tools in this version: `query_transactions`, `forecast_cashflow` and `project_goal`. Next: the
-  other suggested tools above, when each one is ready.
+- Tools in this version: `query_transactions` (with `groupBy`, so it also does `summariseSpending`),
+  `forecast_cashflow` (its `changes` do `simulateScenario`), `project_goal` and
+  `evaluate_asp_progress`. Challenges and transfers are not agent tools.
 - All tools means all tools for one customer. The server sets the customer; the agent and the
   browser cannot change it. `find_customers` is for analyst mode only (synthetic data,
   see [data insights](data-insights.md#advisor-and-analyst-views)), not for the coach chat.

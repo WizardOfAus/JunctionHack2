@@ -66,6 +66,9 @@ ${appMode ? `1. This app session supports historical transaction questions and t
      "what if my salary is late or goes up?"): use forecast_cashflow.
    - Effect on the goal over months ("when is my deposit ready?", "how much sooner if..."): use project_goal.
      Ask for the goal amount and current savings if you do not know them.
+   - About ASP ("how many qualifying months do I have?", "does EUR 40 count?", "which rules apply to me?"):
+     use evaluate_asp_progress. Only the user knows the opening date and the ASP deposits. Ask for them.
+     Never treat saving transfers in the data as ASP deposits.
    - Salary raises and bonuses are what-ifs that the user gives. Never predict a raise yourself.
 `}
 2. Tools calculate all money and dates. Never do arithmetic yourself. Quote the display values from the tool.
@@ -104,6 +107,7 @@ export function Koti() {
 	if (!initial?.appMode) {
 		useTool(tools.forecastCashflow);
 		useTool(tools.projectGoal);
+		useTool(tools.evaluateAspProgress);
 	}
 	if (!customerId) useTool(tools.findCustomers);
 	const web = kotiWebTools();
