@@ -32,6 +32,12 @@ The pinned upstream Git object contains `oid sha256:49b3265d8e44e751de305a074dcf
 
 The original September backtest subset was rechecked: 698 rows, only CUST04859, latest date 31 August 2026. This verifies use of the actual source payload, while the runtime intentionally uses only one customer's history. Additional personas require separate extraction, audits and a server-scoped catalogue; they are not enabled by the current app.
 
+## Supabase copy (added 14 November 2026)
+
+The committed demo data (`app/data/demo-clock.json`, `app/data/persona.json` and `app/data/insights/*.csv`) is accessible in the Supabase project at <https://ighxaiiqgtpsgioqwamp.supabase.co>. The tables, row counts, access rules and update steps are in [`supabase/README.md`](../supabase/README.md). The app does not read Supabase yet.
+
+Use the Supabase copy to look at or query the demo data only. To process the data for development, use the pinned GitHub source, [hackjunction/Junction-2026-S-pankki](https://github.com/hackjunction/Junction-2026-S-pankki) at revision `fbdecdedf1a1f49dd641c2e6b9f2b62d0dc0cc8f`, with the steps above. The Supabase copy is a derived artifact: it holds one customer, not the full 3,626,755-row source. After the importers change `app/data`, make the seed again and load it.
+
 ## Demo clock (updated 14 November 2026)
 
 The team moved the demo clock to **1 October 2026** with history through **30 September 2026**, the end of the dataset. `app/data/demo-clock.json` is the single source for the app, importer and agent. `persona.json` now holds 719 CUST04859 rows through 26 September 2026 (the last recorded row). The importer audits two clocks from the same rows:

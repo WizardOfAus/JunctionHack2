@@ -4,6 +4,7 @@ An independent financial learning prototype for the S-Pankki challenge. Brillian
 
 - [Product and build plan](docs/build-plan.md)
 - [Data audit](docs/data-audit.md)
+- [Supabase copy of the demo data](supabase/README.md)
 - [Verification and limitations](docs/verification.md)
 - [Design workflow](docs/design-workflow.md)
 - [Contributor setup and Claude Code handoff](CONTRIBUTING.md)
