@@ -16,20 +16,29 @@ Node 22.18 or later. All commands run in `agent/`.
 ```sh
 npm ci
 npm run import-data      # downloads the pinned dataset (about 350 MB) and builds data/koti.db
-cp .env.example .env     # then set ANTHROPIC_API_KEY
+cp .env.example .env     # then set OPENAI_API_KEY
 ```
 
 Do not commit `.env`. See `.env.example` for all variables:
 
 | Variable | Default | Use |
 |---|---|---|
-| `ANTHROPIC_API_KEY` | none | Model provider key. Any provider Flue supports works. |
+| `OPENAI_API_KEY` | none | OpenAI API key. Required. See [Model](#model). |
 | `EXA_API_KEY` | none | [Exa](https://exa.ai) key. Turns on `web_search` and `deep_research`. Without it the agent has no web search. |
-| `KOTI_MODEL` | `anthropic/claude-sonnet-5-5` | Model id as `provider/model`. |
 | `KOTI_DB_PATH` | `data/koti.db` | Path to the imported dataset. |
 | `KOTI_DATA_CUTOFF` | shared demo clock | Last day of history the agent can see; an earlier override runs a backtest. |
 | `KOTI_AGENT_TOKEN` | none | When set, `/agents/*` requires `Authorization: Bearer <token>`. |
 | `PORT` | `3000` | Port for the built server (`npm start`). The dev server uses 5180. |
+
+## Model
+
+The agent uses one model and one endpoint, in development and in deployment:
+OpenAI GPT-6.1 Sol (`openai/gpt-6.1-sol`) through the OpenAI API (`https://api.openai.com/v1`).
+The key is `OPENAI_API_KEY`. No other provider (Anthropic, Azure, Gemini or a gateway) is configured.
+
+The model id is a constant in `src/model.ts`. There is no environment override: if `KOTI_MODEL` is set
+to a different model, the agent stops at start-up. To change the model, change the constant in a
+reviewed PR and update this section.
 
 `import-data` gets the dataset from
 [hackjunction/Junction-2026-S-pankki](https://github.com/hackjunction/Junction-2026-S-pankki)

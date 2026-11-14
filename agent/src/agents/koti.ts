@@ -2,11 +2,12 @@
 import { useInitialData, useModel, useTool } from '@flue/runtime';
 import * as v from 'valibot';
 import { AS_OF, DATA_CUTOFF } from '../data/store.ts';
+import { assertModelConfig, MODEL } from '../model.ts';
 import { kotiTools, kotiWebTools } from '../tools/index.ts';
 import { CustomerId } from '../tools/shared.ts';
 
-/** Any provider/model id that Flue supports. Set KOTI_MODEL in .env to change it. */
-const MODEL = process.env.KOTI_MODEL ?? 'anthropic/claude-sonnet-5-5';
+// Only OpenAI GPT-6.1 Sol is configured. See src/model.ts.
+assertModelConfig();
 
 const InitialData = v.optional(v.object({
 	/**

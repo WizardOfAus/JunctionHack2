@@ -38,4 +38,4 @@ Node 24 is recommended. Run npm commands inside `app/`. The default bundled prov
 
 For development processing, use the pinned GitHub dataset and [LFS instructions](docs/data-audit.md). Supabase is a derived runtime/inspection copy, not the source of truth. Do not change the canonical5174 provider until its all-persona API smoke checks pass.
 
-Live AI configuration is deferred until UI review. New provider integrations must accept server-side environment variables and keep deterministic calculations/evidence intact. Preview publication belongs to the integration owner; a new worktree must not register another Site or change `app/.openai/hosting.json`.
+The only model endpoint is the OpenAI API: the agent in `agent/` uses OpenAI GPT-6.1 Sol (`openai/gpt-6.1-sol`) with a server-side `OPENAI_API_KEY`, in development and in deployment. Do not add other model providers. Model changes must keep deterministic calculations/evidence intact; see [agent model](agent/README.md#model). Preview publication belongs to the integration owner; a new worktree must not register another Site or change `app/.openai/hosting.json`.

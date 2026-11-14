@@ -43,4 +43,4 @@ The application uses React, TypeScript, server routes, and Vinext's Cloudflare-c
 
 Money, Learn, Coach and My plan are implemented, including a redesigned balance lesson and two existing lessons, evidence inspection and classification corrections, reserves, spending scenarios, salary delays, a home goal, ASP inputs, and simulated transfers. The supplied ledger is synthetic and fixed at 1 October 2026 (history through 30 September); it is not a live bank account.
 
-Live AI, actual S-Pankki connectivity, authentication for real customer data, cash rewards and money movement are later integration work. OpenAI or Gemini can be connected server-side after the UX review. Never put model keys in browser code or commit them.
+Live AI, actual S-Pankki connectivity, authentication for real customer data, cash rewards and money movement are later integration work. The coach agent in `agent/` uses only OpenAI GPT-6.1 Sol (`openai/gpt-6.1-sol`) through the OpenAI API, on the server; see [agent model](agent/README.md#model). Never put model keys in browser code or commit them.
