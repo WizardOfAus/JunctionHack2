@@ -1,5 +1,38 @@
-<img src="assets/icon.svg" width="64" height="64" alt="">
+# Koti — little steps, closer to home
 
-# WizardOfAus/JunctionHack2
+An independent first-home learning prototype for the S-Pankki challenge. Brilliant-inspired interactive lessons turn synthetic transaction evidence into understandable choices. XP rewards learning; it has no cash value.
 
-Created in [T3 Code](https://t3.codes).
+- [Product and build plan](docs/build-plan.md)
+- [Data audit](docs/data-audit.md)
+- [Verification and limitations](docs/verification.md)
+- [Design workflow](docs/design-workflow.md)
+
+## Run locally
+
+Node 24 recommended (minimum 22.13).
+
+```sh
+cd app
+npm ci
+npm run dev
+```
+
+Open the URL printed by the development server, normally http://localhost:5173. No API key is needed. The app uses an explicitly labelled deterministic demo coach. Preferences and lesson progress are stored in this browser.
+
+## Checks
+
+```sh
+cd app
+npm test
+npm run typecheck
+npm run test:api # with the development server running
+npm run build
+```
+
+The application uses React, TypeScript, server routes, and Vinext's Cloudflare-compatible build. The deployment manifest is `app/.openai/hosting.json`. Original illustration and font licensing are recorded in [asset provenance](docs/asset-provenance.md).
+
+## Scope
+
+Today, Coach and My plan are implemented, including three interactive lessons, evidence inspection and classification corrections, reserves, spending scenarios, salary delays, a home goal, ASP inputs, and simulated transfers. The supplied ledger is synthetic and fixed at 1 September 2026; it is not a live bank account.
+
+Live AI, actual S-Pankki connectivity, authentication for real customer data, cash rewards and money movement are later integration work. OpenAI or Gemini can be connected server-side after the UX review. Never put model keys in browser code or commit them.

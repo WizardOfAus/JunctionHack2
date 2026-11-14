@@ -1,0 +1,6 @@
+import { z } from 'zod';
+import { querySchema,assumptionsSchema } from '@/lib/contracts';
+import { summarise,basketOf } from '@/lib/finance';
+import { transactions } from '@/lib/server-data';
+export async function POST(request:Request){try{const body=z.object({query:querySchema,assumptions:assumptionsSchema}).strict().parse(await request.json()); const q=body.query;const a=body.assumptions;if(!a.connected)return Response.json({error:'Reconnect the demo source to inspect rows.'},{status:409});const s=summarise(transactions,q.from,q.to,q.category);return Response.json({...s,rows:s.rows.filter(t=>!q.basket||basketOf(t,a.corrections)===q.basket).map(t=>({...t,basket:basketOf(t,a.corrections)}))});}catch{return Response.json({error:'Choose a valid history period ending before September 2026.'},{status:400});}}
+export async function GET(){return Response.json({error:'Use the scoped query endpoint.'},{status:405});}
