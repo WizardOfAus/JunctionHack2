@@ -142,6 +142,19 @@ export function projectGoal(input: GoalInput): GoalResult {
 		}
 	}
 
+	// Reject overlapping cuts rather than allocate the same spending twice.
+	const cuts = changes.filter((c): c is Extract<GoalChange, { type: 'changeSpending' }> => c.type === 'changeSpending');
+	for (let i = 0; i < cuts.length; i++) {
+		for (const other of cuts.slice(i + 1)) {
+			if (cuts[i].category === other.category && (!cuts[i].mcc || !other.mcc || cuts[i].mcc === other.mcc)) {
+				throw new Error('Spending changes must not overlap. Use one change per category, or distinct MCCs within it.');
+			}
+		}
+	}
+	if (changes.filter((c) => c.type === 'changeIncome').length > 1) {
+		throw new Error('Give only one changeIncome change.');
+	}
+
 	const stats = monthlyStats(rows, asOf, RECENT_MONTHS);
 	const history = {
 		monthsUsed: stats.months.length,
@@ -227,6 +240,10 @@ export function projectGoal(input: GoalInput): GoalResult {
 			oneOffs.push({ date: change.date, amountCents: change.amountCents });
 			effects.push({ change: `One-off: ${change.label} on ${change.date}`, monthlyEffect: money(0), detail: `${money(change.amountCents).display} once.` });
 		}
+	}
+
+	if (stats.months.length && baseMonthly > stats.medianSurplusBeforeSavingCents) {
+		warnings.push(`The baseline saves ${money(baseMonthly).display} a month, more than the usual monthly surplus before saving (${history.medianSurplusBeforeSaving.display}). It may not be realistic. Check this month with forecast_cashflow.`);
 	}
 
 	if (!changes.length) {
