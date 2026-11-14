@@ -91,6 +91,7 @@ Server: `npm run dev`, then `POST /agents/koti/<conversation-id>` (see `src/app.
 | `project_goal` | "When is my deposit ready?", "How much sooner if...?" | Month-by-month arithmetic to a savings goal. Default monthly saving = median of the existing saving transfers in the last 6 months (the same window as the forecast). Changes: `changeSpending`, `changeIncome` (with `toGoalPercent`), `addMonthlySaving`, `oneOffDeposit`. Warns when a plan saves more than the usual monthly surplus. |
 | `web_search` | Quick lookup of a topic on the web (ASP rules, rates, prices, offers) | First web tool. Exa `type: "auto"`, 5 results by default (max 10), with text highlights. Optional `includeDomains`, `country` (default `FI`) and `publishedAfter`. Timeout 15 s. Needs `EXA_API_KEY`. |
 | `deep_research` | Dig deep: find a specific discount, the exact current rule, or a hard answer | Exa `type: "deep"`: several searches and a short answer with sources (`citations`). Slower (about 4 to 15 s) and costs more, so the agent uses it only when `web_search` is not enough. Timeout 40 s. Needs `EXA_API_KEY`. |
+| `evaluate_asp_progress` | "How many ASP months do I have?", "Does EUR 40 count?" | Versioned ASP rules (`asp-2026-06-01`). Counts qualifying months from the opening date and the verified monthly deposits that the user gives, never from the transaction data. Optional: compares savings with 5% and 10% of a home price, and projects a fixed monthly deposit. Accounts opened before 1 June 2026 get a transition explanation, not a count. |
 | `find_customers` | Pick synthetic customers to study | Analyst mode only (no `customerId` in `initialData`). Not for browsing customers. |
 
 ## Data rules
@@ -129,7 +130,18 @@ Saving goes in at the end of each month. Optional interest is added monthly. Sal
 transfers and surplus use the last 6 months (`RECENT_MONTHS` in `src/finance/history.ts`), the
 same window as the forecast, so the two tools agree. A spending change also uses the same monthly
 number in both tools. Income changes are what-ifs from the user; the agent never predicts a raise.
-ASP rules, purchase costs and mortgage approval are not included yet.
+Purchase costs and mortgage approval are not included. The goal projection does not add ASP bonus
+interest; ASP progress is a separate tool.
+
+## ASP method (`src/finance/asp.ts`)
+
+Rules are a versioned, effective-dated table (`ASP_RULES`). The account uses the rules in force on
+its opening date. From 1 June 2026 (source: State Treasury, page updated 5 August 2026): 20 qualifying
+months of EUR 50 to EUR 1,500 each, not necessarily in a row; a skipped month keeps earlier months;
+savings of 10% of the price (5% and 10 months for interim financing). Deposits in the same month are
+added first. Months above the maximum are not counted, and the tool tells the user to ask the bank.
+Accounts opened earlier are on transition rules (quarters, or a mix), so the tool explains them and
+does not give a count. Interest is not included. Meeting the conditions is not a mortgage approval.
 
 The build plan's audit medians (salary EUR 2,700.99, saving EUR 246.33, surplus EUR 583.38) use
 12 months. A test checks them with `monthlyStats(..., 12)`. The tools use 6 months, so for

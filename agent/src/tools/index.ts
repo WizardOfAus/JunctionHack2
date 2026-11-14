@@ -1,3 +1,4 @@
+import { makeEvaluateAspProgressTool } from './evaluate-asp-progress.ts';
 import { makeForecastCashflowTool } from './forecast-cashflow.ts';
 import { makeProjectGoalTool } from './project-goal.ts';
 import { makeFindCustomersTool, makeQueryTransactionsTool } from './query-transactions.ts';
@@ -14,6 +15,7 @@ function build(scope: ToolScope) {
 		findCustomers: makeFindCustomersTool(scope),
 		forecastCashflow: makeForecastCashflowTool(scope),
 		projectGoal: makeProjectGoalTool(scope),
+		evaluateAspProgress: makeEvaluateAspProgressTool(),
 	};
 }
 
