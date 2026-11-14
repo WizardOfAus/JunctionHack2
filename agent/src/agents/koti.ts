@@ -6,7 +6,7 @@ import { assertModelConfig, MODEL } from '../model.ts';
 import { kotiTools, kotiWebTools } from '../tools/index.ts';
 import { CustomerId } from '../tools/shared.ts';
 
-// Only OpenAI GPT-6.1 Sol is configured. See src/model.ts.
+// Only OpenAI GPT-6 Luna is configured. See src/model.ts.
 assertModelConfig();
 
 const InitialData = v.optional(v.object({

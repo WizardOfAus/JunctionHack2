@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { assertModelConfig, MODEL } from '../src/model.ts';
 
-test('the agent uses only OpenAI GPT-6.1 Sol', () => {
-	assert.equal(MODEL, 'openai/gpt-6.1-sol');
+test('the agent uses only OpenAI GPT-6 Luna', () => {
+	assert.equal(MODEL, 'openai/gpt-6-luna');
 });
 
 test('a different KOTI_MODEL stops start-up', () => {
