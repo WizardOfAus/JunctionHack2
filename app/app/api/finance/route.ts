@@ -1,12 +1,15 @@
 import { assumptionsSchema } from '@/lib/contracts';
-import { forecast,evaluateAsp,depositReady,defaults,CLOCK } from '@/lib/finance';
+import { forecast,evaluateAsp,depositReady,defaults,isConsumption,CLOCK } from '@/lib/finance';
+import { benchmarks } from '@/lib/benchmarks';
+import { benchmarkTables } from '@/lib/benchmark-tables';
 import { personaFromRequest,provenanceOf,unknownPersona } from '@/lib/personas/request';
 import { loanReadiness } from '@/lib/loan-readiness';
 import { latestMortgageRate } from '@/lib/market-rates';
 function respond(persona:NonNullable<ReturnType<typeof personaFromRequest>>,a:typeof defaults){
   const f=forecast(persona.transactions,a,CLOCK,persona.customerId);
   return Response.json({forecast:f,asp:evaluateAsp(a.aspOpenedOn,a.aspDeposits),goal:depositReady(a,f.challengeCents),provenance:provenanceOf(persona),persona:persona.view,
-    loanReadiness:loanReadiness({forecast:f,assumptions:a,mortgage:persona.view.mortgage,marketRate:latestMortgageRate(CLOCK)})});
+    loanReadiness:loanReadiness({forecast:f,assumptions:a,mortgage:persona.view.mortgage,marketRate:latestMortgageRate(CLOCK)}),
+    benchmarks:benchmarks({rows:persona.transactions,salaryCents:f.salaryCents,age:persona.view.customer.age,tables:benchmarkTables,isSpending:isConsumption})});
 }
 export async function GET(request:Request){
   const persona=personaFromRequest(new URL(request.url).searchParams.get('personaId')??undefined);
