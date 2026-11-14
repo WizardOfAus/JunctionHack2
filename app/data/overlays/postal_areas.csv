@@ -1,0 +1,291 @@
+postal_code,status,area_name_fi,area_name_sv,municipality_fi,municipality_sv,inhabitants,households,households_owner_occupied,households_rented,rented_household_share_percent,household_median_income_eur,household_average_income_eur,confidential_fields,paavo_edition,paavo_year,paavo_table,source,licence,retrieved_at
+00006,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00065,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00070,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00100,in_paavo,Helsinki keskusta - Etu-Töölö,Helsingfors centrum - Främre Tölö,Helsinki,Helsingfors,18492,10544,5116,5352,50.8,48148,73915,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00101,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00120,in_paavo,Punavuori - Bulevardi,Rödbergen - Bulevarden,Helsinki,Helsingfors,7297,4086,2156,1887,46.2,50669,90428,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00123,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00125,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00130,in_paavo,Kaartinkaupunki,Gardesstaden,Helsinki,Helsingfors,1731,942,494,441,46.8,60046,118889,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00140,in_paavo,Kaivopuisto - Ullanlinna,Brunnsparken - Ulrikasborg,Helsinki,Helsingfors,7721,4417,2410,1957,44.3,51461,113494,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00150,in_paavo,Punavuori - Eira - Hernesaari,Rödbergen - Eira - Ärtholmen,Helsinki,Helsingfors,9720,5974,3015,2899,48.5,40971,70989,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00160,in_paavo,Katajanokka,Skatudden,Helsinki,Helsingfors,5145,2663,1384,1259,47.3,54094,84296,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00170,in_paavo,Kruununhaka,Kronohagen,Helsinki,Helsingfors,7385,4080,2223,1823,44.7,51636,79311,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00180,in_paavo,Kamppi - Ruoholahti,Kampen - Gräsviken,Helsinki,Helsingfors,14784,8248,3182,4994,60.5,42689,59119,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00190,in_paavo,Suomenlinna,Sveaborg,Helsinki,Helsingfors,677,287,35,235,81.9,50430,58487,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00200,in_paavo,Pohjois-Lauttasaari,Norra Drumsö,Helsinki,Helsingfors,16169,8924,5145,3724,41.7,47081,66541,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00210,in_paavo,Vattuniemi,Hallonnäs,Helsinki,Helsingfors,9156,4734,3168,1540,32.5,58956,78373,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00220,in_paavo,Jätkäsaari,Busholmen,Helsinki,Helsingfors,11152,5949,1550,4382,73.7,43127,55110,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00235,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00240,in_paavo,Länsi-Pasila,Västra Böle,Helsinki,Helsingfors,10171,5672,1924,3721,65.6,39925,48316,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00250,in_paavo,Taka-Töölö,Bortre Tölö,Helsinki,Helsingfors,11597,7090,3309,3725,52.5,39883,54876,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00260,in_paavo,Keski-Töölö,Mellersta Tölö,Helsinki,Helsingfors,5903,3329,1716,1592,47.8,47518,83378,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00270,in_paavo,Pohjois-Meilahti,Norra Mejlans,Helsinki,Helsingfors,7220,4395,1902,2471,56.2,37284,49640,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00280,in_paavo,Ruskeasuo,Brunakärr,Helsinki,Helsingfors,3155,1705,828,870,51.0,37572,49059,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00281,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00290,in_paavo,Meilahden sairaala-alue,Mejlans sjukhusområde,Helsinki,Helsingfors,152,99,35,64,64.6,40591,62744,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00300,in_paavo,Pikku Huopalahti,Lillhoplax,Helsinki,Helsingfors,5459,2877,972,1891,65.7,40200,48460,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00310,in_paavo,Kivihaka,Stenhagen,Helsinki,Helsingfors,872,562,303,250,44.5,35021,43921,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00320,in_paavo,Etelä-Haaga,Södra Haga,Helsinki,Helsingfors,10897,6781,3127,3627,53.5,35487,46996,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00330,in_paavo,Munkkiniemi,Munksnäs,Helsinki,Helsingfors,9280,5048,2839,2162,42.8,49370,79083,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00336,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00340,in_paavo,Kuusisaari - Lehtisaari,Granö - Lövö,Helsinki,Helsingfors,2028,889,644,226,25.4,80587,152039,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00342,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00346,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00350,in_paavo,Munkkivuori - Niemenmäki,Munkshöjden - Näshöjden,Helsinki,Helsingfors,9914,5799,2538,3229,55.7,36963,48054,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00352,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00360,in_paavo,Pajamäki,Smedjebacka,Helsinki,Helsingfors,1873,1143,625,510,44.6,36456,42944,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00370,in_paavo,Reimarla,Reimars,Helsinki,Helsingfors,6666,3382,1439,1916,56.7,39674,57037,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00380,in_paavo,Pitäjänmäen yritysalue,Sockenbacka företagsområde,Helsinki,Helsingfors,4741,2702,787,1904,70.5,38588,47297,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00381,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00387,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00390,in_paavo,Konala,Kånala,Helsinki,Helsingfors,6594,3445,1880,1537,44.6,39764,49710,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00400,in_paavo,Pohjois-Haaga,Norra Haga,Helsinki,Helsingfors,9187,5358,2183,3149,58.8,34218,42104,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00410,in_paavo,Malminkartano,Malmgård,Helsinki,Helsingfors,10016,4853,1784,3052,62.9,36988,43398,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00416,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00420,in_paavo,Kannelmäki,Gamlas,Helsinki,Helsingfors,13973,7531,3161,4309,57.2,33859,41163,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00430,in_paavo,Maununneva - Kuninkaantammi,Magnuskärr - Kungseken,Helsinki,Helsingfors,8691,3905,2107,1777,45.5,52339,61211,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00440,in_paavo,Lassila,Lassas,Helsinki,Helsingfors,4740,2629,1355,1264,48.1,34340,42630,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00487,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00500,in_paavo,Sörnäinen - Harju,Sörnäs - Ås,Helsinki,Helsingfors,11698,8660,2895,5726,66.1,29852,37329,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00510,in_paavo,Alppila - Vallila,Alphyddan - Vallgård,Helsinki,Helsingfors,9407,6528,2766,3731,57.2,32456,42584,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00520,in_paavo,Itä- ja Keski-Pasila,Östra och Mellersta Böle,Helsinki,Helsingfors,8732,4861,2249,2600,53.5,41300,51629,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00530,in_paavo,Kallio,Berghäll,Helsinki,Helsingfors,17951,12017,5114,6839,56.9,33912,44045,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00540,in_paavo,Kalasatama - Sompasaari,Fiskehamnen - Sumparn,Helsinki,Helsingfors,6450,3362,1300,2039,60.6,49245,63105,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00550,in_paavo,Vallila - Hermanni,Vallgård - Hermanstad,Helsinki,Helsingfors,8808,5734,2016,3701,64.5,32458,39510,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00560,in_paavo,Toukola - Kumpula - Vanhakaupunki,Majstad - Gumtäkt - Gammelstad,Helsinki,Helsingfors,13616,7163,3004,4133,57.7,42339,53244,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00570,in_paavo,Kulosaari,Brändö,Helsinki,Helsingfors,4193,1979,1296,663,33.5,57075,95376,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00580,in_paavo,Kalasatama - Kyläsaari,Fiskehamnen - Byholmen,Helsinki,Helsingfors,8148,4744,1638,3074,64.8,41516,55139,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00590,in_paavo,Kruunuvuorenranta,Kronbergsstranden,Helsinki,Helsingfors,4958,2544,918,1616,63.5,43229,55385,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00600,in_paavo,Koskela,Forsby,Helsinki,Helsingfors,4722,2452,802,1632,66.6,34513,45893,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00610,in_paavo,Käpylä,Kottby,Helsinki,Helsingfors,7993,4407,1923,2458,55.8,38428,49216,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00620,in_paavo,Metsälä - Etelä-Oulunkylä,Krämertsskog - Södra Åggelby,Helsinki,Helsingfors,3450,1557,1054,483,31.0,48904,62655,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00630,in_paavo,Maunula,Månsas,Helsinki,Helsingfors,8536,4858,1719,3126,64.3,32995,43929,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00640,in_paavo,Oulunkylä - Patola,Åggelby - Dammen,Helsinki,Helsingfors,8719,4623,2414,2190,47.4,39934,52274,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00642,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00650,in_paavo,Veräjämäki,Grindbacka,Helsinki,Helsingfors,5145,2567,1073,1468,57.2,43083,57863,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00660,in_paavo,Länsi-Pakila,Västra Baggböle,Helsinki,Helsingfors,6974,2838,2479,334,11.8,74931,84004,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00664,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00670,in_paavo,Paloheinä,Svedängen,Helsinki,Helsingfors,5898,2305,2125,153,6.6,78623,88229,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00680,in_paavo,Itä-Pakila,Östra Baggböle,Helsinki,Helsingfors,3610,1431,1227,186,13.0,72831,80889,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00681,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00690,in_paavo,Torpparinmäki,Torparbacken,Helsinki,Helsingfors,2818,1102,839,256,23.2,65045,75387,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00700,in_paavo,Malmi,Malm,Helsinki,Helsingfors,14539,7333,2889,4402,60.0,34938,43494,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00708,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00710,in_paavo,Pihlajamäki - Viikinmäki,Rönnbacka - Viksbacka,Helsinki,Helsingfors,13250,7131,2871,4203,58.9,34420,41419,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00719,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00720,in_paavo,Pukinmäki,Bocksbacka,Helsinki,Helsingfors,9079,4796,2153,2620,54.6,35997,43373,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00722,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00730,in_paavo,Tapanila,Mosabacka,Helsinki,Helsingfors,11738,5469,3144,2279,41.7,48436,57643,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00740,in_paavo,Siltamäki,Brobacka,Helsinki,Helsingfors,10514,4710,3032,1645,34.9,46531,53934,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00750,in_paavo,Tapulikaupunki,Stapelstaden,Helsinki,Helsingfors,9389,4290,2130,2119,49.4,41686,50698,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00751,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00760,in_paavo,Puistola - Heikinlaakso,Parkstad - Henriksdal,Helsinki,Helsingfors,7453,3079,2418,636,20.7,62363,67384,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00769,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00770,in_paavo,Jakomäki - Alppikylä,Jakobacka - Alpbyn,Helsinki,Helsingfors,7367,3707,1003,2694,72.7,33318,39875,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00780,in_paavo,Tapaninvainio,Staffansslätten,Helsinki,Helsingfors,6949,3271,2361,884,27.0,51612,60322,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00788,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00790,in_paavo,Viikki,Vik,Helsinki,Helsingfors,10588,5073,1507,3551,70.0,38402,46649,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00795,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00800,in_paavo,Länsi-Herttoniemi,Västra Hertonäs,Helsinki,Helsingfors,8084,4729,1663,3047,64.4,34335,44251,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00810,in_paavo,Herttoniemenranta,Hertonäs strand,Helsinki,Helsingfors,11682,6195,1985,4192,67.7,40382,49677,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00820,in_paavo,Roihuvuori,Kasberget,Helsinki,Helsingfors,7826,4416,1850,2553,57.8,34124,40774,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00826,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00830,in_paavo,Tammisalo,Tammelund,Helsinki,Helsingfors,2329,953,852,92,9.7,83937,115097,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00840,in_paavo,Yliskylä,Uppby,Helsinki,Helsingfors,8922,4591,3112,1458,31.8,45288,58997,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00850,in_paavo,Jollas,Jollas,Helsinki,Helsingfors,3092,1212,854,351,29.0,75065,97450,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00860,in_paavo,Santahamina,Sandhamn,Helsinki,Helsingfors,278,135,14,117,86.7,46510,55119,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00870,in_paavo,Gunillanmäki - Hevossalmi,Gunillabacken - Hästnässund,Helsinki,Helsingfors,6666,3385,1050,2333,68.9,36505,47400,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00880,in_paavo,Keski-Herttoniemi - Roihupelto,Mellersta Hertonäs - Kasåkern,Helsinki,Helsingfors,1934,1141,123,997,87.4,38545,46748,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00890,in_paavo,Östersundom,Östersundom,Helsinki,Helsingfors,1755,658,580,51,7.8,85188,119313,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00900,in_paavo,Puotinharju,Botbyhöjden,Helsinki,Helsingfors,4302,2309,939,1349,58.4,32648,40216,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00910,in_paavo,Puotila,Botby gård,Helsinki,Helsingfors,6135,3559,1554,1985,55.8,33200,40570,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00920,in_paavo,Myllypuro,Kvarnbäcken,Helsinki,Helsingfors,13535,6687,2851,3791,56.7,38372,47758,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00923,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00930,in_paavo,Itäkeskus - Marjaniemi,Östra centrum - Marudd,Helsinki,Helsingfors,7175,3327,1453,1849,55.6,38446,57033,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00940,in_paavo,Kontula - Vesala - Kivikko,Gårdsbacka - Ärvings - Stensböle,Helsinki,Helsingfors,26432,12957,4221,8684,67.0,32133,39369,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00942,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00950,in_paavo,Vartioharju,Botbyåsen,Helsinki,Helsingfors,6707,2954,2139,793,26.8,58159,66933,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00960,in_paavo,Pohjois-Vuosaari,Norra  Nordsjö,Helsinki,Helsingfors,6954,3838,1935,1862,48.5,35572,43122,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00963,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00970,in_paavo,Mellunmäki,Mellungsbacka,Helsinki,Helsingfors,10777,5830,2467,3332,57.2,33508,40796,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00980,in_paavo,Etelä-Vuosaari,Södra Nordsjö,Helsinki,Helsingfors,22693,11547,4100,7408,64.2,35006,43080,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+00990,in_paavo,Aurinkolahti,Solvik,Helsinki,Helsingfors,9673,5307,2452,2820,53.1,40935,50191,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01039,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01099,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01106,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01120,in_paavo,Västerskog,Västerskog,Sipoo,Sibbo,1406,593,537,38,6.4,67660,81072,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01122,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01150,in_paavo,Söderkulla,Söderkulla,Sipoo,Sibbo,7288,3438,2013,1373,39.9,46549,61206,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01159,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01167,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01180,in_paavo,Kalkkiranta,Kalkstrand,Sipoo,Sibbo,493,212,200,8,3.8,64990,86597,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01190,in_paavo,Box,Box,Sipoo,Sibbo,1009,422,398,20,4.7,61927,67208,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01197,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01200,in_paavo,Hakunila,Håkansböle,Vantaa,Vanda,13100,6501,2345,4104,63.1,32920,40386,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01205,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01230,in_paavo,Vaarala,Fagersta,Vantaa,Vanda,3081,1426,1074,343,24.1,52690,56482,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01260,in_paavo,Itä-Hakkila,Östra Haxböle,Vantaa,Vanda,4683,1886,1587,286,15.2,62312,70126,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01261,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01280,in_paavo,Länsimäki,Västerkulla,Vantaa,Vanda,9979,4643,2605,2018,43.5,40051,46527,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01300,in_paavo,Tikkurila,Dickursby,Vantaa,Vanda,24875,14065,5924,8013,57.0,36531,44753,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01339,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01340,in_paavo,Leinelä,Lejle,Vantaa,Vanda,2544,1458,294,1158,79.4,35786,41230,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01350,in_paavo,Hiekkaharju,Sandkulla,Vantaa,Vanda,10533,5331,2762,2510,47.1,38116,47999,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01360,in_paavo,Koivukylä-Havukoski,Björkby-Havukoski,Vantaa,Vanda,12857,6450,2827,3579,55.5,32224,40423,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01370,in_paavo,Jokiniemi,Ånäs,Vantaa,Vanda,7229,3796,1147,2629,69.3,34039,41361,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01380,in_paavo,Kuusikko-Hakkila,Sexan-Håkansböle,Vantaa,Vanda,2112,814,615,189,23.2,63776,68943,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01382,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01390,in_paavo,Ruskeasanta-Ilola,Rödsand-Gladas,Vantaa,Vanda,9184,3802,2846,928,24.4,60955,65646,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01400,in_paavo,Rekola,Räckhals,Vantaa,Vanda,9822,4700,2156,2482,52.8,41402,50079,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01403,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01420,in_paavo,Päiväkumpu,Lövkulla,Vantaa,Vanda,3122,1160,1026,124,10.7,68333,73660,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01422,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01434,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01449,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01450,in_paavo,Korso,Korso,Vantaa,Vanda,18126,8692,5163,3481,40.0,42453,49730,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01480,in_paavo,Mikkola,Mikkola,Vantaa,Vanda,6485,3063,1785,1265,41.3,39125,48084,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01490,in_paavo,Nikinmäki,Nissbacka,Vantaa,Vanda,4620,1676,1514,157,9.4,70537,74419,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01505,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01510,in_paavo,Kirkonkylä-Veromäki,Kyrkoby-Skattbacka,Vantaa,Vanda,7870,3938,1243,2640,67.0,39098,46394,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01520,in_paavo,Tammisto,Rosendal,Vantaa,Vanda,7688,3515,1687,1819,51.7,49016,57452,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01530,in_paavo,Veromiehenkylä,Skattmansby,Vantaa,Vanda,956,505,15,486,96.2,34222,38193,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01535,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01547,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01571,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01600,in_paavo,Myyrmäki,Myrbacka,Vantaa,Vanda,19159,10641,4729,5861,55.1,33340,39665,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01610,in_paavo,Kaivoksela,Gruvsta,Vantaa,Vanda,5853,3427,1575,1820,53.1,34816,41814,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01620,in_paavo,Martinlaakso,Mårtensdal,Vantaa,Vanda,14204,7285,3490,3754,51.5,35846,43108,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01630,in_paavo,Hämeenkylä,Tavastby,Vantaa,Vanda,2101,907,750,149,16.4,61469,66191,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01640,in_paavo,Hämevaara,Tavastberga,Vantaa,Vanda,3650,1722,986,725,42.1,46634,57911,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01650,in_paavo,Vapaala,Friherrs,Vantaa,Vanda,4058,1905,1411,487,25.6,49534,60327,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01658,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01660,in_paavo,Varisto,Varistorna,Vantaa,Vanda,2243,1017,641,368,36.2,48797,54364,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01670,in_paavo,Vantaanlaakso,Vandadalen,Vantaa,Vanda,2925,1259,1061,192,15.3,62476,66113,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01680,in_paavo,Askisto,Askis,Vantaa,Vanda,2082,811,580,222,27.4,65853,71657,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01690,in_paavo,Ylästö,Övitsböle,Vantaa,Vanda,5485,1947,1642,296,15.2,78106,85147,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01700,in_paavo,Kivistö,Kivistö,Vantaa,Vanda,13583,7404,2092,5252,70.9,33548,44615,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01703,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01705,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01710,in_paavo,Pähkinärinne,Hasselbacken,Vantaa,Vanda,5524,3015,1646,1362,45.2,36315,43479,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01716,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01730,in_paavo,Vantaanpuisto,Vandaparken,Vantaa,Vanda,2636,1128,979,138,12.2,57283,64275,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01734,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01740,in_paavo,Tuupakan teollisuusalue,Stubbacka industriområde,Vantaa,Vanda,177,79,64,12,15.2,52679,59031,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01750,in_paavo,Keimola,Käinby,Vantaa,Vanda,792,314,293,15,4.8,65970,70044,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01760,in_paavo,Seutula,Sjöskog,Vantaa,Vanda,1972,820,711,97,11.8,55988,67580,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01784,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01795,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01800,in_paavo,Klaukkala Keskus,Klaukkala centrum,Nurmijärvi,Nurmijärvi,11355,5631,3184,2412,42.8,41363,51109,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01805,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01810,in_paavo,Luhtajoki,Luhtajoki,Nurmijärvi,Nurmijärvi,673,260,235,20,7.7,63739,69438,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01820,in_paavo,Haikala,Haikala,Nurmijärvi,Nurmijärvi,3190,1303,1088,212,16.3,60475,67266,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01830,in_paavo,Lepsämä,Lepsämä,Nurmijärvi,Nurmijärvi,2394,899,869,19,2.1,67492,71626,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01840,in_paavo,Klaukkala,Klaukkala,Nurmijärvi,Nurmijärvi,3824,1543,1285,252,16.3,63348,70951,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01860,in_paavo,Perttula,Perttula,Nurmijärvi,Nurmijärvi,1949,781,742,27,3.5,64049,65945,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01900,in_paavo,Nurmijärvi Keskus,Nurmijärvi centrum,Nurmijärvi,Nurmijärvi,9149,4595,2939,1612,35.1,42221,52265,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01917,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01930,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+01940,in_paavo,Palojoki,Palojoki,Nurmijärvi,Nurmijärvi,771,305,286,10,3.3,59670,70538,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02033,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02052,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02082,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02092,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02100,in_paavo,Tapiola,Hagalund,Espoo,Esbo,6975,4105,2203,1872,45.6,47086,65516,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02110,in_paavo,Otsolahti,Björnviken,Espoo,Esbo,2790,1506,875,621,41.2,48301,62108,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02120,in_paavo,Länsikorkee-Suvikumpu,Västerhöjden-Solhöjden,Espoo,Esbo,3055,1716,1046,660,38.5,46312,61559,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02130,in_paavo,Pohjois-Tapiola,Norra Hagalund,Espoo,Esbo,6723,2968,2139,810,27.3,65115,81030,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02140,in_paavo,Laajalahti,Bredvik,Espoo,Esbo,3759,1439,1071,361,25.1,74973,87785,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02150,in_paavo,Otaniemi,Otnäs,Espoo,Esbo,4661,2315,134,2177,94.0,19198,26935,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02160,in_paavo,Westend,Westend,Espoo,Esbo,3320,1369,1174,177,12.9,98624,162274,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02170,in_paavo,Haukilahti,Gäddvik,Espoo,Esbo,5919,2842,1952,875,30.8,61913,87785,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02174,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02180,in_paavo,Mankkaa,Mankans,Espoo,Esbo,7742,2886,2427,445,15.4,82496,93905,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02182,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02194,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02200,in_paavo,Niittykumpu,Ängskulla,Espoo,Esbo,14415,7961,3222,4658,58.5,42687,55908,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02210,in_paavo,Olari,Olars,Espoo,Esbo,12904,6640,3972,2631,39.6,44059,54266,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02230,in_paavo,Matinkylä,Mattby,Espoo,Esbo,22927,11515,5198,6254,54.3,42186,59748,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02235,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02240,in_paavo,Friisilä,Frisans,Espoo,Esbo,2726,1199,852,342,28.5,71431,89803,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02250,in_paavo,Henttaa,Hemtans,Espoo,Esbo,7410,3704,694,2976,80.3,35718,46408,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02260,in_paavo,Kaitaa,Kaitans,Espoo,Esbo,3740,1666,1025,629,37.8,53723,66781,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02270,in_paavo,Finnoo-Eestinmalmi,Finno-Estmalmen,Espoo,Esbo,4620,2283,836,1412,61.8,42733,55669,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02280,in_paavo,Malminmäki-Eestinlaakso,Malmbacka-Estdalen,Espoo,Esbo,4764,2097,1095,998,47.6,52319,61736,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02300,in_paavo,Nöykkiönpuro,Nöykisbäcken,Espoo,Esbo,2580,914,854,58,6.3,88533,102962,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02302,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02309,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02320,in_paavo,Espoonlahti,Esboviken,Espoo,Esbo,17639,9089,4736,4296,47.3,41157,51270,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02326,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02330,in_paavo,Saunalahti-Kattilalaakso,Bastvik-Kitteldalen,Espoo,Esbo,12340,5710,2816,2866,50.2,46692,66807,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02337,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02338,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02340,in_paavo,Latokaski,Ladusved,Espoo,Esbo,4889,1890,1543,344,18.2,67243,71826,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02347,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02360,in_paavo,Soukka,Sökö,Espoo,Esbo,9801,4634,3035,1575,34.0,49689,66875,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02363,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02366,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02380,in_paavo,Suvisaaristo,Sommaröarna,Espoo,Esbo,626,257,230,13,5.1,87946,163961,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02390,in_paavo,Sarvvik,Sarvvik,Kirkkonummi,Kyrkslätt,1330,789,323,455,57.7,41208,74036,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02400,in_paavo,Kirkkonummi Keskus,Kyrkslätt centrum,Kirkkonummi,Kyrkslätt,12490,6136,3515,2573,41.9,43731,54544,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02402,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02407,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02410,in_paavo,Gesterby,Gesterby,Kirkkonummi,Kyrkslätt,1976,1141,556,580,50.8,29605,36490,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02420,in_paavo,Jorvas,Jorvas,Kirkkonummi,Kyrkslätt,1691,703,651,43,6.1,68942,81519,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02430,in_paavo,Masala,Masaby,Kirkkonummi,Kyrkslätt,5362,2711,1081,1595,58.8,36341,44200,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02440,in_paavo,Luoma,Bobäck,Kirkkonummi,Kyrkslätt,568,246,224,15,6.1,68529,87441,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02450,in_paavo,Sundsberg,Sundsberg,Kirkkonummi,Kyrkslätt,2558,879,772,100,11.4,82523,86610,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02460,in_paavo,Kantvik,Kantvik,Kirkkonummi,Kyrkslätt,1937,878,627,248,28.2,51213,61105,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02470,in_paavo,Upinniemi,Obbnäs,Kirkkonummi,Kyrkslätt,228,153,10,143,93.5,37837,41071,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02480,in_paavo,Porkkala,Porkala,Kirkkonummi,Kyrkslätt,4717,1869,1472,378,20.2,68128,75708,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02483,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02490,in_paavo,Pikkala,Pickala,Siuntio,Sjundeå,274,146,108,35,24.0,40337,50392,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02510,in_paavo,Oitmäki,Oitbacka,Kirkkonummi,Kyrkslätt,453,197,153,32,16.2,58777,70006,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02520,in_paavo,Lapinkylä,Lappböle,Kirkkonummi,Kyrkslätt,786,333,313,14,4.2,63654,68264,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02528,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02540,in_paavo,Kylmälä,Kylmälä,Kirkkonummi,Kyrkslätt,583,243,228,13,5.3,62216,76738,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02550,in_paavo,Evitskog,Evitskog,Kirkkonummi,Kyrkslätt,858,357,332,20,5.6,57794,66297,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02570,in_paavo,Siuntio Kirkonkylä,Sjundeå kyrkby,Siuntio,Sjundeå,1255,571,505,52,9.1,53739,58792,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02580,in_paavo,Siuntio Asemanseutu,Sjundeå stationsamhälle,Siuntio,Sjundeå,3560,1552,1236,294,18.9,53350,64936,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02589,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02590,in_paavo,Lappers,Lappers,Siuntio,Sjundeå,237,97,94,3,3.1,63444,64713,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02594,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02600,in_paavo,Etelä-Leppävaara,Södra Alberga,Espoo,Esbo,17336,9151,2407,6697,73.2,38323,47437,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02605,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02610,in_paavo,Kilo,Kilo,Espoo,Esbo,7020,3055,1076,1964,64.3,41974,53842,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02620,in_paavo,Karakallio,Karabacka,Espoo,Esbo,8783,4006,2196,1803,45.0,44995,57450,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02630,in_paavo,Nihtisilta,Knektbro,Espoo,Esbo,4160,1944,845,1081,55.6,43986,55082,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02648,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02650,in_paavo,Pohjois-Leppävaara,Norra Alberga,Espoo,Esbo,12084,6603,3131,3443,52.1,40884,49854,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02657,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02660,in_paavo,Lintuvaara,Fågelberga,Espoo,Esbo,6457,2384,1586,786,33.0,71801,80022,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02680,in_paavo,Uusmäki,Nybacka,Espoo,Esbo,3829,1596,997,593,37.2,65117,72068,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02694,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02700,in_paavo,Kauniainen,Grankulla,Kauniainen,Grankulla,10100,4432,3069,1322,29.8,69098,112077,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02710,in_paavo,Viherlaakso,Gröndal,Espoo,Esbo,6154,3019,2149,859,28.5,48171,59596,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02720,in_paavo,Lähderanta,Källstrand,Espoo,Esbo,2949,1364,1032,325,23.8,52174,62306,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02728,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02730,in_paavo,Jupperi,Jupper,Espoo,Esbo,4654,1709,1663,33,1.9,85714,99127,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02733,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02740,in_paavo,Bemböle-Pakankylä,Bemböle-Backby,Espoo,Esbo,3117,1285,650,609,47.4,58465,66178,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02750,in_paavo,Sepänkylä-Kuurinniitty,Smedsby-Kurängen,Espoo,Esbo,5940,2662,1426,1224,46.0,50481,67668,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02760,in_paavo,Tuomarila-Suvela,Domsby-Södrik,Espoo,Esbo,15512,6860,3388,3415,49.8,42483,50478,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02767,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02770,in_paavo,Espoon Keskus,Esbo centrum,Espoo,Esbo,11271,5344,1993,3330,62.3,37514,47636,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02780,in_paavo,Kauklahti,Köklax,Espoo,Esbo,14251,5699,3161,2488,43.7,59988,70653,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02799,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02810,in_paavo,Gumböle-Karhusuo,Gumböle-Björnkärr,Espoo,Esbo,1790,663,537,118,17.8,69918,80317,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02820,in_paavo,Nupuri-Nuuksio,Nupurböle-Noux,Espoo,Esbo,1708,691,619,58,8.4,67450,80603,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02842,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02855,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02860,in_paavo,Siikajärvi,Siikajärvi,Espoo,Esbo,616,257,237,16,6.2,58288,67275,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02868,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02880,in_paavo,Veikkola,Veikkola,Kirkkonummi,Kyrkslätt,5760,2304,2007,279,12.1,66373,74051,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02908,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02920,in_paavo,Niipperi,Nipert,Espoo,Esbo,6040,2259,1650,593,26.3,67864,75886,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02939,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02940,in_paavo,Lippajärvi-Järvenperä,Klappträsk-Träskända,Espoo,Esbo,10987,4994,2967,1999,40.0,51487,63013,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02946,not_in_paavo,,,,,,,,,,,,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02970,in_paavo,Kalajärvi,Kalajärvi,Espoo,Esbo,3675,1457,1126,315,21.6,68065,72981,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
+02980,in_paavo,Lakisto,Lakisto,Espoo,Esbo,218,123,55,62,50.4,40467,48779,,2026,2024,12f7_ja2026,"Statistics Finland, Paavo – Open data by postal code area, table 12f7",CC-BY-4.0,2026-11-14
