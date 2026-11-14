@@ -4,15 +4,9 @@ export function dateLabel(iso: string, year = false) {
   return new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', ...(year ? { year: 'numeric' } : {}), timeZone: 'UTC' }).format(new Date(`${iso}T12:00:00Z`));
 }
 
-// #11 adds an explicit historical period. The fallback describes the existing
-// engine's three completed months and is removed when that contract is universal.
-export function analysisPeriod(f: Forecast & { recentPeriod?: string | { from: string; to: string; label?: string } }) {
-  if (typeof f.recentPeriod === 'string') return f.recentPeriod;
-  if (f.recentPeriod?.label) return f.recentPeriod.label;
-  if (f.recentPeriod) return `${dateLabel(f.recentPeriod.from)} – ${dateLabel(f.recentPeriod.to, true)}`;
-  const end = new Date(`${f.dataThrough}T12:00:00Z`);
-  const start = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth() - 2, 1)).toISOString().slice(0, 10);
-  return `${dateLabel(start)} – ${dateLabel(f.dataThrough, true)}`;
+// The historical analysis period comes from the same server calculation as the totals.
+export function analysisPeriod(f: Forecast) {
+  return f.recentPeriod;
 }
 
 export function outlook(f: Forecast) {

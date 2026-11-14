@@ -32,6 +32,24 @@ The pinned upstream Git object contains `oid sha256:49b3265d8e44e751de305a074dcf
 
 The runtime subset was rechecked: 698 rows, only CUST04859, latest date 31 August 2026. This verifies use of the actual source payload, while the runtime intentionally uses only one customer's history. Additional personas require separate extraction, audits and a server-scoped catalogue; they are not enabled by the current app.
 
+## Demo clock (updated 14 November 2026)
+
+The team moved the demo clock to **1 October 2026** with history through **30 September 2026**, the end of the dataset. `app/data/demo-clock.json` is the single source for the app, importer and agent. `persona.json` now holds 719 CUST04859 rows through 26 September 2026 (the last recorded row). The importer audits two clocks from the same rows:
+
+| Measure | Current clock (history to 30 Sep) | Backtest clock (history to 31 Aug) |
+|---|---:|---:|
+| Closing balance | €7,417.39 | €6,059.33 |
+| Median monthly salary (12 months) | €2,700.99 | €2,700.99 |
+| Median monthly surplus before saving | €583.38 | €583.38 |
+| Median monthly saving outflows | €246.33 | €246.33 |
+| Mean monthly restaurants (last 3 months) | €77.30 (Jul–Sep) | €114.32 (Jun–Aug) |
+| 20% restaurant reduction | €15.46 | €22.86 |
+| Recognised taxi, last month | €0.00 (Sep) | €50.47 (Aug) |
+
+The current figures were reproduced independently with DuckDB from the raw CSV. The backtest column is the original audit below and must keep reproducing exactly. `npm run evaluate:holdout` now runs the backtest: it forecasts from history through 31 August and compares with the recorded September balances (mean absolute daily balance error €742.79, no protected-floor breaches). There is no separate `work/holdout.json` any more.
+
+The sections below describe the original 1 September audit, which is now the backtest.
+
 ## Acceptance targets
 
 All seven targets from the build brief reproduce exactly at cent precision.
@@ -91,3 +109,38 @@ need separate labelled fixtures/tests; they cannot be claimed as observed behavi
 The artifact also contains 12 monthly aggregates, June–August category summaries with evidence IDs,
 category/type counts and missing-MCC counts. It contains no other customer's rows, no September
 rows, and no September-derived forecast inputs.
+
+## Time zone of the source timestamps
+
+`tx_timestamp` has the format `DDMONYY:HH:MM:SS` (for example `03OCT24:09:04:04`). It has no time zone.
+Koti assumes **Europe/Helsinki local time** (EET in winter, EEST in summer). This is an assumption, not a
+fact from the dataset. The dataset documentation does not state a time zone. `tx_date` is the booking date.
+No parsing code changes because of this note.
+
+## Public-data overlays
+
+Added 14 November 2026. The overlays are separate files under `app/data/overlays/`. They never change a
+source row, the importer output or the audited figures above. Regenerate them from `app/` with
+`python3 scripts/build-overlays.py all`. The script uses the Python standard library only. It caches raw
+API responses under the ignored `app/work/overlay-cache/`, so `--offline` gives the same files again.
+See [the overlay README](../app/data/overlays/README.md) for columns, licences and attribution.
+
+| File | Key | Source | Licence |
+|---|---|---|---|
+| `merchants.csv` | `merchant_id` (515) | OpenStreetMap (Overpass API), Wikidata for airlines, MCC descriptions from `greggles/mcc-codes` | ODbL 1.0 for the file; Wikidata rows CC0; MCC list Unlicense |
+| `merchant_ids.csv` | `merchant_id` (515) | The pinned transactions CSV: ID, MCC and category only | Same terms as the dataset |
+| `postal_areas.csv` | `customer_postal_code` (290) | Statistics Finland Paavo 2026, table 12f7, data year 2024 | CC BY 4.0 |
+| `mortgage_market_rates.csv` | month, series (January–August 2026) | Bank of Finland open data, Timeseries API v4, dataset `MFI_PUBL` | Free reuse with acknowledgement of the source |
+
+Limits:
+
+- **Merchant names are labels only.** Each merchant ID is shared by 90 to 5,074 customers, has no location,
+  and its amounts and times follow the category. A real name on an ID does not make a synthetic row a
+  purchase at that business. Every row carries this label. The names are not wired into the app yet.
+- **95 of the 290 customer postal codes are not Paavo postal areas** (for example `00006`, `00642`). They
+  are kept with status `not_in_paavo` and no values. Paavo hides values for small areas; these are blank
+  and listed in `confidential_fields`.
+- **Market rates are national monthly averages.** They are not the rate of any loan in the dataset.
+  The Euribor is not included: the Bank of Finland publishes it under EMMI terms that restrict
+  redistribution. The margin series in the API differs from the margin in Bank of Finland press releases,
+  which comes from the Positive Credit Register.

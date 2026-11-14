@@ -1,17 +1,21 @@
 // Read-only access to the imported dataset (data/koti.db, made by
 // `npm run import-data`). Every query is parameterised and every query stops at
-// the data cutoff, so the September 2026 holdout never reaches the agent.
+// the configured cutoff, including when replaying the September backtest.
 
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
+import clock from '../../../app/data/demo-clock.json' with { type: 'json' };
 import { addDays } from '../finance/dates.ts';
 import type { Cents } from '../finance/money.ts';
 
 export const CUSTOMER_ID_PATTERN = /^CUST\d{5}$/;
 
 /** Last day of history the agent can see. The demo clock is the day after. */
-export const DATA_CUTOFF = process.env.KOTI_DATA_CUTOFF ?? '2026-08-31';
+export const DATA_CUTOFF = process.env.KOTI_DATA_CUTOFF ?? clock.clocks.current.historyThrough;
+if (!/^\d{4}-\d{2}-\d{2}$/.test(DATA_CUTOFF) || !Number.isFinite(Date.parse(DATA_CUTOFF)) || new Date(DATA_CUTOFF).toISOString().slice(0, 10) !== DATA_CUTOFF || DATA_CUTOFF < clock.dataStart || DATA_CUTOFF > clock.clocks.current.historyThrough) {
+	throw new Error('KOTI_DATA_CUTOFF must be a valid date within the supplied history.');
+}
 export const AS_OF = addDays(DATA_CUTOFF, 1);
 
 let db: DatabaseSync | undefined;

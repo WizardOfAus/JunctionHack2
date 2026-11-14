@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, Check, Home, ShieldCheck, Wallet } from 'lucide-react';
-import { euro } from '@/lib/finance';
+import { HISTORY_THROUGH, euro } from '@/lib/finance';
+import { dateLabel } from '@/lib/date-labels';
 import { goals, type GoalId } from './model';
 import styles from './onboarding.module.css';
 
@@ -37,10 +38,10 @@ export function Onboarding({ initialGoal, protectedCents, onFinish, onCancel }: 
         </> : <>
           <h2 id="setup-heading" ref={heading} tabIndex={-1}>Meet Alex’s demo account.</h2>
           <p>One synthetic person. Your choice of goal changes the journey, not the transactions.</p>
-          <dl className={styles.facts}><div><dt>History available</dt><dd>Through 31 Aug 2026</dd></div><div><dt>Source</dt><dd>Junction dataset · one account</dd></div><div><dt>Protected reserve</dt><dd>{euro(protectedCents, 2)} · editable assumption</dd></div></dl>
+          <dl className={styles.facts}><div><dt>History available</dt><dd>Through {dateLabel(HISTORY_THROUGH)}</dd></div><div><dt>Source</dt><dd>Junction dataset · one account</dd></div><div><dt>Protected reserve</dt><dd>{euro(protectedCents, 2)} · editable assumption</dd></div></dl>
           <fieldset className={styles.coverage}><legend>Should we assume this covers all accounts and bills?</legend><label><input type="radio" name="coverage" checked={coverage === 'assume'} onChange={() => setCoverage('assume')}/><span>Yes, for this demo<small>Allow estimates using the supplied account.</small></span></label><label><input type="radio" name="coverage" checked={coverage === 'unknown'} onChange={() => setCoverage('unknown')}/><span>I don’t know<small>Explore and learn. Extra saving estimates stay paused.</small></span></label></fieldset>
           <p className={styles.disclosure}>Your goal and learning progress stay in this browser. XP is a learning reward with no cash value.</p>
-          <button className={`button ${styles.continue}`} disabled={!coverage} onClick={() => { if (goal && coverage) onFinish(goal, coverage === 'assume'); }}>Open my money overview<ArrowRight size={18}/></button>
+          <button className={`button ${styles.continue}`} disabled={!coverage} onClick={() => { if (goal && coverage) onFinish(goal, coverage === 'assume'); }}>Open my workspace<ArrowRight size={18}/></button>
           <button className={styles.skip} onClick={() => setStep(0)}><ArrowLeft size={16}/>Back to my direction</button>
         </>}
       </section>

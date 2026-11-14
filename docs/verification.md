@@ -4,7 +4,7 @@
 
 - 13 domain tests: source scope, balances, single allocation, uncertainty guards, category corrections, restaurant scenario, delayed income, unexpected cost, ASP rules and idempotent learning XP.
 - TypeScript type checking and production Worker build.
-- Running API smoke checks: finance, custom restaurant percentage, taxi evidence, period filtering, holdout/customer isolation, invalid inputs and disconnected source.
+- Running API smoke checks: finance, custom restaurant percentage, taxi evidence, period filtering, history-window/customer isolation, invalid inputs and disconnected source.
 - Desktop and 390 px mobile browser checks: lesson incorrect/correct feedback, XP award, coach-to-plan transition, expense shock pausing saving, allocation and simulated-transfer confirmation, disconnect/reconnect and demo reset.
 - No browser error/warning logs observed during these checks.
 
@@ -12,7 +12,7 @@
 
 September transactions are excluded from app data and coaching. The reproducible offline evaluation uses them only after forecasting from history through 31 August 2026. The baseline forecast's mean absolute daily closing-balance error is **€742.79**. Allocating all estimated capacity would have left a minimum actual closing balance of **€3,821.31**, with **zero days below the €3,500 protected floor** in this one synthetic month. This is a narrow retrospective check, not evidence of general forecast reliability.
 
-Run the importer described in data-audit.md, then `npm run evaluate:holdout` from app. Raw source and holdout files remain ignored under app/work; they are not deployed.
+Run the importer described in data-audit.md, then `npm run evaluate:holdout` from app, which now runs the 1 September backtest (see the demo clock section in data-audit.md). Raw source files remain ignored under app/work; they are not deployed.
 
 ## Boundaries
 

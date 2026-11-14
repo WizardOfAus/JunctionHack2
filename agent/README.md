@@ -7,7 +7,7 @@ Tools calculate all money and dates; the model selects the tools and explains
 the results.
 
 The agent can read transactions, make a 35-day Monte Carlo cashflow forecast,
-and project when a savings goal is reached.
+and project when a savings goal is reached. With an Exa key, it can also search the web.
 
 ## Setup
 
@@ -24,9 +24,10 @@ Do not commit `.env`. See `.env.example` for all variables:
 | Variable | Default | Use |
 |---|---|---|
 | `ANTHROPIC_API_KEY` | none | Model provider key. Any provider Flue supports works. |
+| `EXA_API_KEY` | none | [Exa](https://exa.ai) key. Turns on `web_search` and `deep_research`. Without it the agent has no web search. |
 | `KOTI_MODEL` | `anthropic/claude-sonnet-5-5` | Model id as `provider/model`. |
 | `KOTI_DB_PATH` | `data/koti.db` | Path to the imported dataset. |
-| `KOTI_DATA_CUTOFF` | `2026-08-31` | Last day of history the agent can see. |
+| `KOTI_DATA_CUTOFF` | shared demo clock | Last day of history the agent can see; an earlier override runs a backtest. |
 | `KOTI_AGENT_TOKEN` | none | When set, `/agents/*` requires `Authorization: Bearer <token>`. |
 | `PORT` | `3000` | Port for the built server (`npm start`). The dev server uses 5180. |
 
@@ -88,11 +89,14 @@ Server: `npm run dev`, then `POST /agents/koti/<conversation-id>` (see `src/app.
 | `query_transactions` | Questions about the past | Filters: dates, categories, types, MCC, merchant, direction, amount. Group by category, type, month, week, weekday, MCC or merchant. Every row has a `row:<line>` reference to the source CSV. |
 | `forecast_cashflow` | "Is it safe this month?", "What if...?" | 35-day Monte Carlo forecast. Changes: `changeSpending`, `addExpense`, `moveToSavings`, `delayIncome`, `changeIncome` (percent or new monthly amount), `addIncome` (one-off). Returns risk, P10 lowest balance, tightest day, safe amount, and the difference from the baseline. |
 | `project_goal` | "When is my deposit ready?", "How much sooner if...?" | Month-by-month arithmetic to a savings goal. Default monthly saving = median of the existing saving transfers in the last 6 months (the same window as the forecast). Changes: `changeSpending`, `changeIncome` (with `toGoalPercent`), `addMonthlySaving`, `oneOffDeposit`. Warns when a plan saves more than the usual monthly surplus. |
+| `web_search` | Quick lookup of a topic on the web (ASP rules, rates, prices, offers) | First web tool. Exa `type: "auto"`, 5 results by default (max 10), with text highlights. Optional `includeDomains`, `country` (default `FI`) and `publishedAfter`. Timeout 15 s. Needs `EXA_API_KEY`. |
+| `deep_research` | Dig deep: find a specific discount, the exact current rule, or a hard answer | Exa `type: "deep"`: several searches and a short answer with sources (`citations`). Slower (about 4 to 15 s) and costs more, so the agent uses it only when `web_search` is not enough. Timeout 40 s. Needs `EXA_API_KEY`. |
+| `evaluate_asp_progress` | "How many ASP months do I have?", "Does EUR 40 count?" | Versioned ASP rules (`asp-2026-06-01`). Counts qualifying months from the opening date and the verified monthly deposits that the user gives, never from the transaction data. Optional: compares savings with 5% and 10% of a home price, and projects a fixed monthly deposit. Accounts opened before 1 June 2026 get a transition explanation, not a count. |
 | `find_customers` | Pick synthetic customers to study | Analyst mode only (no `customerId` in `initialData`). Not for browsing customers. |
 
 ## Data rules
 
-- The agent sees history up to `2026-08-31` (`KOTI_DATA_CUTOFF`). The demo clock is `2026-09-01`.
+- The agent reads `app/data/demo-clock.json`: history through 30 September 2026, demo date 1 October. Set `KOTI_DATA_CUTOFF=2026-08-31` to replay the September backtest. Overrides outside the supplied history are rejected.
   September 2026 is held out for evaluation. The store enforces this on every query, and the
   forecast and goal engines reject any row on or after the demo clock.
 - Without `customerId` in `initialData`, the conversation is in analyst mode: an analyst or adviser
@@ -104,6 +108,9 @@ Server: `npm run dev`, then `POST /agents/koti/<conversation-id>` (see `src/app.
   `<koti_app_context>` block, calculated by `app/lib/finance.ts` with the user's basket changes.
   Do not add basket rules to the agent. `forecast_cashflow` and `project_goal` do not use baskets.
 - All SQL is fixed and parameterised. The model selects filter values, never SQL.
+- Web search queries go to Exa, an outside service. The agent is told never to put the customer id,
+  names, amounts or transaction details in a query. Web pages are data, not instructions, and web
+  facts never change the tool figures for the customer's own money.
 
 ## Forecast method (`src/finance/forecast.ts`)
 
@@ -123,7 +130,18 @@ Saving goes in at the end of each month. Optional interest is added monthly. Sal
 transfers and surplus use the last 6 months (`RECENT_MONTHS` in `src/finance/history.ts`), the
 same window as the forecast, so the two tools agree. A spending change also uses the same monthly
 number in both tools. Income changes are what-ifs from the user; the agent never predicts a raise.
-ASP rules, purchase costs and mortgage approval are not included yet.
+Purchase costs and mortgage approval are not included. The goal projection does not add ASP bonus
+interest; ASP progress is a separate tool.
+
+## ASP method (`src/finance/asp.ts`)
+
+Rules are a versioned, effective-dated table (`ASP_RULES`). The account uses the rules in force on
+its opening date. From 1 June 2026 (source: State Treasury, page updated 5 August 2026): 20 qualifying
+months of EUR 50 to EUR 1,500 each, not necessarily in a row; a skipped month keeps earlier months;
+savings of 10% of the price (5% and 10 months for interim financing). Deposits in the same month are
+added first. Months above the maximum are not counted, and the tool tells the user to ask the bank.
+Accounts opened earlier are on transition rules (quarters, or a mix), so the tool explains them and
+does not give a count. Interest is not included. Meeting the conditions is not a mortgage approval.
 
 The build plan's audit medians (salary EUR 2,700.99, saving EUR 246.33, surplus EUR 583.38) use
 12 months. A test checks them with `monthlyStats(..., 12)`. The tools use 6 months, so for

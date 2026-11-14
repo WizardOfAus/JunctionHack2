@@ -21,7 +21,6 @@ test('zero room is explained without inventing available money', () => {
 });
 test('history labels consume the explicit server period after a clock change', () => {
   assert.equal(analysisPeriod({ ...f, dataThrough: '2026-09-30', recentPeriod: 'Jul–Sep 2026' }), 'Jul–Sep 2026');
-  assert.equal(analysisPeriod({ ...f, recentPeriod: undefined, dataThrough: '2026-01-31' }), '1 Nov – 31 Jan 2026');
 });
 test('date labels are UTC-stable and show the correct demo month', () => {
   assert.equal(dateLabel('2026-10-01', true), '1 Oct 2026');
