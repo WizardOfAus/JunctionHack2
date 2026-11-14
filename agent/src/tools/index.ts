@@ -1,3 +1,5 @@
+import { makeForecastCashflowTool } from './forecast-cashflow.ts';
+import { makeProjectGoalTool } from './project-goal.ts';
 import { makeFindCustomersTool, makeQueryTransactionsTool } from './query-transactions.ts';
 import type { ToolScope } from './shared.ts';
 
@@ -9,6 +11,8 @@ function build(scope: ToolScope) {
 	return {
 		queryTransactions: makeQueryTransactionsTool(scope),
 		findCustomers: makeFindCustomersTool(scope),
+		forecastCashflow: makeForecastCashflowTool(scope),
+		projectGoal: makeProjectGoalTool(scope),
 	};
 }
 
