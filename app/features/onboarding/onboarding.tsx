@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, Check, Home, ShieldCheck, Wallet } from 'lucide-react';
-import { HISTORY_THROUGH, euro } from '@/lib/finance';
+import { HISTORY_THROUGH, defaults, euro } from '@/lib/finance';
 import { dateLabel } from '@/lib/date-labels';
 import { DEFAULT_PERSONA_ID, type PersonaId } from '@/lib/contracts';
 import type { PersonaView } from '@/lib/personas/view';
@@ -46,7 +46,7 @@ export function Onboarding({ initialGoal, initialPersonaId, personas, protectedC
           <p>{persona.story}</p>
           {persona.mortgage ? <p className={styles.disclosure}>Application record: {persona.mortgage.status.replaceAll('_', ' ')}{persona.mortgage.statusDate ? ` · ${dateLabel(persona.mortgage.statusDate)}` : ''}. A historical record, not an approval prediction.</p> : null}
           {initialPersonaId && initialPersonaId !== personaId ? <p className={styles.disclosure}>Switching starts a fresh plan and conversation for this account. Your learning progress stays.</p> : null}
-          <dl className={styles.facts}><div><dt>History available</dt><dd>Through {dateLabel(HISTORY_THROUGH)}</dd></div><div><dt>Source</dt><dd>Junction dataset · one account</dd></div><div><dt>Protected reserve</dt><dd>{euro(protectedCents, 2)} · editable assumption</dd></div></dl>
+          <dl className={styles.facts}><div><dt>History available</dt><dd>Through {dateLabel(HISTORY_THROUGH)}</dd></div><div><dt>Source</dt><dd>Junction dataset · one account</dd></div><div><dt>Protected reserve</dt><dd>{euro(initialPersonaId && initialPersonaId !== personaId ? defaults.reserveCents + defaults.irregularReserveCents : protectedCents, 2)} · editable assumption</dd></div></dl>
           <fieldset className={styles.coverage}><legend>Should we assume this covers all accounts and bills?</legend><label><input type="radio" name="coverage" checked={coverage === 'assume'} onChange={() => setCoverage('assume')}/><span>Yes, for this demo<small>Allow estimates using the supplied account.</small></span></label><label><input type="radio" name="coverage" checked={coverage === 'unknown'} onChange={() => setCoverage('unknown')}/><span>I don’t know<small>Explore and learn. Extra saving estimates stay paused.</small></span></label></fieldset>
           <p className={styles.disclosure}>Your goal and learning progress stay in this browser. XP is a learning reward with no cash value.</p>
           <button className={`button ${styles.continue}`} disabled={!coverage} onClick={() => { if (goal && coverage) onFinish(goal, coverage === 'assume', personaId); }}>Open my workspace<ArrowRight size={18}/></button>

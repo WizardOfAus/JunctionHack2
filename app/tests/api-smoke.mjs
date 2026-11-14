@@ -27,6 +27,8 @@ for(const persona of catalogue.personas){
   const finance=await post('/api/finance',{...defaults,personaId:persona.id});
   assert.equal(finance.persona.account.accountId,persona.account.accountId);
   assert.equal(finance.forecast.accountId,persona.account.accountId);
+  assert.match(finance.loanReadiness.label,/education, not a credit decision/);assert.equal(finance.loanReadiness.checks.length,3);assert.ok(finance.loanReadiness.payments.market.month);
+  if(persona.mortgage)assert.match(finance.loanReadiness.basis.source,/Application record/);
   const evidence=await post('/api/transactions',{query:{},assumptions:defaults,personaId:persona.id});
   assert.equal(evidence.persona.id,persona.id);
   assert.ok(evidence.rows.every(row=>row.customer_id===persona.account.customerId));

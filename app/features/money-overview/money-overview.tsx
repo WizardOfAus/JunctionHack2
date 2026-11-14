@@ -52,7 +52,7 @@ export function MoneyOverview({ personaId, forecast: f, goal, busy, failed, conn
       <section className={styles.hero} aria-labelledby="money-title" aria-busy={busy}>
         <div className={styles.heroLabel}><Wallet size={18}/><span>{f.horizonDays}-day estimate</span></div>
         <h2 id="money-title">Estimated extra room</h2><strong className={styles.heroAmount}>{pending ? '—' : paused ? 'Paused' : euro(f.remainingCents, 2)}</strong>
-        <p className={styles.heroDescription}>{paused ? 'Confirm the picture before making a new plan.' : 'After outgoings, reserve and home allocation. An estimate, not a spending target.'}</p>
+        <p className={styles.heroDescription}>{paused ? 'Confirm the picture before making a new plan.' : f.allocationCents>0?'After outgoings, reserve and home allocation. An estimate, not a spending target.':'After outgoings and your reserve. An estimate, not a spending target.'}</p>
         <dl className={styles.balanceBreakdown}><div><dt>Recorded balance</dt><dd>{pending || !connected ? '—' : euro(f.balanceCents, 2)}</dd></div><div><dt>Lowest projected balance</dt><dd>{unavailable ? '—' : euro(f.minimumCents, 2)}</dd></div><div><dt>Protected reserve</dt><dd>{pending || !connected ? '—' : euro(f.protectedCents, 2)}</dd></div>{f.allocationCents > 0 && !unavailable ? <div><dt>Home scenario allocation</dt><dd>{euro(f.allocationCents, 2)}</dd></div> : null}</dl>
         <button className={styles.heroAction} disabled={pending} onClick={paused ? onSettings : openScenario}>{paused ? 'Review your assumptions' : 'Explore a what-if'}<ArrowRight size={18}/></button><button className={styles.heroSecondary} onClick={onCalculation} disabled={unavailable}>How is this calculated?</button>
       </section>
