@@ -1,0 +1,107 @@
+.timeline{min-width:0}
+.chartHeading{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:15px}
+.chartHeading h2{font-size:19px}
+.chartHeading p{margin-top:7px;font-size:12px;color:var(--muted);max-width:33ch}
+.segmented{display:flex;background:#f0f3eb;padding:3px;border-radius:8px;flex-shrink:0}
+.segmented button{min-height:32px;border:0;background:none;border-radius:6px;color:#637158;font-size:11px;padding:5px 10px;white-space:nowrap}
+.segmented button[aria-pressed=true]{background:white;color:var(--forest);font-weight:750;box-shadow:0 1px 3px #203d3112}
+.chartFrame{margin:10px -5px 0}
+.chartFrame svg{display:block;width:100%;height:auto;overflow:visible}
+.gridLine{stroke:#e7ebe2;stroke-width:1}
+.axisText{fill:#6a7662;font-family:Manrope,Arial,sans-serif;font-size:15px}
+.chartArea{fill:#edf3e4}
+.forecastLine{fill:none;stroke:var(--green);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.reserveLine{stroke:#ab896b;stroke-width:2;stroke-dasharray:6 5}
+.incomeGuide{stroke:#bac8ae;stroke-width:1;stroke-dasharray:2 4}
+.incomeDot{fill:var(--green)}
+.cursorLine{stroke:#96a68c;stroke-width:1;stroke-dasharray:3 4}
+.selectedDot{fill:var(--forest);stroke:white;stroke-width:3}
+.recordedDot{fill:white;stroke:var(--forest);stroke-width:2}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:10px;color:#66715d;margin:8px 0 18px}
+.legend>span{display:flex;align-items:center;gap:5px}
+.lineKey{width:14px;border-top:2px solid var(--green)}
+.reserveKey{width:14px;border-top:2px dashed #ab896b}
+.paydayKey{width:5px;height:5px;border-radius:50%;background:var(--green)}
+.dateSlider{display:block;font-size:12px;color:#65725c}
+.dateSlider>span{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.dateSlider strong{color:var(--ink);font-weight:650}
+.dateSlider input{display:block;width:100%;margin:0;min-height:30px}
+.dayReadout{padding:14px;margin-top:8px;border-radius:10px;background:#f5f7f0;display:grid;grid-template-columns:.8fr 1.2fr;gap:17px;align-items:center}
+.dayReadout span{display:block;font-size:11px;color:var(--muted)}
+.dayReadout strong{display:block;font-size:21px;font-variant-numeric:tabular-nums;letter-spacing:-.03em;margin-top:2px}
+.dayReadout p{font-size:12px;margin-top:5px}
+.details{margin-top:8px;color:var(--muted);font-size:11px}
+.details summary{cursor:pointer;min-height:34px;padding:7px 0}
+.tableScroll{overflow:auto;max-height:250px}
+.tableScroll table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:11px}
+.tableScroll caption{text-align:left;white-space:normal;margin:8px 0}
+.tableScroll th,.tableScroll td{text-align:right;padding:9px 8px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.tableScroll th:first-child{text-align:left;font-weight:500}
+
+.scenarioDialog{border:1px solid var(--line);border-radius:20px;padding:0;width:min(720px,calc(100vw - 32px));max-height:90dvh;color:var(--ink);background:var(--paper);box-shadow:0 24px 90px #152a3440}
+.scenarioDialog::backdrop{background:#11241cb3}
+.dialogHeader{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:23px 28px;background:var(--paper);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:2}
+.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--muted)}
+.dialogHeader h2{font-size:26px;margin-top:5px}
+.dialogBody{padding:23px 28px}
+.dialogIntro{font-size:14px;color:var(--muted)}
+.scenarioChoices{display:flex;gap:8px;margin:22px 0}
+.scenarioChoices button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:12px 8px;min-height:48px;border:1px solid var(--line);border-radius:10px;background:white;font-size:12px}
+.scenarioChoices button[aria-pressed=true]{background:var(--lime);color:var(--forest);border-color:#a9c773;font-weight:750}
+.scenarioInput{padding:20px;background:#f0f4e9;border-radius:12px}
+.scenarioInput label{display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:650;gap:12px}
+.scenarioInput p{font-size:12px;color:var(--muted);margin-top:10px}
+.amountInput{display:flex;align-items:center;gap:8px;margin-top:11px;padding:8px 12px;border:1px solid #c8d4bd;border-radius:9px;background:white;width:min(100%,240px);font-size:26px}
+.amountInput input{min-width:0;width:100%;border:0;background:none;font-size:28px;font-weight:700;font-variant-numeric:tabular-nums}
+.scenarioInput select{font:inherit;font-size:16px;min-height:48px;padding:8px 12px;width:100%;background:white;border:1px solid #c8d4bd;border-radius:8px;margin-top:12px}
+.scenarioInput input[type=range]{width:100%;min-height:35px;margin-top:12px}
+.scenarioResult{min-height:90px;margin-top:22px}
+.scenarioResult>p{font-size:14px}
+.comparison{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}
+.comparison span{font-size:12px;color:var(--muted)}
+.comparison strong{display:block;font-size:29px;font-variant-numeric:tabular-nums;letter-spacing:-.035em;margin-top:4px}
+.resultNote,.resultWarning{font-size:13px;padding:14px 16px;border-radius:10px;margin:18px 0;background:#eaf1df}
+.resultWarning{background:var(--peach);color:#75492c}
+.roomComparison{display:flex;justify-content:space-between;gap:15px;font-size:13px;border-top:1px solid var(--line);padding-top:15px}
+.roomComparison>span:last-child{display:flex;gap:9px;align-items:center;font-variant-numeric:tabular-nums}
+.smallPrint{font-size:12px;color:var(--muted);margin-top:12px}
+.dialogFooter{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 28px;border-top:1px solid var(--line);background:var(--paper);position:sticky;bottom:0;z-index:2}
+
+@media(max-width:1150px){.chartHeading{flex-wrap:wrap}
+.axisText{font-size:18px}
+.legend{gap:10px}
+}
+
+@media(max-width:740px){.chartHeading h2{font-size:18px}
+.chartHeading p{max-width:none}
+.chartHeading{gap:12px}
+.axisText{font-size:23px}
+.chartFrame{margin-inline:-8px}
+.legend{gap:7px 12px;font-size:10px}
+.dayReadout{grid-template-columns:1fr;gap:8px}
+.dayReadout strong{font-size:23px}
+.dayReadout span{font-size:12px}
+.dayReadout p{font-size:13px}
+.dateSlider{font-size:12px}
+.scenarioDialog{width:calc(100vw - 20px);border-radius:15px;max-height:92dvh}
+.dialogHeader{padding:17px}
+.dialogHeader h2{font-size:22px}
+.dialogBody{padding:18px 17px}
+.scenarioChoices{gap:6px;margin:18px 0}
+.scenarioChoices button{flex-direction:column;gap:7px;font-size:11px;padding:10px 4px}
+.scenarioInput{padding:17px 14px}
+.comparison{gap:9px}
+.comparison span{font-size:11px}
+.comparison strong{font-size:23px}
+.comparison>svg{width:17px}
+.roomComparison{flex-wrap:wrap;gap:7px}
+.dialogFooter{padding:14px 17px;gap:9px;flex-direction:column-reverse;align-items:stretch}
+.dialogFooter>button{justify-content:center}
+}
+
+
+.legend{font-size:12px}
+.dayReadout span,.details,.tableScroll table{font-size:12px}
+.scenarioInput p{font-size:13px}
+.segmented button{min-height:40px;font-size:12px}
+

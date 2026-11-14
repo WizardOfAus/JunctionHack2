@@ -1,43 +1,76 @@
 'use client';
 
-import { ArrowRight, ArrowUpRight, ChevronRight, Heart, Home, ShieldCheck, Utensils, Wallet } from 'lucide-react';
-import { euro, type Basket, type Forecast } from '@/lib/finance';
-import { dateLabel } from '@/lib/date-labels';
+import { useState } from 'react';
+import { ArrowDownLeft, ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, ChevronRight, Heart, Home, Info, ShieldCheck, SlidersHorizontal, Sparkles, Utensils, Wallet, X } from 'lucide-react';
+import { euro, type Assumptions, type Basket, type Forecast } from '@/lib/finance';
 import { goals, type GoalId } from '../onboarding/model';
+import { CashflowTimeline } from '../money-insights/cashflow-timeline';
+import { ScenarioDialog } from '../money-insights/scenario-dialog';
+import { analysisPeriod, dateLabel, outlook } from '../money-insights/model';
 import styles from './money-overview.module.css';
 
-type Props = { forecast: Forecast; goal: GoalId; busy: boolean; failed: boolean; connected: boolean; lessonComplete: boolean; onLesson: () => void; onPlan: () => void; onCalculation: () => void; onSettings: () => void; onEvidence: (basket: Basket) => void };
+type Props = { forecast: Forecast; goal: GoalId; busy: boolean; failed: boolean; connected: boolean; lessonComplete: boolean; onLesson: () => void; onPlan: () => void; onCalculation: () => void; onSettings: () => void; onEvidence: (basket: Basket) => void; assumptions?: Assumptions; onApplyScenario?: (patch: Partial<Assumptions>) => void; onCoach?: (question: string) => void };
 const baskets = [
-  { id: 'regular', title: 'Everyday essentials', detail: 'Housing, groceries & bills', icon: Home },
-  { id: 'irregular', title: 'Life’s little surprises', detail: 'Health, transport & irregular needs', icon: Heart },
-  { id: 'flexible', title: 'Your kind of everyday', detail: 'Restaurants, lifestyle & entertainment', icon: Utensils },
+  { id: 'regular', title: 'Everyday essentials', detail: 'Housing, groceries & regular bills', icon: Home },
+  { id: 'flexible', title: 'Flexible everyday', detail: 'Spending you can review and adjust', icon: Utensils },
+  { id: 'irregular', title: 'Irregular essentials', detail: 'Less frequent costs and larger needs', icon: Heart },
 ] as const;
 
-export function MoneyOverview({ forecast: f, goal, busy, failed, connected, lessonComplete, onLesson, onPlan, onCalculation, onSettings, onEvidence }: Props) {
+export function MoneyOverview({ forecast: f, goal, busy, failed, connected, lessonComplete, onLesson, onPlan, onCalculation, onSettings, onEvidence, assumptions, onApplyScenario, onCoach }: Props) {
+  const [scenarioOpen, setScenarioOpen] = useState(false);
+  const [selectedBasket, setSelectedBasket] = useState<Basket | null>(null);
+  const [dismissed, setDismissed] = useState('');
   const pending = busy || failed;
   const paused = f.blocked || !connected;
-  const max = Math.max(f.balanceCents, f.minimumCents, f.protectedCents, 1);
-  const rows = [
-    { label: 'Recorded balance', value: f.balanceCents, className: styles.balance, explanation: 'What the account shows today' },
-    { label: 'Lowest forecast', value: f.minimumCents, className: styles.forecast, explanation: `After projected income & outgoings over ${f.horizonDays} days` },
-    { label: 'Protected reserve', value: f.protectedCents, className: styles.protected, explanation: 'Emergency & irregular-expense assumptions' },
-  ];
+  const unavailable = pending || paused;
+  const signal = outlook(f);
+  const period = analysisPeriod(f);
+  const total = Object.values(f.baskets).reduce((sum, value) => sum + value, 0);
+  const incomeDay = f.points.find(point => point.incomeCents > 0);
+  const recommendationKey = `${goal}:${lessonComplete}:${signal.kind}:${f.asOf}`;
+  const recommendation = !lessonComplete
+    ? { title: 'Why isn’t the whole balance available?', text: 'See how bills and a reserve change what is left to choose with.', action: 'Explore in 2 minutes', why: 'You haven’t completed the balance exercise yet. It explains the same balance, forecast and reserve shown here.' }
+    : goal === 'buffer'
+      ? { title: 'Try your buffer against a surprise.', text: 'Explore an unexpected cost and see how your reserve holds up.', action: 'Try a scenario', why: 'Your chosen direction is building a safety net. This exercise uses your current reserve and projected cash flow.' }
+      : goal === 'home'
+        ? { title: 'Make space for your next chapter.', text: 'Explore how a change affects your cash before adjusting your home plan.', action: 'Try a scenario', why: 'Your chosen direction is a first home. The preview keeps everyday costs and your reserve visible alongside that goal.' }
+        : { title: 'See what a different month could look like.', text: 'Try a later payday or a change in spending. Keep the parts that work for you.', action: 'Try a scenario', why: 'Your chosen direction is understanding your money, and you have completed the balance exercise.' };
+  const openScenario = () => { if (assumptions && onApplyScenario) setScenarioOpen(true); else onPlan(); };
+
+  const briefing = <section className={styles.briefing} aria-label="Your money outlook" aria-busy={busy}>
+      <span className={`${styles.signalIcon} ${signal.kind === 'attention' ? styles.attentionIcon : ''}`}><ShieldCheck size={21}/></span>
+      <div><strong>{failed ? 'Your outlook needs a refresh.' : busy ? 'Updating your money outlook…' : !connected ? 'Your demo source is disconnected.' : signal.title}</strong><p>{failed ? 'Retry the update above. Previous estimates stay hidden until the refresh succeeds.' : busy ? 'Checking the forecast against your latest assumptions.' : !connected ? 'Reconnect it to explore your money and inspect the source.' : signal.detail}</p></div>
+      <button className="text-button" disabled={pending} onClick={paused ? onSettings : onCalculation}>{paused ? 'Review data' : 'Why this?'}<ArrowUpRight size={16}/></button>
+    </section>;
+
   return <div className={styles.overview}>
-    <section className={styles.money} aria-labelledby="money-title" aria-busy={busy}>
-      <div className={styles.sectionTop}><h2 id="money-title">What’s really available?</h2><button className="text-button" onClick={onCalculation}>Follow the numbers<ArrowUpRight size={16}/></button></div>
-      <div className={styles.room}>
-        <div><span>Estimated extra room</span><strong>{pending ? '—' : paused ? 'Paused' : euro(f.remainingCents, 2)}</strong></div>
-        <p>{failed ? 'The estimate couldn’t refresh. Retry above before using these numbers.' : busy ? 'Recalculating with your latest assumptions…' : paused ? 'Let’s check the assumptions before planning extra saving.' : 'A little room to choose. Everyday spending and your protected reserve are already accounted for.'}</p>
-      </div>
-      <div className={styles.bridge} aria-label="From account balance to extra room">{rows.map(row => <div className={styles.bridgeRow} key={row.label}><div className={styles.rowLabel}><span>{row.label}</span><strong>{pending || !connected ? '—' : euro(row.value, 2)}</strong></div><div className={styles.track} aria-hidden="true"><span className={row.className} style={{ width: `${pending || !connected ? 0 : Math.max(0, row.value) / max * 100}%` }}/></div><p>{row.explanation}</p></div>)}</div>
-      {!pending && f.allocationCents > 0 ? <p className={styles.allocation}>{euro(f.allocationCents, 2)} is also set aside in your home scenario.</p> : null}
-      {!pending && paused ? <div className={styles.pause} role="status"><ShieldCheck size={21}/><div><strong>Protection comes first.</strong><p>{f.warnings[0] || 'Reconnect your demo source to see the estimate.'}</p><button className="text-button" onClick={onSettings}>Review assumptions<ArrowRight size={16}/></button></div></div> : <div className={styles.moneyAction}><p>Forecast, not a guarantee.<br/><span>One synthetic account · {dateLabel(f.asOf)}</span></p><button className="button" onClick={onPlan} disabled={pending}>{goals[goal].action}<ArrowRight size={17}/></button></div>}
-    </section>
-    <button className={styles.lessonInvite} onClick={onLesson}>
-      <span className={styles.lessonDrawing} aria-hidden="true">{Array.from({ length: 16 }, (_, i) => <i key={i} className={i < 9 ? styles.cellBills : i < 14 ? styles.cellReserve : styles.cellRoom}/>)}</span>
-      <span className={styles.inviteCopy}><strong>Same balance. Different possibilities.</strong><span>Try it in 2 minutes · {lessonComplete ? 'Progress saved' : '40 XP'}</span><span>Move the money. Discover why your balance isn’t all spending room.</span></span><ArrowRight size={23}/>
-    </button>
-    <section className={styles.spending} aria-labelledby="spending-title"><div className={styles.sectionTop}><h2 id="spending-title">Where everyday life goes</h2><span>Monthly average · {f.recentPeriod}</span></div><div className={styles.basketBar} aria-hidden="true">{baskets.map(({ id }) => <span key={id} className={styles[id]} style={{ flex: f.baskets[id] || 1 }}/>)}</div>{baskets.map(({ id, title, detail, icon: Icon }) => <button className={styles.basket} key={id} onClick={() => onEvidence(id)} disabled={!connected || pending}><span className={`${styles.basketIcon} ${styles[id]}`}><Icon size={21}/></span><span className={styles.basketCopy}><strong>{title}</strong><span>{detail}</span></span><strong className={styles.amount}>{pending || !connected ? '—' : euro(f.baskets[id], 2)}</strong><ChevronRight size={17}/></button>)}<p className={styles.sourceNote}>Open a basket to inspect the source rows or change a classification.</p></section>
-    <div className={styles.bottomNote}><Wallet size={18}/><span>Estimates use the supplied history through {dateLabel(f.dataThrough)}. You can inspect every assumption.</span></div>
+    <div className={styles.heading}><div><h1>Your money</h1></div><span className={styles.datePill}><CalendarDays size={15}/>{dateLabel(f.asOf, true)} · demo</span></div>
+    <div className={styles.contextRow}><span><span className={styles.sourceDot}/>One synthetic account · history through {dateLabel(f.dataThrough)}</span><button className="text-button" onClick={onSettings}><SlidersHorizontal size={15}/>Your assumptions</button></div>
+    {failed || paused || signal.kind === 'attention' ? briefing : null}
+    <div className={styles.outlookGrid}>
+      <section className={styles.hero} aria-labelledby="money-title" aria-busy={busy}>
+        <div className={styles.heroLabel}><span><Wallet size={18}/>After the essentials</span><span>{f.horizonDays}-day outlook</span></div>
+        <h2 id="money-title">Estimated extra room</h2><strong className={styles.heroAmount}>{pending ? '—' : paused ? 'Paused' : euro(f.remainingCents, 2)}</strong>
+        <p className={styles.heroDescription}>{paused ? 'Confirm the picture before making a new plan.' : 'After expected outgoings, your protected reserve and any home allocation. This is an estimate, not a spending target.'}</p>
+        <dl className={styles.balanceBreakdown}><div><dt>Recorded balance</dt><dd>{pending || !connected ? '—' : euro(f.balanceCents, 2)}</dd></div><div><dt>Lowest projected balance</dt><dd>{unavailable ? '—' : euro(f.minimumCents, 2)}</dd></div><div><dt>Protected reserve</dt><dd>{pending || !connected ? '—' : euro(f.protectedCents, 2)}</dd></div>{f.allocationCents > 0 && !unavailable ? <div><dt>Home scenario allocation</dt><dd>{euro(f.allocationCents, 2)}</dd></div> : null}</dl>
+        <button className={styles.heroAction} disabled={pending} onClick={paused ? onSettings : openScenario}>{paused ? 'Review your assumptions' : 'Explore a what-if'}<ArrowRight size={18}/></button><button className={styles.heroSecondary} onClick={onCalculation} disabled={unavailable}>How is this calculated?</button>
+      </section>
+      <section className={styles.chartCard} aria-label="Cash-flow forecast">{unavailable ? <div className={styles.chartEmpty}><ShieldCheck size={30}/><h2>{failed ? 'Your forecast couldn’t refresh' : busy ? 'Your forecast is updating' : 'Your forecast is paused'}</h2><p>{failed ? 'The update could not complete. Retry before using the forecast.' : busy ? 'The timeline will return with your updated numbers.' : 'Review the source and account coverage to see the projected timeline.'}</p>{!pending && <button className="button secondary" onClick={onSettings}>Review assumptions<ArrowRight size={16}/></button>}</div> : <CashflowTimeline forecast={f}/>}</section>
+    </div>
+    {!unavailable && signal.kind !== 'attention' ? briefing : null}
+    <div className={styles.snapshot} aria-label="Money snapshot"><div><span><ArrowDownLeft size={17}/>Typical monthly salary</span><strong>{pending || !connected ? '—' : euro(f.salaryCents)}</strong><small>Median used by the forecast</small></div><div><span><Wallet size={17}/>Average monthly spending</span><strong>{pending || !connected ? '—' : euro(f.consumptionCents)}</strong><small>{period} · excludes saving transfers</small></div><div><span><CalendarDays size={17}/>Next expected income</span><strong>{unavailable ? '—' : incomeDay ? dateLabel(incomeDay.date) : 'Outside this outlook'}</strong><small>Estimated timing · can change</small></div></div>
+    <div className={styles.detailGrid}>
+      <section className={styles.spending} aria-labelledby="spending-title"><div className={styles.sectionHeading}><div><span className={styles.eyebrow}>Understand the pattern</span><h2 id="spending-title">Where your money goes</h2></div><span className={styles.smallTag}>Monthly average</span></div><p className={styles.supporting}>{period}. Open a group to see what sits behind it.</p>
+        <div className={styles.basketBar} aria-label="Spending group proportions">{baskets.map(({ id, title }) => <span key={id} title={title} className={styles[id]} style={{ width: `${!pending && connected && total > 0 ? f.baskets[id] / total * 100 : 0}%` }}/>)}</div>
+        {baskets.map(({ id, title, detail, icon: Icon }) => <div key={id}><button className={styles.basket} disabled={pending || !connected} onClick={() => setSelectedBasket(selectedBasket === id ? null : id)} aria-expanded={selectedBasket === id} aria-controls={`basket-${id}`}><span className={`${styles.basketIcon} ${styles[id]}`}><Icon size={20}/></span><span className={styles.basketCopy}><strong>{title}</strong><span>{detail}</span></span><span className={styles.basketAmount}><strong>{pending || !connected ? '—' : euro(f.baskets[id], 2)}</strong><small>{pending || !connected ? '—' : `${total ? Math.round(f.baskets[id] / total * 100) : 0}% of spending`}</small></span><ChevronRight size={17} className={selectedBasket === id ? styles.expandedChevron : ''}/></button>{selectedBasket === id && !pending && connected ? <div id={`basket-${id}`} className={styles.basketDetail}><p>{id === 'regular' ? 'These purchases are currently classified as recurring essentials. A classification can be corrected if it does not match your circumstances.' : id === 'irregular' ? 'These are less frequent essential costs identified in the available history. A zero average does not mean an unexpected cost cannot happen.' : 'These purchases are currently classified as flexible. Flexible does not mean unnecessary; you decide what matters to you.'}</p><button className="text-button" onClick={() => onEvidence(id)}>Inspect transactions & classifications<ArrowUpRight size={15}/></button>{onCoach && <button className="text-button" onClick={() => onCoach(`Help me understand my ${id === 'regular' ? 'regular' : id === 'irregular' ? 'irregular' : 'flexible'} spending basket.`)}>Ask my coach<ArrowRight size={15}/></button>}</div> : null}</div>)}
+        <p className={styles.smallPrint}>Historical spending groups. Transfers and investments are excluded. Classifications are editable.</p>
+      </section>
+      <section className={styles.nextStep} aria-labelledby="next-step-title"><div className={styles.sectionHeading}><span className={styles.eyebrow}><Sparkles size={15}/>A useful next step</span></div>
+        {unavailable ? <><span className={styles.nextIcon}><ShieldCheck size={26}/></span><h2 id="next-step-title">Start with what you know.</h2><p>You can still learn while estimates are unavailable. Explore how bills and a reserve affect an example balance.</p><button className="button secondary" onClick={onLesson}>Explore the balance lesson<BookOpen size={16}/></button></> : dismissed === recommendationKey ? <><span className={styles.nextIcon}><Check size={26}/></span><h2 id="next-step-title">Your pace. Your choice.</h2><p>That suggestion is hidden for now. Your plan and the learning library are here whenever you need them.</p><button className="text-button" onClick={onLesson}>Browse learning<ArrowRight size={16}/></button><button className="text-button" onClick={() => setDismissed('')}>Show suggestion again</button></> : <><button className={styles.dismiss} onClick={() => setDismissed(recommendationKey)} aria-label="Dismiss this suggestion"><X size={17}/></button><span className={styles.nextIcon}>{lessonComplete ? <ShieldCheck size={26}/> : <BookOpen size={26}/>}</span><h2 id="next-step-title">{signal.kind === 'attention' ? 'Understand the dip before you decide.' : recommendation.title}</h2><p>{signal.kind === 'attention' ? 'Inspect the forecast and test the timing. Pausing extra saving can be a useful step too.' : recommendation.text}</p><button className="button" onClick={signal.kind === 'attention' ? openScenario : lessonComplete ? openScenario : onLesson}>{signal.kind === 'attention' ? 'Explore the forecast' : recommendation.action}<ArrowRight size={16}/></button><details className={styles.why}><summary><Info size={14}/>Why this suggestion?</summary><p>{signal.kind === 'attention' ? 'Your current forecast falls below the reserve you chose. This suggestion is based on those assumptions, not a judgement about your finances.' : recommendation.why}</p><p>Based on this demo account, your selected direction and saved learning progress.</p></details></>}
+        <div className={styles.planLink}><span>Your direction</span><button onClick={onPlan}>{goals[goal].title}<ArrowUpRight size={16}/></button></div>
+      </section>
+    </div>
+    <footer className={styles.footer}><ShieldCheck size={16}/><span>Your choices stay yours. Synthetic data · forecasts are estimates · no money moves.</span><button className="text-button" onClick={onSettings}>Review data & assumptions</button></footer>
+    {scenarioOpen && !unavailable && assumptions && onApplyScenario ? <ScenarioDialog key={`${f.accountId}:${f.asOf}`} assumptions={assumptions} baseline={f} onClose={() => setScenarioOpen(false)} onApply={onApplyScenario}/> : null}
   </div>;
 }
