@@ -33,7 +33,12 @@
 .reserve { background:var(--lilac); border:1px solid #b3a3c6; }
 .free { background:var(--lime); border:1px solid #819c4e; }
 .legend { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:18px; }
-.legend>span { font-size:12px; }
+.legend>button { min-height:66px; border:1px solid transparent; border-radius:9px; padding:7px 9px; background:transparent; text-align:left; font-size:14px; color:var(--ink); }
+.legend>button:hover,.legend>button.activePart { background:#ffffffa6; border-color:#b6c6a5; }
+.legend>button:focus-visible { outline:3px solid var(--green); outline-offset:3px; }
+.cells { cursor:help; }
+.cells>span.dimmedCell { opacity:.3; }
+.unit { min-height:3.2em; }
 .legend i { display:inline-block; width:9px; height:9px; border-radius:2px; margin-right:5px; }
 .legend strong { display:block; font-size:20px; font-variant-numeric:tabular-nums; margin-top:3px; }
 .unit { font-size:12px; margin-top:12px; color:var(--muted); }
@@ -106,7 +111,7 @@
 
 /* Match the shared reading and control roles without shrinking the exercise. */
 .observation,.feedback,.connection>p,.takeaway{font-size:16px;line-height:1.6}
-.path li strong,.path li button,.legend>span,.sliderLabel{font-size:14px}
+.path li strong,.path li button,.legend>button,.sliderLabel{font-size:14px}
 .path li button{min-height:44px;border-radius:6px}
 .unit,.rangeLabels,.actions>span{font-size:13px}
 .answers label{min-height:52px;font-size:16px}
