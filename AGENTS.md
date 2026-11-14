@@ -12,7 +12,7 @@ Read `README.md`, `CONTRIBUTING.md`, and your work package in `docs/workstreams.
 
 ## Product and data invariants
 
-- The current shipped app is a single-persona first-home prototype. Multi-goal onboarding is planned in `docs/onboarding.md`, not implemented yet.
+- The app offers goal-led onboarding for understanding spending, building a buffer and a first home, using one audited synthetic persona. See `docs/slices/goal-led-first-slice.md`; additional source personas remain planned.
 - Money is integer euro cents, calculated in `app/lib/finance.ts`. Models explain and call constrained tools; they do not calculate authoritative balances.
 - Use the real pinned Junction dataset, not a Git LFS pointer. Follow `docs/data-audit.md`. Keep the full CSV and September holdout under ignored `app/work/`; never deploy them.
 - Coaching history ends on 31 August 2026, before the 1 September demo clock. Keep customer scope server-controlled. Do not combine different customers into one person or fabricate source rows.
