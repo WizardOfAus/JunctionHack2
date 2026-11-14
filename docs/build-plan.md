@@ -1,6 +1,6 @@
 # Koti — first-home financial trainer
 
-Status: approved direction, implementation starting.
+Status: first prototype implemented and merged to main; goal-led onboarding and team work packages prepared for the next iteration.
 Date: 14 November 2026. Working name: Koti (Finnish for home).
 Repository: https://github.com/WizardOfAus/JunctionHack2
 Source brief: https://chatgpt.com/space/page_61975f138de08191a3bbbf0533cc05d5
@@ -193,3 +193,9 @@ Show second-bank behavior only if implemented, with its mode visible.
 ## Implementation update — 14 November 2026
 
 Koti is now implemented as an independent prototype under `app/`. See [verification](verification.md), [data audit](data-audit.md), and [design workflow](design-workflow.md). The user explicitly deferred model credentials until the UI review: the current coach is a labelled deterministic demo. OpenAI or Gemini will be selected and configured server-side later. Rewards are noncash XP; sponsored benefits, real bank connectivity and payment execution remain future integration work.
+
+## Collaboration and onboarding update
+
+The complete prototype was merged in PR #1 (`d56feea8b03173f84b7860c907e6719a6354dbbc`). Read [CONTRIBUTING.md](../CONTRIBUTING.md) and [work packages](workstreams.md) before parallel work. The current shared UI component is still a coordination point; component extraction is the integration owner's first task, not work for every branch to duplicate.
+
+The user proposed choosing a goal and demo situation before entering the home journey. The [onboarding plan](onboarding.md) recommends spending understanding, a safety cushion and first-home saving as distinct choices. This expands the original first-home-only direction and is not implemented yet. Keep the existing home journey as one selected path. Multiple source personas need audited data and server-side identity changes before they can affect calculations.
