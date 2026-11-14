@@ -1,9 +1,12 @@
 import { assumptionsSchema } from '@/lib/contracts';
 import { forecast,evaluateAsp,depositReady,defaults,CLOCK } from '@/lib/finance';
 import { personaFromRequest,provenanceOf,unknownPersona } from '@/lib/personas/request';
+import { loanReadiness } from '@/lib/loan-readiness';
+import { latestMortgageRate } from '@/lib/market-rates';
 function respond(persona:NonNullable<ReturnType<typeof personaFromRequest>>,a:typeof defaults){
   const f=forecast(persona.transactions,a,CLOCK,persona.customerId);
-  return Response.json({forecast:f,asp:evaluateAsp(a.aspOpenedOn,a.aspDeposits),goal:depositReady(a,f.challengeCents),provenance:provenanceOf(persona),persona:persona.view});
+  return Response.json({forecast:f,asp:evaluateAsp(a.aspOpenedOn,a.aspDeposits),goal:depositReady(a,f.challengeCents),provenance:provenanceOf(persona),persona:persona.view,
+    loanReadiness:loanReadiness({forecast:f,assumptions:a,mortgage:persona.view.mortgage,marketRate:latestMortgageRate(CLOCK)})});
 }
 export async function GET(request:Request){
   const persona=personaFromRequest(new URL(request.url).searchParams.get('personaId')??undefined);
