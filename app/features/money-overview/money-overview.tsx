@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { ArrowDownLeft, ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, ChevronRight, Heart, Home, Info, ShieldCheck, SlidersHorizontal, Sparkles, Utensils, Wallet, X } from 'lucide-react';
+import type { PersonaId } from '@/lib/contracts';
 import { euro, type Assumptions, type Basket, type Forecast } from '@/lib/finance';
 import { goals, type GoalId } from '../onboarding/model';
 import { CashflowTimeline } from '../money-insights/cashflow-timeline';
@@ -9,14 +10,14 @@ import { ScenarioDialog } from '../money-insights/scenario-dialog';
 import { analysisPeriod, dateLabel, outlook } from '../money-insights/model';
 import styles from './money-overview.module.css';
 
-type Props = { forecast: Forecast; goal: GoalId; busy: boolean; failed: boolean; connected: boolean; lessonComplete: boolean; onLesson: () => void; onPlan: () => void; onCalculation: () => void; onSettings: () => void; onEvidence: (basket: Basket) => void; assumptions?: Assumptions; onApplyScenario?: (patch: Partial<Assumptions>) => void; onCoach?: (question: string) => void };
+type Props = { personaId?: PersonaId; forecast: Forecast; goal: GoalId; busy: boolean; failed: boolean; connected: boolean; lessonComplete: boolean; onLesson: () => void; onPlan: () => void; onCalculation: () => void; onSettings: () => void; onEvidence: (basket: Basket) => void; assumptions?: Assumptions; onApplyScenario?: (patch: Partial<Assumptions>) => void; onCoach?: (question: string) => void };
 const baskets = [
   { id: 'regular', title: 'Everyday essentials', detail: 'Housing, groceries & regular bills', icon: Home },
   { id: 'flexible', title: 'Flexible everyday', detail: 'Spending you can review and adjust', icon: Utensils },
   { id: 'irregular', title: 'Irregular essentials', detail: 'Less frequent costs and larger needs', icon: Heart },
 ] as const;
 
-export function MoneyOverview({ forecast: f, goal, busy, failed, connected, lessonComplete, onLesson, onPlan, onCalculation, onSettings, onEvidence, assumptions, onApplyScenario, onCoach }: Props) {
+export function MoneyOverview({ personaId, forecast: f, goal, busy, failed, connected, lessonComplete, onLesson, onPlan, onCalculation, onSettings, onEvidence, assumptions, onApplyScenario, onCoach }: Props) {
   const [scenarioOpen, setScenarioOpen] = useState(false);
   const [selectedBasket, setSelectedBasket] = useState<Basket | null>(null);
   const [dismissed, setDismissed] = useState('');
@@ -71,6 +72,6 @@ export function MoneyOverview({ forecast: f, goal, busy, failed, connected, less
       </section>
     </div>
     <footer className={styles.footer}><ShieldCheck size={16}/><span>Your choices stay yours. Synthetic data · forecasts are estimates · no money moves.</span><button className="text-button" onClick={onSettings}>Review data & assumptions</button></footer>
-    {scenarioOpen && !unavailable && assumptions && onApplyScenario ? <ScenarioDialog key={`${f.accountId}:${f.asOf}`} assumptions={assumptions} baseline={f} onClose={() => setScenarioOpen(false)} onApply={onApplyScenario}/> : null}
+    {scenarioOpen && !unavailable && assumptions && onApplyScenario ? <ScenarioDialog personaId={personaId} key={`${f.accountId}:${f.asOf}`} assumptions={assumptions} baseline={f} onClose={() => setScenarioOpen(false)} onApply={onApplyScenario}/> : null}
   </div>;
 }

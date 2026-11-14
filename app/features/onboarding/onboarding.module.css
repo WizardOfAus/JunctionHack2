@@ -63,3 +63,5 @@
  .facts>div { flex-wrap:wrap; gap:2px 16px; }
  .facts dd { text-align:left; }
 }
+
+.setup>label { margin-top:24px; }
