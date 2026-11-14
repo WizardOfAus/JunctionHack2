@@ -23,7 +23,7 @@
 .progress [aria-current] { font-weight:750; }
 .progress>span { display:flex; gap:4px; align-items:center; color:var(--green); white-space:nowrap; }
 .lesson>h1 { font-size:30px; line-height:1.2; max-width:23ch; outline:none; }
-.intro { margin-top:16px; color:var(--muted); font-size:15px; }
+.intro { margin-top:12px; color:var(--muted); font-size:16px; max-width:55ch; }
 .canvas { margin-top:25px; padding:22px 25px; background:var(--mint); border-radius:14px; }
 .canvasHeader { display:flex; justify-content:space-between; align-items:center; gap:15px; font-size:13px; margin-bottom:19px; }
 .canvasHeader strong { font-size:22px; font-variant-numeric:tabular-nums; }
@@ -64,7 +64,7 @@
 .feedback.success { background:var(--mint); }
 .reward { display:inline-flex; align-items:center; gap:7px; margin-top:13px; font-size:13px; font-weight:750; }
 .connection { margin-top:27px; padding:26px; background:var(--mint); border-radius:14px; }
-.connection>h3 { font-size:22px; margin-top:15px; }
+.connection>h2 { font-size:22px; margin-top:15px; }
 .connection>p { font-size:14px; margin-top:12px; }
 .connection dl { margin:23px 0; border-block:1px solid #cad7bf; padding:13px 0; }
 .connection dl>div { display:flex; justify-content:space-between; gap:16px; padding:7px 0; font-size:14px; }
@@ -80,7 +80,7 @@
  .progress>span { font-size:12px; gap:2px; padding-top:1px; }
  .progress>span svg { width:12px; }
  .lesson>h1 { font-size:27px; }
- .intro { font-size:14px; }
+ .intro { font-size:16px; }
  .canvas { padding:19px 15px; }
  .canvasHeader { font-size:12px; gap:10px; }
  .canvasHeader strong { font-size:21px; }
@@ -103,3 +103,12 @@
  .connection dd { margin-left:auto; }
 }
 @media(prefers-reduced-motion:reduce) { .cells>span { transition:none; } }
+
+/* Match the shared reading and control roles without shrinking the exercise. */
+.observation,.feedback,.connection>p,.takeaway{font-size:16px;line-height:1.6}
+.path li strong,.path li button,.legend>span,.sliderLabel{font-size:14px}
+.path li button{min-height:44px;border-radius:6px}
+.unit,.rangeLabels,.actions>span{font-size:13px}
+.answers label{min-height:52px;font-size:16px}
+.answers label:focus-within{outline:3px solid #608b39;outline-offset:3px}
+@media(hover:hover) and (pointer:fine){.answers label:hover{background:#edf4e5;border-color:var(--green)}.path li button:hover{background:#edf3e6}}
