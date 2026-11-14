@@ -6,9 +6,8 @@ Koti app coach chat calls it from the app server when `KOTI_AGENT_URL` is set.
 Tools calculate all money and dates; the model selects the tools and explains
 the results.
 
-This is the first setup only: project, environment, data access, the
-transaction query tools and the chat connection. Forecast and goal tools are
-not in this version.
+The agent can read transactions, make a 35-day Monte Carlo cashflow forecast,
+and project when a savings goal is reached.
 
 ## Setup
 
@@ -65,6 +64,12 @@ npx flue run src/agents/koti.ts -m "How much did CUST04859 spend on taxis in Aug
 # One customer only (coaching mode): the tools refuse other customers
 npx flue run src/agents/koti.ts --data '{"customerId":"CUST04859"}' \
   -m "How much did I spend on restaurants from June to August?"
+
+# Forecast and goal questions
+npx flue run src/agents/koti.ts --data '{"customerId":"CUST04859"}' \
+  -m "How much can I safely put towards my home this month? My emergency reserve is EUR 3,000."
+npx flue run src/agents/koti.ts --data '{"customerId":"CUST04859"}' \
+  -m "My deposit goal is EUR 30,000 and I have EUR 5,000. How much sooner if I cut café spending by 20%?"
 ```
 
 Server: `npm run dev`, then `POST /agents/koti/<conversation-id>` (see `src/app.ts`).
@@ -75,20 +80,47 @@ Server: `npm run dev`, then `POST /agents/koti/<conversation-id>` (see `src/app.
 | Tool | Use | Notes |
 |---|---|---|
 | `query_transactions` | Questions about the past | Filters: dates, categories, types, MCC, merchant, direction, amount. Group by category, type, month, week, weekday, MCC or merchant. Every row has a `row:<line>` reference to the source CSV. |
+| `forecast_cashflow` | "Is it safe this month?", "What if...?" | 35-day Monte Carlo forecast. Changes: `changeSpending`, `addExpense`, `moveToSavings`, `delayIncome`, `changeIncome` (percent or new monthly amount), `addIncome` (one-off). Returns risk, P10 lowest balance, tightest day, safe amount, and the difference from the baseline. |
+| `project_goal` | "When is my deposit ready?", "How much sooner if...?" | Month-by-month arithmetic to a savings goal. Default monthly saving = median of the existing saving transfers in the last 6 months (the same window as the forecast). Changes: `changeSpending`, `changeIncome` (with `toGoalPercent`), `addMonthlySaving`, `oneOffDeposit`. Warns when a plan saves more than the usual monthly surplus. |
 | `find_customers` | Research across customers | Only in research mode (no `customerId` in `initialData`). |
 
 ## Data rules
 
 - The agent sees history up to `2026-08-31` (`KOTI_DATA_CUTOFF`). The demo clock is `2026-09-01`.
-  September 2026 is held out for evaluation. The store enforces this on every query.
+  September 2026 is held out for evaluation. The store enforces this on every query, and the
+  forecast and goal engines reject any row on or after the demo clock.
 - Without `customerId` in `initialData`, the agent can read any synthetic customer.
   With it, the conversation is locked to that customer. The app always sends it.
 - All SQL is fixed and parameterised. The model selects filter values, never SQL.
 
+## Forecast method (`src/finance/forecast.ts`)
+
+1. Repeating items (salary, housing, utilities, saving transfers, salary sweeps) are found from
+   the last 6 months. An item must appear in at least 4 of them. Each one goes on its median day
+   with its median amount.
+2. Everyday purchases (and bills that do not repeat) are sampled as whole past weeks from the last
+   26 weeks (block bootstrap), so weekday patterns stay together.
+3. 10,000 runs, a seeded generator (seed = customer + date + version) so results repeat exactly.
+   Baseline and scenario use the same random picks.
+4. `safeToSetAside = max(0, P10 of lowest balance - floor)`. If the user gives no floor, the engine
+   uses EUR 0 and marks the result `low_confidence`.
+
+## Goal method (`src/finance/goal.ts`)
+
+Saving goes in at the end of each month. Optional interest is added monthly. Salary, saving
+transfers and surplus use the last 6 months (`RECENT_MONTHS` in `src/finance/history.ts`), the
+same window as the forecast, so the two tools agree. A spending change also uses the same monthly
+number in both tools. Income changes are what-ifs from the user; the agent never predicts a raise.
+ASP rules, purchase costs and mortgage approval are not included yet.
+
+The build plan's audit medians (salary EUR 2,700.99, saving EUR 246.33, surplus EUR 583.38) use
+12 months. A test checks them with `monthlyStats(..., 12)`. The tools use 6 months, so for
+CUST04859 they give EUR 2,737.43, EUR 249.65 and EUR 808.69.
+
 ## Commands
 
 ```sh
-npm test              # dataset and tool checks (they need data/koti.db, else they are skipped)
+npm test              # engine unit tests + dataset and tool checks (the dataset checks need data/koti.db, else they are skipped)
 npm run check:types
 npm run build && npm start
 ```
