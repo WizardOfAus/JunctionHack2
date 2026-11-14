@@ -135,6 +135,43 @@ Suggested tools:
 Simulated transfers: prepare -> review -> confirm -> explicitly simulated completion.
 Recheck current forecast before confirmation and make repeated confirmation idempotent.
 
+### Coach agent
+The coach is one Flue agent (`agent/`). The app server sends each chat question to it
+(`app/lib/coach/agent.ts`). The browser never calls the agent directly.
+
+Single-threaded:
+- One agent answers every question. There are no sub-agents, no specialist agents and no
+  parallel answers to the same question.
+- Each chat is one conversation. The agent does one message at a time, in the order received.
+  A new message waits until the last answer is complete.
+- One server process owns a conversation at a time. Flue stores the conversation history, so the
+  agent can use earlier messages in the same chat.
+- The agent decides which tool to call, one step after the other. The tools calculate; the agent
+  explains the result.
+
+All tools:
+- The agent has access to all coaching tools. It does not hand a question to another agent.
+- Tools in this version: `query_transactions`. Next: `forecast_cashflow`, `project_goal` and the
+  other suggested tools above, when each one is ready.
+- All tools means all tools for one customer. The server sets the customer; the agent and the
+  browser cannot change it. `find_customers` is for research mode only, not for the coach chat.
+
+Purpose:
+- Help the user save as much money as possible, without risk to everyday life. Find the largest
+  amount the user can save safely, and show where it comes from (for example a habit to cut).
+- Never suggest saving below the protected reserve. Never count forecast savings as money the
+  user has. The user decides; the agent does not put pressure on them.
+- Be generally helpful: answer the question first, in short plain language, then offer one next
+  step that can save money.
+
+Scope:
+- Financial topics only: spending, income, saving, budgets, the safety cushion, the first-home
+  goal, ASP and how Koti calculates its numbers.
+- For other topics, say in one sentence that Koti helps with money questions only, and offer a
+  money question instead.
+- No investment, tax, legal or mortgage approval advice. Give general facts and send the user to a
+  qualified adviser or the official source.
+
 ## Optional bank integration
 Timebox Enable Banking sandbox setup to 90 minutes once credentials are available.
 Institution selection -> consent redirect -> accounts/balances/paginated transactions -> refresh,
