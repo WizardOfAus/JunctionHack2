@@ -1,6 +1,6 @@
 # Goal-led first slice
 
-Owner: Codex. Branch: `codex/goal-led-first-slice`. Base: `fc93b7d` (includes Claude’s category fix, PR #3).
+Owner: Codex. Branch: `codex/goal-led-first-slice`. Rebased on `f850b59`, including Claude’s category fix (PR #3) and data-insights analysis (PR #4).
 
 ## File boundary
 
@@ -37,3 +37,7 @@ This slice ships three goal choices with one audited synthetic persona, not a pe
 
 The profile is stored separately as validated `koti-journey-v1`; the prior `koti-demo-v1` assumptions and progress are preserved. Reset clears both. Offline or rejected storage still permits in-memory use. Authoritative numbers remain in the finance API. No model key, live bank connection, monetary reward or actual transfer was introduced.
 
+
+## Next integration handoff
+
+Claude’s upcoming allowlisted persona catalogue should supply selectable demo situations and declared goal/assumption metadata via props. Mortgage status cannot be inferred from housing transactions. Keep raw categories in `app/lib/categories.ts`; consume future basket changes through the existing finance interface. No credit score or approval odds; external survey comparisons must identify their price year. No analyst route or persona catalogue has been started in this slice.
