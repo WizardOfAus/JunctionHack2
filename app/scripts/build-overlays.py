@@ -528,7 +528,7 @@ def build_postal_areas(args):
 # ---------------------------------------------------------------- mortgage market rates (Bank of Finland)
 
 BOF_API = "https://api.boffsaopendata.fi/v4/observations/"
-RATE_MONTHS = [f"2026M{m}" for m in range(1, 9)]  # January to August 2026. The demo clock is 1 September 2026.
+RATE_MONTHS = [f"2026M{m}" for m in range(1, 9)]  # Pinned January–August rate snapshot; independent of the current app clock.
 RATE_SERIES = [
     ("new_housing_loans_average_rate", "MFI_PUBL", "M.A.1.B.A20.A.A.U6.2251.ZZ.Z01.H.A.0.A.0.A.0",
      "Annualised agreed rate, new drawdowns of housing loans to Finnish households, MFIs excl. Bank of Finland, "

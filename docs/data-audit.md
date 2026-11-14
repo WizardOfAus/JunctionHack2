@@ -18,8 +18,8 @@ python3 scripts/import-data.py
 - 3,626,755 transaction rows; 5,100 customers; 1 October 2024–30 September 2026.
 - Exactly one account per customer; zero sequential balance reconciliation errors across the full file.
 - Main synthetic customer: `CUST04859`; account: `ACC004859`.
-- `app/data/persona.json`: 698 source rows before the 1 September 2026 demo clock.
-- `app/work/holdout.json`: 21 September rows, reserved for evaluation and excluded from the runtime artifact.
+- `app/data/persona.json`: 719 source rows through the current 30 September 2026 cutoff; 698 belong to the original September backtest.
+- September’s 21 rows are now in the runtime artifact; the explicit backtest excludes them from forecast inputs. There is no separate holdout file.
 
 The importer preserves every original CSV field as a string, adding `id: row-N`, `sourceRow`,
 `amountCents` and `balanceCents`. Source row numbers include the header: the first data row is 2.
@@ -30,7 +30,7 @@ The JSON is intended for server-only imports; do not serialize all transaction r
 
 The pinned upstream Git object contains `oid sha256:49b3265d8e44e751de305a074dcffcda732bb79aa1e07b46fcca774ce76f1e63` and `size 362796501`. The downloaded file was independently rehashed and its byte size checked: both match exactly. Its first line is the CSV header (`customer_id,bank_account_id,...`), not the `version https://git-lfs.github.com/spec/v1` pointer line. The existing importer also rejects a file without the expected CSV header before writing artifacts.
 
-The runtime subset was rechecked: 698 rows, only CUST04859, latest date 31 August 2026. This verifies use of the actual source payload, while the runtime intentionally uses only one customer's history. Additional personas require separate extraction, audits and a server-scoped catalogue; they are not enabled by the current app.
+The original September backtest subset was rechecked: 698 rows, only CUST04859, latest date 31 August 2026. This verifies use of the actual source payload, while the runtime intentionally uses only one customer's history. Additional personas require separate extraction, audits and a server-scoped catalogue; they are not enabled by the current app.
 
 ## Demo clock (updated 14 November 2026)
 
@@ -95,7 +95,7 @@ user-confirmed obligations. The first October housing commitment falls inside a 
 starting 1 September, so the projection must include it. Flex spending and optional saving share
 one pool of capacity above the floor.
 
-The current prototype engine uses the 12-month salary/saving medians, the highest June–August housing payment, and June–August average daily consumption. The conservative candidates above are preserved for later comparison; they are not all active inputs. See `app/lib/finance.ts` and the in-app calculation assumptions for the implemented model.
+The original September prototype engine used the 12-month salary/saving medians, the highest June–August housing payment, and June–August average daily consumption. The current engine derives these windows from the shared clock. The conservative candidates above are preserved for later comparison; they are not all active inputs. See `app/lib/finance.ts` and the in-app calculation assumptions for the implemented model.
 
 ## Available fields and limits
 
