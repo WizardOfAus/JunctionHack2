@@ -1,5 +1,11 @@
 import { z } from 'zod';
 import { DATA_START, DEMO_DATE, HISTORY_THROUGH, recentWindow } from './finance';
+/** Allowlisted demo persona keys, kept equal to data/personas/catalogue.json by tests/personas.test.mjs.
+ *  Only the keys live here, so the browser never receives the catalogue's customer mapping. Unknown IDs fail validation. */
+export const personaIds=['reference','home-approved','home-rejected-income','home-recent-approval','home-rejected-collateral','tight-budget','flexible-spender','irregular-shocks'] as const;
+export type PersonaId=typeof personaIds[number];
+export const DEFAULT_PERSONA_ID:PersonaId='reference';
+export const personaIdSchema=z.enum(personaIds,{errorMap:()=>({message:'Unknown demo persona.'})});
 const readable=(iso:string)=>new Date(iso+'T12:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
 const cents=z.number().int().min(0).max(100000000);
 export const assumptionsSchema=z.object({

@@ -1,0 +1,14 @@
+{
+  "$comment": "Allowlisted demo personas. Keys are stable catalogue IDs; the browser never sends a customer_id. Stories describe recorded data; anything not in the data is marked as an assumption. Read by scripts/import-data.py and lib/personas.ts.",
+  "defaultId": "reference",
+  "personas": [
+    { "id": "reference", "customerId": "CUST04859", "label": "Steady saver", "story": "Regular salary, steady investing and almost no surprise costs. The original Koti demo account.", "suggestedGoal": "home" },
+    { "id": "home-approved", "customerId": "CUST04767", "label": "Approved home purchase", "story": "Applied for a mortgage in April 2026 and was approved in May for an apartment in Espoo. Whether this is a first home is a demo assumption.", "suggestedGoal": "home" },
+    { "id": "home-rejected-income", "customerId": "CUST02222", "label": "Mortgage declined: income", "story": "A strong saver whose May 2026 application for a house was declined for insufficient income. What would it take next time?", "suggestedGoal": "home" },
+    { "id": "home-recent-approval", "customerId": "CUST01265", "label": "Recent mortgage approval", "story": "Applied in August 2026 and was approved on 8 September. Most salary moves on to another account, so spending there is not visible.", "suggestedGoal": "home" },
+    { "id": "home-rejected-collateral", "customerId": "CUST01460", "label": "Mortgage declined: collateral", "story": "Declined in February 2026 because the home's lending value did not cover the loan. Most salary moves on to another account.", "suggestedGoal": "home" },
+    { "id": "tight-budget", "customerId": "CUST02097", "label": "Tight budget", "story": "A modest salary, frequent negative balances and housing that takes almost half of income.", "suggestedGoal": "buffer" },
+    { "id": "flexible-spender", "customerId": "CUST02689", "label": "Generous everyday spender", "story": "Restaurant spending in the top few percent of the dataset and a thin monthly margin.", "suggestedGoal": "understand" },
+    { "id": "irregular-shocks", "customerId": "CUST04617", "label": "Hit by big one-offs", "story": "Several large Home & Tech and Travel purchases and a small saving margin.", "suggestedGoal": "buffer" }
+  ]
+}
