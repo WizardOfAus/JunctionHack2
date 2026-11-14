@@ -1,6 +1,6 @@
 # Koti — little steps, closer to home
 
-An independent first-home learning prototype for the S-Pankki challenge. Brilliant-inspired interactive lessons turn synthetic transaction evidence into understandable choices. XP rewards learning; it has no cash value.
+An independent financial learning prototype for the S-Pankki challenge. Brilliant-inspired interactive lessons turn synthetic transaction evidence into understandable choices. XP rewards learning; it has no cash value.
 
 - [Product and build plan](docs/build-plan.md)
 - [Data audit](docs/data-audit.md)
@@ -8,10 +8,11 @@ An independent first-home learning prototype for the S-Pankki challenge. Brillia
 - [Design workflow](docs/design-workflow.md)
 - [Contributor setup and Claude Code handoff](CONTRIBUTING.md)
 - [Work packages and file ownership](docs/workstreams.md)
-- [Proposed goal-led onboarding](docs/onboarding.md)
+- [Goal-led first slice and contributor boundary](docs/slices/goal-led-first-slice.md)
+- [Onboarding and future persona plan](docs/onboarding.md)
 - [Palette and brand provenance](docs/brand-provenance.md)
 
-The complete first prototype is on `main`, merged through [PR #1](https://github.com/WizardOfAus/JunctionHack2/pull/1). Onboarding and multiple source personas are planned next; the current UI still opens the first-home demo. Start collaborator branches from current `main` and follow the work-package boundaries above.
+The complete first prototype is on `main`, merged through [PR #1](https://github.com/WizardOfAus/JunctionHack2/pull/1). Goal-led onboarding now offers spending clarity, a safety net or a first home. All three use one audited demo account; multiple source personas are still planned. Start collaborator branches from current `main` and follow the work-package boundaries above.
 
 ## Run locally
 
@@ -39,6 +40,6 @@ The application uses React, TypeScript, server routes, and Vinext's Cloudflare-c
 
 ## Scope
 
-Today, Coach and My plan are implemented, including three interactive lessons, evidence inspection and classification corrections, reserves, spending scenarios, salary delays, a home goal, ASP inputs, and simulated transfers. The supplied ledger is synthetic and fixed at 1 September 2026; it is not a live bank account.
+Money, Learn, Coach and My plan are implemented, including a redesigned balance lesson and two existing lessons, evidence inspection and classification corrections, reserves, spending scenarios, salary delays, a home goal, ASP inputs, and simulated transfers. The supplied ledger is synthetic and fixed at 1 September 2026; it is not a live bank account.
 
 Live AI, actual S-Pankki connectivity, authentication for real customer data, cash rewards and money movement are later integration work. OpenAI or Gemini can be connected server-side after the UX review. Never put model keys in browser code or commit them.

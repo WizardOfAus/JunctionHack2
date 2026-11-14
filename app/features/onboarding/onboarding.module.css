@@ -1,0 +1,65 @@
+.page { min-height:100dvh; background:var(--paper); padding:0 5vw 40px; }
+.header { max-width:1200px; margin:auto; height:100px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+.header>span { font-size:13px; color:var(--muted); }
+.brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:32px; letter-spacing:-.03em; text-decoration:none; }
+.layout { max-width:1120px; margin:36px auto 0; display:grid; grid-template-columns:1fr 1.1fr; gap:8%; align-items:start; }
+.introduction { padding-top:38px; }
+.introduction h1 { font-size:clamp(36px,4vw,52px); line-height:1.14; letter-spacing:-.035em; text-wrap:initial; }
+.introduction h1 span { color:var(--green); }
+.introduction>p { margin-top:24px; font-size:17px; max-width:36ch; }
+.moneyMap { margin:46px 0 32px; max-width:390px; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.moneyMap>div { padding:22px; border-radius:12px; display:flex; flex-direction:column; justify-content:space-between; font-weight:700; gap:25px; }
+.mapTop { background:var(--forest); color:var(--paper); grid-row:span 2; min-height:225px; }
+.mapMiddle { background:var(--lilac); }
+.mapBottom { background:var(--lime); }
+.introduction .introNote { font-size:13px; color:var(--muted); max-width:44ch; }
+.setup { padding:30px 0; }
+.steps { display:flex; gap:28px; list-style:none; margin:0 0 36px; padding:0; font-size:12px; color:var(--muted); }
+.steps li { display:flex; gap:8px; align-items:center; }
+.steps li>span { width:24px; height:24px; background:var(--mint); border-radius:50%; display:grid; place-items:center; }
+.steps [aria-current] { color:var(--ink); font-weight:750; }
+.steps [aria-current]>span { background:var(--forest); color:white; }
+.setup h2 { font-size:29px; line-height:1.23; letter-spacing:-.03em; outline:none; }
+.setup>p { margin-top:12px; color:var(--muted); }
+.choices { padding:0; margin:26px 0; border:0; display:grid; gap:12px; }
+.choice { position:relative; border:1px solid var(--line); border-radius:12px; display:flex; align-items:center; gap:16px; padding:20px 16px; cursor:pointer; background:white; }
+.choice:hover { border-color:var(--green); }
+.choice.selected { background:var(--mint); border-color:var(--green); }
+.choice input { position:absolute; opacity:0; width:1px; height:1px; }
+.choice:has(input:focus-visible) { outline:3px solid var(--green); outline-offset:4px; }
+.choice>span:not(.radio) { flex:1; }
+.choice strong { display:block; font-size:16px; margin-bottom:5px; }
+.choice span span { display:block; color:var(--muted); font-size:13px; line-height:1.5; }
+.radio { border:1px solid var(--muted); border-radius:50%; width:22px; height:22px; display:grid; place-items:center; flex-shrink:0; }
+.selected .radio { background:var(--forest); color:white; border-color:var(--forest); }
+.continue { width:100%; justify-content:space-between; min-height:50px; font-size:14px; }
+.skip { display:flex; gap:8px; align-items:center; justify-content:center; border:0; background:none; min-height:44px; margin:8px auto 0; color:var(--green); font-size:13px; }
+.skip:hover { text-decoration:underline; }
+.facts { margin:26px 0; padding:18px 0; border-block:1px solid var(--line); font-size:13px; }
+.facts>div { display:flex; justify-content:space-between; gap:20px; padding:6px 0; }
+.facts dt { color:var(--muted); }
+.facts dd { margin:0; text-align:right; font-weight:700; }
+.coverage { border:0; padding:0; margin:0 0 20px; }
+.coverage legend { font-size:16px; font-weight:750; margin-bottom:14px; }
+.coverage label { display:flex; align-items:flex-start; gap:12px; cursor:pointer; padding:12px 0; }
+.coverage input { margin-top:5px; width:18px; height:18px; flex-shrink:0; }
+.coverage small { display:block; color:var(--muted); font-size:13px; }
+.setup .disclosure { font-size:13px; margin:0 0 24px; }
+@media(max-width:740px) {
+ .page { padding:0 22px 30px; }
+ .header { height:76px; }
+ .header>span { font-size:12px; max-width:130px; text-align:right; }
+ .layout { display:block; margin:12px auto 0; max-width:500px; }
+ .introduction { padding:12px 0 28px; border-bottom:1px solid var(--line); }
+ .introduction h1 { font-size:32px; }
+ .introduction>p { font-size:14px; margin-top:14px; }
+ .moneyMap,.introduction .introNote { display:none; }
+ .setup { padding-top:26px; }
+ .steps { margin-bottom:25px; gap:22px; }
+ .setup h2 { font-size:25px; }
+ .choice { padding:17px 13px; gap:12px; }
+ .choice strong { font-size:15px; }
+ .choice>svg { width:21px; }
+ .facts>div { flex-wrap:wrap; gap:2px 16px; }
+ .facts dd { text-align:left; }
+}
