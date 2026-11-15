@@ -16,7 +16,8 @@
     "typecheck": "tsc --noEmit",
     "test:api": "node tests/api-smoke.mjs",
     "test:coach-fallback": "node tests/coach-fallback-smoke.mjs",
-    "evaluate:holdout": "node scripts/evaluate-holdout.mjs"
+    "evaluate:holdout": "node scripts/evaluate-holdout.mjs",
+    "evaluate:coach": "node scripts/evaluate-coach.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",
