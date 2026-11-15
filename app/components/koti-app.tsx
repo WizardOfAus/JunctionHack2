@@ -29,6 +29,7 @@ import { CoachAnswerVisual } from '@/features/journey/coach-answer-visual';
 import { CoachChat } from '@/features/coach/coach-chat';
 import { useCoachChat } from '@/features/coach/use-coach-chat';
 import { MemoryPanel, saveMemory } from '@/features/memory/memory-panel';
+import { LearnFeed } from '@/features/learn/learn-feed';
 import sliceStyles from '@/features/integration.module.css';
 
 type Drawer = 'data'|'settings'|'evidence'|'calculation'|null;
@@ -164,6 +165,7 @@ export default function KotiApp({initialForecast,personas}:{initialForecast:Fore
         <div className={`content-grid ${tab!=='plan'?sliceStyles.learningLayout:''}`}><div className="primary-column">
           {tab==='today'?<MoneyOverview key={personaId} personaId={personaId} forecast={f} goal={goalId} busy={busy} failed={!!error} connected={a.connected} lessonComplete={completed.includes('balance')} onLesson={()=>go('learn')} onPlan={()=>go('plan')} onCalculation={()=>setDrawer('calculation')} onSettings={()=>setDrawer(a.connected?'settings':'data')} onEvidence={basket=>evidence({basket})} assumptions={a} onApplyScenario={patch=>{update(patch);go('plan');}} onCoach={question=>{if(!helpOpen)go('coach');void coach.ask(question);}}/>:null}
           {tab==='today'&&comparison&&!busy&&!error&&a.connected&&!f.blocked?<SpendingComparison key={`benchmarks:${personaId}`} data={comparison}/>:null}
+          {tab==='learn'?<LearnFeed key={`${personaId}:${goalId}`} personaId={personaId} goal={goalId} forecast={f} comparison={comparison} readiness={readiness} format={c=>euro(c)} unavailable={busy||!!error||!a.connected||f.blocked} onAsk={question=>{go('coach');void coach.ask(question);}}/>:null}
           {tab==='learn'?<BalanceLesson key={personaId} completed={completed.includes('balance')} forecast={f} unavailable={busy||!!error||!a.connected} onComplete={()=>finishLesson(0)} onMoney={()=>go('today')} nextDiscovery={{title:goalId==='home'?'Try a small change':'Build your safety net',xp:goalId==='home'?60:50}} onNext={()=>openLesson(goalId==='home'?2:1)}/>:null}
           {tab==='coach'?coachPanel:null}
           {tab==='plan'?<>
