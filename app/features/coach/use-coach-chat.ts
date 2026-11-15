@@ -4,12 +4,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { CoachAction } from '@/lib/journey/context';
 import type { Basket } from '@/lib/finance';
+import type { AnswerVisual } from '@/lib/coach/visuals';
 import { applyProgress, emptyProgress, type ProgressState } from '@/lib/coach/progress';
 import { streamCoach } from '@/lib/coach/stream-client';
 
 export type CoachMessage = {
   role: 'user' | 'coach'; text: string; source?: {dataset?: string; customerLabel?: string}; kind?: string; mode?: string; intent?: string; category?: string; from?: string; to?: string;
-  evidence?: string[]; reductionPercent?: number; basket?: Basket; actions?: CoachAction[]; scope?: string; sources?: string[]; agentUnavailable?: boolean; rememberSuggestion?: string;
+  evidence?: string[]; reductionPercent?: number; basket?: Basket; actions?: CoachAction[]; scope?: string; sources?: string[]; agentUnavailable?: boolean; rememberSuggestion?: string; visual?: AnswerVisual | null;
 };
 
 export function useCoachChat(request: { personaId: string; assumptions: unknown; context: unknown; scopeKey: string }) {

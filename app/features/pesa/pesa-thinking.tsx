@@ -15,7 +15,7 @@ export function PesaThinking({ progress, startedAt }: { progress: ProgressState;
   const label = progress.text ? 'Writing your answer' : current?.label ?? 'Thinking it through';
   return (
     <div className={styles.thinking} role="status" aria-live="polite">
-      <PesaEgg state={progress.text ? 'answering' : 'thinking'} size={30} />
+      <PesaEgg state={progress.text ? 'answering' : 'thinking'} size={32} />
       <div className={styles.body}>
         <p className={styles.current}><span className={styles.shimmer}>{label}</span><span className={styles.time} aria-hidden="true">{seconds}s</span></p>
         {done.length ? (

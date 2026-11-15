@@ -1,5 +1,11 @@
 .egg{display:inline-grid;place-items:center;flex-shrink:0;line-height:0}
 .egg svg{width:100%;height:100%;overflow:visible}
+/* At chat sizes the egg sits on a soft green badge so it reads against the paper background. */
+.badge{border-radius:50%;background:#eaf1de;box-shadow:inset 0 0 0 1px var(--line)}
+.badge svg{width:82%;height:82%}
+.sprout{transform-box:fill-box;transform-origin:50% 100%}
+.egg[data-state=thinking] .sprout,.egg[data-state=answering] .sprout{animation:sway 1.6s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg)}}
 .body{transform-box:fill-box;transform-origin:50% 100%}
 .shadow{fill:var(--forest);opacity:.08;transform-box:fill-box;transform-origin:center}
 .eyes{transform-box:fill-box;transform-origin:center;animation:blink 5s infinite}

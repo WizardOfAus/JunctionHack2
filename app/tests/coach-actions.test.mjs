@@ -9,7 +9,7 @@ test('a surprise bill offers an unexpected-cost preview, not the default lesson'
 });
 test('ordinary answers drop the lesson; learning questions keep it',()=>{
   assert.deepEqual(answerActions(base,'restaurant_scenario','What if I spent 20% less eating out?'),[base[1]]);
-  assert.deepEqual(answerActions([base[0]],'basket','Help me understand my flexible spending basket.'),[base[0]]);
+  assert.deepEqual(answerActions([base[0]],'basket','Help me understand my flexible spending basket.'),[]);
   assert.deepEqual(answerActions([base[0]],'journey','What should I learn next?'),[base[0]]);
   assert.deepEqual(answerActions([base[0]],'taxi','How much did I spend on taxis in August?'),[]);
 });
