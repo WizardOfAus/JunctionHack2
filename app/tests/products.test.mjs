@@ -1,7 +1,10 @@
+import './resolve-ts.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {liveProducts,productKind,products,productsContext,suggest} from '../lib/products/catalogue.ts';
+// Dynamic import, so the loader is active for the extensionless imports in terms.ts.
+const {createSBankTerms,EXA_TIMEOUT_MS}=await import('../lib/products/terms.ts');
 
 const cached=JSON.parse(readFileSync(new URL('../data/products/s-pankki-cached.json',import.meta.url),'utf8'));
 
@@ -30,5 +33,58 @@ test('the coach block lists neutral options and dated, cited S-Bank terms',()=>{
   const text=productsContext({products:liveProducts(cached.output),checkedAt:'2026-11-15',source:'cached'});
   assert.match(text,/not investment advice/);assert.match(text,/Osakesäästötili/);
   assert.match(text,/S-Bank terms from a cached check on 2026-11-15/);assert.match(text,/ASP-tili: .*\(https:\/\/www\.s-pankki\.fi/);
-  assert.doesNotMatch(productsContext(null),/S-Bank terms/);
+  assert.doesNotMatch(productsContext(null),/S-Bank terms (checked live|from a cached check)/);
+});
+
+test('the coach block says Koti is independent and other providers\' terms can differ',()=>{
+  for(const text of [productsContext(null),productsContext({products:liveProducts(cached.output),checkedAt:'2026-11-15',source:'live'})]){
+    const lines=text.split('\n');
+    assert.equal(lines[1],"Koti is independent and not an S-Pankki service. Other Finnish banks offer these options too; if you quote S-Bank terms, say that other providers' terms can differ.");
+  }
+});
+
+// Fake fetch only: these tests never call Exa.
+const fallback=()=>({products:[],checkedAt:cached.retrievedAt,source:'cached',note:'cached'});
+const goodBody={output:cached.output};
+function fakeFetch(respond){
+  const calls=[];
+  const fn=async(url,init)=>{calls.push({url,init});return respond(calls.length);};
+  return {fn,calls};
+}
+const quiet=fn=>async()=>{const error=console.error;console.error=()=>{};try{await fn();}finally{console.error=error;}};
+
+test('a failed Exa call is cached for the day, so a second call does not fetch again',quiet(async()=>{
+  let day='2026-11-15';
+  for(const respond of [()=>new Response('no',{status:500}),()=>{throw new Error('timeout');},()=>Response.json({output:{content:{products:[]}}})]){
+    const f=fakeFetch(respond);
+    const terms=createSBankTerms({key:()=>'test-key',fallback,fetch:f.fn,today:()=>day});
+    assert.equal((await terms()).source,'cached');
+    assert.equal((await terms()).source,'cached');
+    assert.equal(f.calls.length,1);
+  }
+  const f=fakeFetch(()=>new Response('no',{status:500}));
+  const terms=createSBankTerms({key:()=>'test-key',fallback,fetch:f.fn,today:()=>day});
+  await terms();day='2026-11-16';await terms();
+  assert.equal(f.calls.length,2,'a new day tries again');
+}));
+
+test('concurrent calls share one Exa fetch, with an 8 s timeout',async()=>{
+  let release;const gate=new Promise(r=>{release=r;});
+  const f=fakeFetch(async()=>{await gate;return Response.json(goodBody);});
+  const terms=createSBankTerms({key:()=>'test-key',fallback,fetch:f.fn,today:()=>'2026-11-15'});
+  const all=Promise.all([terms(),terms(),terms()]);
+  release();
+  const results=await all;
+  assert.equal(f.calls.length,1);
+  assert.ok(results.every(r=>r===results[0]&&r.source==='live'&&r.products.length>=3));
+  assert.equal((await terms()).source,'live');assert.equal(f.calls.length,1);
+  assert.equal(EXA_TIMEOUT_MS,8000);
+  assert.ok(f.calls[0].init.signal instanceof AbortSignal);
+  assert.doesNotMatch(f.calls[0].init.body,/customer|persona/i);
+});
+
+test('with no Exa key, the cached copy is used and nothing is fetched',async()=>{
+  const f=fakeFetch(()=>Response.json(goodBody));
+  const terms=createSBankTerms({key:()=>'  ',fallback,fetch:f.fn});
+  assert.equal((await terms()).source,'cached');assert.equal(f.calls.length,0);
 });
