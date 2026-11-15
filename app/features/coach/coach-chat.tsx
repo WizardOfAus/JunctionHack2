@@ -22,12 +22,17 @@ type Props = {
   onAction: (action: CoachAction) => void;
   actionLabel: (action: CoachAction) => string;
   actionDisabled: (action: CoachAction, message: CoachMessage) => boolean;
+  /** Shown under the suggestions, e.g. the memory panel. */
+  memory?: ReactNode;
+  /** Saves a confirmed "remember …" request; resolves true when saved. */
+  onRemember?: (text: string) => Promise<boolean>;
 };
 
 const paragraphs = (text: string) => text.split(/\n{2,}/).map((p, i) => <p key={i}>{p}</p>);
 
-export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, scopeKey, disabled, inputRef, renderVisual, onEvidence, onAction, actionLabel, actionDisabled }: Props) {
+export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, scopeKey, disabled, inputRef, renderVisual, onEvidence, onAction, actionLabel, actionDisabled, memory, onRemember }: Props) {
   const [draft, setDraft] = useState('');
+  const [remembered, setRemembered] = useState<Record<number, 'saved' | 'failed'>>({});
   const end = useRef<HTMLDivElement>(null);
   const empty = !chat.messages.length && !chat.busy;
   const streaming = chat.progress.text.length > 0;
@@ -53,6 +58,7 @@ export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, sc
       <p className={styles.lead}>I read your account through {dataThrough} and calculate from your actual transactions.</p>
       {composer}
       <div className={styles.suggestions}>{suggestions.map(s => <button key={s} onClick={() => send(s)} disabled={disabled}>{s}<ArrowUpRight size={15} aria-hidden="true" /></button>)}</div>
+      {memory}
     </section>
   );
 
@@ -70,6 +76,9 @@ export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, sc
                   {m.evidence?.length ? <button className={styles.link} onClick={() => onEvidence(m)}>Inspect {m.evidence.length} source row{m.evidence.length === 1 ? '' : 's'}<ArrowUpRight size={13} aria-hidden="true" /></button> : null}
                 </div> : null}
                 <SourceChips domains={m.sources ?? []} />
+                {m.rememberSuggestion && onRemember ? <div className={styles.actions}>{remembered[i] === 'saved'
+                  ? <span className={styles.badge}>Saved to what Pesä knows</span>
+                  : <button onClick={async () => { const ok = await onRemember(m.rememberSuggestion!); setRemembered(r => ({ ...r, [i]: ok ? 'saved' : 'failed' })); }}>{remembered[i] === 'failed' ? 'Try again' : 'Remember this'}<ArrowRight size={13} aria-hidden="true" /></button>}</div> : null}
                 {m.actions?.length ? <div className={styles.actions}>{m.actions.map((action, j) =>
                   <button key={j} disabled={actionDisabled(action, m)} onClick={() => onAction(action)}>{actionLabel(action)}<ArrowRight size={13} aria-hidden="true" /></button>)}</div> : null}
                 {m.actions?.some(a => a.type === 'preview') && m.scope !== scopeKey ? <small className={styles.stale}>Your plan or learning changed. Ask again for an updated suggestion.</small> : null}

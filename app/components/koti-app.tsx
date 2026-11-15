@@ -28,6 +28,7 @@ import { CoachHelp } from '@/features/journey/coach-help';
 import { CoachAnswerVisual } from '@/features/journey/coach-answer-visual';
 import { CoachChat } from '@/features/coach/coach-chat';
 import { useCoachChat } from '@/features/coach/use-coach-chat';
+import { MemoryPanel, saveMemory } from '@/features/memory/memory-panel';
 import sliceStyles from '@/features/integration.module.css';
 
 type Drawer = 'data'|'settings'|'evidence'|'calculation'|null;
@@ -140,7 +141,8 @@ export default function KotiApp({initialForecast,personas}:{initialForecast:Fore
     onEvidence={m=>{setHelpOpen(false);evidence({from:m.from||recentWindow().from,to:m.to||HISTORY_THROUGH,category:m.category,basket:m.basket});}}
     onAction={action=>{setHelpOpen(false);if(action.type==='lesson')openLesson(lessons.findIndex(l=>l.id===action.lessonId));else setCoachPreview(action);}}
     actionLabel={action=>action.type==='lesson'?`Explore: ${lessons.find(l=>l.id===action.lessonId)?.title}`:action.scenario==='expense'?'Preview an unexpected cost':action.scenario==='payday'?'Preview a later payday':`Preview ${action.reductionPercent ?? 20}% less eating out`}
-    actionDisabled={(action,m)=>action.type==='preview'&&(busy||!!error||m.scope!==scopeKey)}/>;
+    actionDisabled={(action,m)=>action.type==='preview'&&(busy||!!error||m.scope!==scopeKey)}
+    memory={<MemoryPanel personaId={personaId} assumptions={a} goal={goalId}/>} onRemember={text=>saveMemory(personaId,text)}/>;
 
   return <div className={`app-shell ${sliceStyles.shell}`}>
     <a href="#main-content" className="skip-link">Skip to content</a>

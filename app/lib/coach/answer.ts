@@ -14,6 +14,9 @@ import { journeyContextSchema, defaultContext, journeyActions, coachJourneyConte
 import { basketContext } from '@/lib/coach/context';
 import { calculatedAnswer,calculatedContext } from '@/lib/coach/calculated';
 import { CALCULATING_STEP,type CoachProgress } from '@/lib/coach/progress';
+import { learnedFacts,memoryContext,rememberRequest } from '@/lib/memory/memory';
+import { memoryStore } from '@/lib/memory/store';
+import { personaIdSchema,DEFAULT_PERSONA_ID } from '@/lib/contracts';
 
 export type CoachOptions={onProgress?:(event:CoachProgress)=>void;signal?:AbortSignal};
 export async function coachResponse(request:Request,{onProgress,signal}:CoachOptions={}):Promise<Response> {
@@ -38,6 +41,9 @@ export async function coachResponse(request:Request,{onProgress,signal}:CoachOpt
     const comparison=benchmarks({rows:transactions,salaryCents:f.salaryCents,age:persona.view.customer.age,tables:benchmarkTables,isSpending:isConsumption});
     // The app's own answer, when it can calculate one. The demo coach replies with it; the agent quotes it.
     const calc=calculatedAnswer({question:body.question,transactions,customerId:persona.customerId,assumptions:a,forecast:f,profile,readiness,mortgage:persona.view.mortgage,comparison,context,actions});
+    // "Remember that …" is saved only after the person confirms it in the app.
+    const remember=rememberRequest(body.question);
+    if(remember) return respond({text:`Want me to remember this? “${remember}” You can see or remove it any time under What Pesä knows.`,kind:'remember',mode:'demo',rememberSuggestion:remember,evidence:[]});
     onProgress?.(CALCULATING_STEP);onProgress?.({type:'step-done',id:CALCULATING_STEP.id});
     const agent=agentConfig();
     if(agent) {
@@ -47,7 +53,11 @@ export async function coachResponse(request:Request,{onProgress,signal}:CoachOpt
         const window=transactions.filter(t=>t.tx_date>=recent.from&&isConsumption(t));
         const appContext=coachJourneyContext(context,a,f)+"\n"+basketContext(window.map(t=>({category:t.category,basket:basketOf(t,a.corrections,profile),spentCents:-t.amountCents})),f.baskets,{months:3,period:recent.label,corrections:Object.keys(a.corrections).length,format:c=>euro(c)});
         // Application record, loan readiness and benchmarks, so the agent explains the app's figures instead of guessing.
-        const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext:[calculatedContext(calc),appContext,readinessContext(readiness,persona.view.mortgage,c=>euro(c)),benchmarkContext(comparison,c=>euro(c))].filter(Boolean).join('\n\n')},{onProgress,signal});
+        // What Pesä knows: derived facts plus what the person asked it to remember. Storage failures never block an answer.
+        const personaKey=personaIdSchema.optional().safeParse(body.personaId).data??DEFAULT_PERSONA_ID;
+        const told=await memoryStore().list(personaKey).catch(()=>[]);
+        const memory=memoryContext(learnedFacts({rows:transactions,forecast:f,comparison,mortgage:persona.view.mortgage,goal:context.goal,format:c=>euro(c)}),told);
+        const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext:[calculatedContext(calc),appContext,readinessContext(readiness,persona.view.mortgage,c=>euro(c)),benchmarkContext(comparison,c=>euro(c)),memory].filter(Boolean).join('\n\n')},{onProgress,signal});
         // Source rows stay inspectable when the agent quotes an authoritative app calculation.
         const evidence=calc.authoritative?{evidence:calc.evidence,category:calc.category,basket:calc.basket,from:calc.from,to:calc.to}:{evidence:[]};
         return respond({text:reply.text,kind:'answer',mode:'agent',intent:calc.intent,...evidence,conversationId:reply.conversationId,account:provenance.accountId,dataThrough:HISTORY_THROUGH});
