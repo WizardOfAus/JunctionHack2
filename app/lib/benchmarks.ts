@@ -101,7 +101,7 @@ export function benchmarkAnswer(b:Benchmarks,category:string|undefined,format:Fo
   const above=(c:Benchmarks['categories'][number])=>c.youCents-c.dataset.p50;
   const picked=category?b.categories.filter(c=>c.category===category)
     :b.categories.filter(c=>c.youCents>=c.dataset.p75).sort((x,y)=>above(y)-above(x)).slice(0,3);
-  const sentences=picked.map(c=>`${c.category}: ${format(c.youCents)} a month, ${c.dataset.words} in the synthetic dataset (median ${format(c.dataset.p50)})${c.national?`; Finnish households averaged ${format(c.national.cents)} per adult in ${b.statfinYear}`:''}.`);
+  const sentences=picked.map(c=>`${c.category}: ${format(c.youCents)} a month, ${c.dataset.words} in the synthetic dataset (median ${format(c.dataset.p50)})${c.national?`; Finnish households averaged ${format(c.national.cents)} per consumption unit in ${b.statfinYear} (${b.statfinYear} prices)`:''}.`);
   const lead=category?'':picked.length?'Compared with people like you, these categories stand out most. ':'None of your categories is higher than most people’s in the synthetic dataset. ';
   return `${lead}${sentences.join(' ')} This is a comparison, not advice: dataset figures describe synthetic customers, and national figures include all accounts and cash.`.trim();
 }

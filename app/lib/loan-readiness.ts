@@ -101,12 +101,13 @@ export type LoanReadiness=ReturnType<typeof loanReadiness>;
 export function readinessContext(r:LoanReadiness,mortgage:MortgageView|null,format:(cents:number)=>string) {
   const lines=['Home loan figures calculated by the Koti app (quote them; do not recalculate; education, not a credit decision):'];
   if(mortgage) lines.push(`- Application record ${mortgage.applicationId}: ${mortgage.status.replace('_',' ')} on ${mortgage.statusDate}${mortgage.rejectionReason?` (reason: ${mortgage.rejectionReason.replaceAll('_',' ')})`:''}; ${mortgage.propertyType??'property'} price ${mortgage.priceCents!=null?format(mortgage.priceCents):'unknown'}, loan ${mortgage.loanCents!=null?format(mortgage.loanCents):'unknown'}, own funds ${mortgage.equityCents!=null?format(mortgage.equityCents):'unknown'}.`);
+  else lines.push('- There is no home loan application on record for this account, so these figures use your assumptions.');
   lines.push(`- Basis: ${r.basis.source}. Price ${format(r.basis.priceCents)}, own funds ${format(r.basis.equityCents)}, loan ${format(r.basis.loanCents)}, monthly salary ${format(r.basis.incomeCents)}.`);
   for(const c of r.checks) lines.push(`- ${c.label}: ${c.status}${'gapCents' in c&&c.gapCents?`, short by ${format(c.gapCents)}`:''}${'valueMonths' in c&&c.valueMonths!=null?`, ${c.valueMonths} months covered`:''}.`);
   lines.push(`- Monthly payment: ${format(r.payments.stress.monthlyCents)} at the 6% stress rate${r.payments.market?`, ${format(r.payments.market.monthlyCents)} at the Bank of Finland average new-loan rate ${r.payments.market.annualPercent}% (${r.payments.market.month})`:''}.`);
   const w=r.whatItWouldTake;
-  lines.push(`- What would close the gaps: extra own funds ${format(w.extraEquityCents)}${w.monthsToSaveExtraEquity?` (about ${w.monthsToSaveExtraEquity} months of the current monthly surplus ${format(w.monthlySurplusCents)})`:''}; or a price up to ${format(w.maxPriceCents)} with the same own funds; or extra monthly income ${format(w.extraMonthlyIncomeCents)}.`);
-  if(r.basis.loanCents>0) lines.push(`- Monthly payment for this loan over 25 years at other interest rates, calculated by the app. These are app figures, not a what-if: when the user asks about the payment at any interest rate (their own, a bank offer, or Euribor plus a margin from the web), quote the matching row, or the two rows around the rate as a range. Do not calculate: ${paymentTable(r.basis.loanCents).map(p=>`${p.annualPercent.toFixed(2)}% ${format(p.monthlyCents)}`).join(', ')}.`);
+  lines.push(`- What would close the gaps: extra own funds ${format(w.extraEquityCents)}${w.monthsToSaveExtraEquity?` (about ${w.monthsToSaveExtraEquity} months of the current monthly surplus ${format(w.monthlySurplusCents)})`:''}${w.maxPriceCents>0?`; or a price up to ${format(w.maxPriceCents)} with the same own funds`:''}; or extra monthly income ${format(w.extraMonthlyIncomeCents)}.`);
+  if(r.basis.loanCents>0) lines.push(`- Monthly payment for this loan over 25 years at other interest rates, calculated by the app. These are app figures, not a what-if: when the user asks about the payment at any interest rate (their own, a bank offer, or Euribor plus a margin from the web), quote the matching row, or the two rows around the rate as a range. If the rate is outside 2.00–6.00%, say the table does not cover it; do not estimate. Do not calculate: ${paymentTable(r.basis.loanCents).map(p=>`${p.annualPercent.toFixed(2)}% ${format(p.monthlyCents)}`).join(', ')}.`);
   lines.push(`- Required income is a calculation found in this synthetic dataset (6%, 25 years, 35% of income), not a bank rule. Never present approval odds.`);
   return lines.join('\n');
 }
@@ -126,13 +127,14 @@ export function readinessAnswer(r:LoanReadiness,mortgage:MortgageView|null,forma
   const [deposit,income]=[money('deposit'),money('income')];
   const s:string[]=[];
   if(mortgage) s.push(`Your application record from ${dateWords(mortgage.statusDate)} was ${statusWords[mortgage.status]}${mortgage.rejectionReason?` (recorded reason: ${mortgage.rejectionReason.replaceAll('_',' ')})`:''}.`);
+  else s.push('There is no home loan application on record for this account, so these figures use your assumptions.');
   s.push(`For a ${format(r.basis.priceCents)} home with ${format(r.basis.equityCents)} of own funds (${r.basis.source.toLowerCase()}), the loan would be ${format(r.basis.loanCents)}.`);
   s.push(income.status==='met'?`Your monthly salary of ${format(r.basis.incomeCents)} passes the 6% stress test, which needs ${format(income.targetCents)}.`
     :`At the 6% stress test this loan needs a monthly salary of ${format(income.targetCents)}; yours is ${format(r.basis.incomeCents)}.`);
   s.push(deposit.status==='met'?'Your own funds cover the loan cap.':`The loan cap needs ${format(deposit.targetCents)} of own funds, ${format(deposit.gapCents)} more than you have.`);
   const m=r.payments.market;
   s.push(`The monthly payment would be about ${m?`${format(m.monthlyCents)} at the Bank of Finland average new-loan rate of ${m.annualPercent}% (${dateWords(`${m.month}-01`).replace(/^1 /,'')}), or `:''}${format(r.payments.stress.monthlyCents)} at 6%.`);
-  if(r.checks.some(c=>c.id!=='buffer'&&c.status==='short')) s.push(`To close the gap: about ${format(r.whatItWouldTake.extraEquityCents)} more own funds, or a price up to ${format(r.whatItWouldTake.maxPriceCents)} with the funds you have.`);
+  if(r.checks.some(c=>c.id!=='buffer'&&c.status==='short')) s.push(`To close the gap: about ${format(r.whatItWouldTake.extraEquityCents)} more own funds${r.whatItWouldTake.maxPriceCents>0?`, or a price up to ${format(r.whatItWouldTake.maxPriceCents)} with the funds you have`:''}.`);
   s.push('This is education, not a credit decision. Banks also look at debts, the property and their own criteria.');
   return s.join(' ');
 }

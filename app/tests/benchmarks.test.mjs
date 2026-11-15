@@ -61,3 +61,9 @@ test('the demo coach names the categories furthest above typical, or the one ask
   const one=benchmarkAnswer(b,'Groceries',c=>euro(c));
   assert.ok(one.startsWith('Groceries:'));assert.doesNotMatch(one,/Restaurants/);assert.match(one,/not advice/);
 });
+
+test('national coaching comparison uses consumption units and explicit 2022 prices',()=>{
+  const text=benchmarkAnswer(run('flexible-spender'),'Restaurants',c=>String(c));
+  assert.match(text,/per consumption unit in 2022 \(2022 prices\)/);
+  assert.doesNotMatch(text,/per adult/);
+});

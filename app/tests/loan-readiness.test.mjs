@@ -110,3 +110,13 @@ test('the demo coach does not suggest closing a gap when the checks are met',()=
   const text=readinessAnswer(r,mortgageAt(records['home-approved'].mortgage,clocks.current),c=>euro(c));
   assert.match(text,/was approved/);assert.match(text,/passes the 6% stress test/);assert.doesNotMatch(text,/To close the gap/);
 });
+
+test('no application record is explicit in both coach paths and zero-price alternatives are omitted',()=>{
+  const {r}=readiness('flexible-spender');
+  for(const render of [readinessAnswer,readinessContext]) {
+    const text=render(r,null,c=>euro(c));
+    assert.match(text,/no home loan application on record.*use your assumptions/);
+    assert.doesNotMatch(text,/price up to €0(?:\D|$)/);
+  }
+  assert.match(readinessContext(r,null,c=>euro(c)),/outside 2.00–6.00%.*do not estimate/);
+});
