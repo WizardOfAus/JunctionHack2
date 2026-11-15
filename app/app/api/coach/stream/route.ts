@@ -9,8 +9,8 @@ export async function POST(request: Request) {
   if (request.signal.aborted) disconnect();
   const stream = new TransformStream<Uint8Array, Uint8Array>();
   const writer = stream.writable.getWriter();
-  // The writer observes downstream cancellation, including runtimes that don't
-  // propagate it to the incoming Request's signal.
+  // Observe downstream cancellation where the runtime forwards it. The browser
+  // also sends an explicit stop request: some local bridges swallow disconnects.
   void writer.closed.catch(disconnect);
   const write = async (text: string) => {
     if (lifecycle.signal.aborted) return;
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   const heartbeat = setInterval(() => { void write(': ping\n\n'); }, 2000);
   void (async () => {
     try {
-      const response = await coachResponse(request, { signal: lifecycle.signal, onProgress: event => { void send('progress', event); } });
+      const response = await coachResponse(request, { signal: lifecycle.signal, onProgress: event => { void send('progress', event); }, onAdmitted: capability => { void send('admitted', { capability }); } });
       await send('final', { status: response.status, body: await response.json() });
     } catch {
       if (!lifecycle.signal.aborted) await send('final', { status: 500, body: { error: 'The coach could not answer. Try again.' } });

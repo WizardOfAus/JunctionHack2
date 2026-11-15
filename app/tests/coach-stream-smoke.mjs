@@ -25,16 +25,21 @@ try {
   }
   const invalid=await post('/api/coach/stream',{question:''});
   assert.equal(parseEvents(await invalid.text()).events.find(e=>e.event==='final').data.status,400);
+  assert.equal((await post('/api/coach/cancel',{capability:'../../other'})).status,400);
   mode='quiet';
   const controller=new AbortController();
   const response=await post('/api/coach/stream',{question:'Explain my reserve',personaId:'reference',assumptions:defaults},controller.signal);
   const reader=response.body.getReader();let text='';
-  while(!text.includes(': ping')) {const part=await reader.read();assert.equal(part.done,false);text+=new TextDecoder().decode(part.value);}
-  const stoppedAt=Date.now();controller.abort();
+  while(!text.includes(': ping') || !text.includes('event: admitted')) {const part=await reader.read();assert.equal(part.done,false);text+=new TextDecoder().decode(part.value);}
+  const capability=parseEvents(text).events.find(e=>e.event==='admitted').data.capability;
+  const stoppedAt=Date.now();
+  const cancel=await post('/api/coach/cancel',{capability});
+  assert.equal(cancel.status,200);
+  controller.abort();
   await reader.cancel().catch(()=>{});
   const deadline=Date.now()+7000;
   while(!abortedAt&&Date.now()<deadline) await new Promise(resolve=>setTimeout(resolve,100));
-  assert.ok(abortedAt,'browser cancellation must send /abort to the admitted agent');
+  assert.ok(abortedAt,'explicit browser Stop must send /abort to the admitted agent');
   assert.ok(abortedAt-stoppedAt<6500,`cancellation took ${abortedAt-stoppedAt}ms`);
-  console.log(`Stream smoke passed: JSON parity, validation, heartbeat, durable abort ${abortedAt-stoppedAt}ms after disconnect.`);
+  console.log(`Stream smoke passed: JSON parity, validation, heartbeat, durable abort ${abortedAt-stoppedAt}ms after explicit Stop.`);
 } finally {agent.closeAllConnections();await new Promise(resolve=>agent.close(resolve));}

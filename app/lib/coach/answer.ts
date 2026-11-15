@@ -15,8 +15,8 @@ import { basketContext } from '@/lib/coach/context';
 import { calculatedAnswer,calculatedContext } from '@/lib/coach/calculated';
 import { CALCULATING_STEP,type CoachProgress } from '@/lib/coach/progress';
 
-export type CoachOptions={onProgress?:(event:CoachProgress)=>void;signal?:AbortSignal};
-export async function coachResponse(request:Request,{onProgress,signal}:CoachOptions={}):Promise<Response> {
+export type CoachOptions={onProgress?:(event:CoachProgress)=>void;signal?:AbortSignal;onAdmitted?:(capability:string)=>void};
+export async function coachResponse(request:Request,{onProgress,signal,onAdmitted}:CoachOptions={}):Promise<Response> {
   try {
     const body=z.object({question:z.string().min(1).max(1500),assumptions:assumptionsSchema,personaId:z.unknown().optional(),context:journeyContextSchema.optional()}).strict().parse(await request.json());
     const persona=await personaFromRequest(body.personaId);if(!persona) return unknownPersona();
@@ -47,7 +47,7 @@ export async function coachResponse(request:Request,{onProgress,signal}:CoachOpt
         const window=transactions.filter(t=>t.tx_date>=recent.from&&isConsumption(t));
         const appContext=coachJourneyContext(context,a,f)+"\n"+basketContext(window.map(t=>({category:t.category,basket:basketOf(t,a.corrections,profile),spentCents:-t.amountCents})),f.baskets,{months:3,period:recent.label,corrections:Object.keys(a.corrections).length,format:c=>euro(c)});
         // Application record, loan readiness and benchmarks, so the agent explains the app's figures instead of guessing.
-        const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext:[calculatedContext(calc),appContext,readinessContext(readiness,persona.view.mortgage,c=>euro(c)),benchmarkContext(comparison,c=>euro(c))].filter(Boolean).join('\n\n')},{onProgress,signal});
+        const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext:[calculatedContext(calc),appContext,readinessContext(readiness,persona.view.mortgage,c=>euro(c)),benchmarkContext(comparison,c=>euro(c))].filter(Boolean).join('\n\n')},{onProgress,signal,onAdmitted});
         // Source rows stay inspectable when the agent quotes an authoritative app calculation.
         const evidence=calc.authoritative?{evidence:calc.evidence,category:calc.category,basket:calc.basket,from:calc.from,to:calc.to}:{evidence:[]};
         return respond({text:reply.text,kind:'answer',mode:'agent',intent:calc.intent,...evidence,conversationId:reply.conversationId,account:provenance.accountId,dataThrough:HISTORY_THROUGH});

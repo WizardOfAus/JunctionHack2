@@ -26,7 +26,7 @@ export function isAgentOutage(error: unknown, signal: AbortSignal): boolean {
  * in a <koti_app_context> block, so the agent can tell it apart from the user's words.
  */
 export async function askAgent(config: AgentConfig, input: { customerId: string; question: string; appContext?: string },
-  options: { onProgress?: (event: CoachProgress) => void; signal?: AbortSignal } = {}) {
+  options: { onProgress?: (event: CoachProgress) => void; signal?: AbortSignal; onAdmitted?: (capability: string) => void } = {}) {
   const request = freshAgentRequest(input.customerId, input.question, input.appContext);
   const conversation = createFlueClient({
     url: `${config.url}/${encodeURIComponent(request.conversationId)}`,
@@ -45,6 +45,7 @@ export async function askAgent(config: AgentConfig, input: { customerId: string;
       ...request.options,
       signal,
     });
+    options.onAdmitted?.(request.conversationId);
     signal.addEventListener('abort', stopWork, { once: true });
     if (signal.aborted) stopWork();
     const reply = await conversation.read(admission, { signal, onEvent });
@@ -57,4 +58,11 @@ export async function askAgent(config: AgentConfig, input: { customerId: string;
     signal.removeEventListener('abort', stopWork);
     await abortWork;
   }
+}
+
+/** A random per-question conversation id is a bearer capability to stop that run only.
+ * It never permits reading/resuming a conversation or selecting a customer. */
+export async function cancelAgent(config: AgentConfig, capability: string) {
+  if (!/^koti-app-[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(capability)) throw new Error('Invalid cancellation capability');
+  return createFlueClient({url:`${config.url}/${capability}`, token:config.token}).abort({signal:AbortSignal.timeout(5000)});
 }

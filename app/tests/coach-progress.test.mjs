@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {progressMapper,sourceDomains,applyProgress,emptyProgress,CALCULATING_STEP} from '../lib/coach/progress.ts';
-import {parseEvents} from '../lib/coach/stream-client.ts';
+import {streamCoach,parseEvents} from '../lib/coach/stream-client.ts';
 
 test('agent events become allowlisted steps without tool inputs or customer data',()=>{
   const map=progressMapper();
@@ -42,4 +42,19 @@ test('server-sent events parse across chunk boundaries',()=>{
   assert.deepEqual(first.events,[{event:'progress',data:{type:'text',delta:'a'}}]);
   const second=parseEvents(first.rest+'al\ndata: {"status":200,"body":{}}\n\n');
   assert.deepEqual(second.events,[{event:'final',data:{status:200,body:{}}}]);assert.equal(second.rest,'');
+});
+
+
+test('browser Stop sends the admitted capability even if the stream disconnect is swallowed',async t=>{
+  const controller=new AbortController();let cancelled;
+  const capability='koti-app-12345678-1234-4123-8123-123456789012';
+  t.mock.method(globalThis,'fetch',async (url,init)=>{
+    if(url==='/api/coach/cancel') {cancelled=JSON.parse(init.body).capability;return Response.json({stopped:true});}
+    return new Response(new ReadableStream({start(c){
+      c.enqueue(new TextEncoder().encode(`event: admitted\ndata: ${JSON.stringify({capability})}\n\nevent: progress\ndata: {"type":"step","id":"test","label":"Working"}\n\n`));
+      init.signal.addEventListener('abort',()=>c.error(new DOMException('Stopped','AbortError')));
+    }}));
+  });
+  await assert.rejects(streamCoach({}, {signal:controller.signal,onProgress:()=>controller.abort()}));
+  assert.equal(cancelled,capability);
 });
