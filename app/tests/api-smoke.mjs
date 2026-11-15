@@ -53,7 +53,8 @@ console.log('Journey API: all 8 personas isolated; context, lesson actions, scen
 
 // Topic routing must not turn affordability/card/period questions into mortgages or population benchmarks.
 const dining=await post('/api/coach',{question:'Can I afford to eat out more at restaurants?',assumptions:defaults});
-assert.equal(dining.kind,'scenario');assert.equal(dining.category,'Restaurants');
+// Affordability is not a cut: the coach gives the spending facts, never a reduction scenario.
+assert.equal(dining.kind,'answer');assert.equal(dining.category,'Restaurants');assert.equal(dining.reductionPercent,undefined);
 const card=await post('/api/coach',{question:'Why was my card declined?',assumptions:defaults});
 assert.equal(card.kind,'help');assert.doesNotMatch(card.text,/mortgage|application record/);
 const periods=await post('/api/coach',{question:'Compare restaurants in August and September',assumptions:defaults});
