@@ -8,7 +8,7 @@
 .note{color:var(--muted);font-size:var(--type-context)}
 .stack{position:relative;display:grid;gap:14px}
 .peek{position:absolute;inset:14px 18px auto;height:100%;border-radius:24px;background:#fff;border:1px solid var(--line);transform:translateY(10px) scale(.97);opacity:.6;z-index:0}
-.card{position:relative;z-index:1;display:grid;gap:14px;padding:28px;border-radius:24px;background:#fff;border:1px solid var(--line);box-shadow:0 1px 2px #183f320d,0 12px 34px #183f3212;animation:enter 320ms var(--ease) both}
+.card{position:relative;z-index:1;display:grid;gap:14px;padding:28px;border-radius:24px;background:#fff;border:1px solid var(--line);animation:enter 320ms var(--ease) both}
 .card h3{font-size:22px;letter-spacing:-.025em}
 .card>p{font-size:15px;line-height:1.65;max-width:62ch}
 .kicker{font-size:var(--type-meta);font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.06em}
