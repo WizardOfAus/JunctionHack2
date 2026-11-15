@@ -1,0 +1,36 @@
+.visual{margin:2px 0 0;padding:16px;border-radius:14px;background:#eef2e8;display:grid;gap:12px;max-width:560px}
+.visual figcaption{font-size:var(--type-label);font-weight:700;color:var(--ink)}
+.bars,.compare,.checks,.splitLegend{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.bars li,.compare li{display:grid;grid-template-columns:minmax(72px,120px) 1fr auto;align-items:center;gap:10px;font-size:var(--type-label)}
+.bars li>span:first-child,.compare li>span:first-child{color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bars strong,.compare strong{font-variant-numeric:tabular-nums;text-align:right}
+.track{display:block;height:10px;border-radius:9px;background:#fffefa;overflow:hidden}
+.track i{display:block;height:100%;border-radius:inherit;background:var(--muted);animation:grow 600ms var(--ease) both}
+.bars li[data-highlight] i{background:var(--green)}
+.bars li[data-highlight]>span:first-child{color:var(--ink);font-weight:700}
+.pair{display:grid;gap:3px}
+.compare .track i{background:var(--green)}
+.compare .typical i{background:var(--muted);opacity:.55}
+.compare strong{display:grid;justify-items:end;line-height:1.3}
+.compare strong small{color:var(--muted);font-weight:500;font-size:12px}
+.legend{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+.keyYou,.keyTypical{width:10px;height:10px;border-radius:50%;background:var(--green);margin-left:6px}
+.keyYou{margin-left:0}
+.keyTypical{background:var(--muted);opacity:.55}
+.split{display:flex;height:14px;border-radius:9px;overflow:hidden;background:#fffefa}
+.split i{display:block;height:100%;animation:grow 600ms var(--ease) both}
+[data-tone=forest]{background:var(--forest)}
+[data-tone=lilac]{background:var(--lilac)}
+[data-tone=lime]{background:var(--lime)}
+[data-tone=peach]{background:var(--peach)}
+.splitLegend li{display:flex;align-items:center;gap:8px;font-size:var(--type-label)}
+.splitLegend li>span{width:10px;height:10px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--line)}
+.splitLegend strong{margin-left:auto;font-variant-numeric:tabular-nums}
+.checks li{display:flex;align-items:center;gap:10px;font-size:var(--type-label)}
+.checks li svg{flex-shrink:0;color:var(--muted)}
+.checks li[data-status=met] svg{color:var(--green)}
+.checks li[data-status=short] svg{color:var(--ink)}
+.checks strong{margin-left:auto;text-align:right}
+.note{font-size:12px;color:var(--muted)}
+@keyframes grow{from{width:0}}
+@media(prefers-reduced-motion:reduce){.track i,.split i{animation:none}}

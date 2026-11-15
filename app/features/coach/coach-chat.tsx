@@ -7,6 +7,7 @@ import type { CoachAction } from '@/lib/journey/context';
 import { PesaEgg } from '@/features/pesa/pesa-egg';
 import { PesaThinking, SourceChips } from '@/features/pesa/pesa-thinking';
 import type { CoachMessage, useCoachChat } from './use-coach-chat';
+import { AnswerVisualView } from './answer-visual';
 import styles from './coach-chat.module.css';
 
 type Props = {
@@ -35,6 +36,7 @@ function suggestionIcon(text: string): LucideIcon {
     : /learn/.test(t) ? BookOpen : /save|reserve|bill/.test(t) ? PiggyBank : /home|mortgage|loan/.test(t) ? Home : /balance|available/.test(t) ? Wallet : Sparkles;
 }
 
+const formatEuro = (cents: number) => new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(cents / 100);
 const paragraphs = (text: string) => text.split(/\n{2,}/).map((p, i) => <p key={i}>{p}</p>);
 
 export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, scopeKey, disabled, inputRef, renderVisual, onEvidence, onAction, actionLabel, actionDisabled, memory, onRemember }: Props) {
@@ -43,8 +45,10 @@ export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, sc
   const [remembered, setRemembered] = useState<Record<number, 'saved' | 'failed'>>({});
   const end = useRef<HTMLDivElement>(null);
   const empty = !chat.messages.length && !chat.busy;
-  const streaming = chat.progress.text.length > 0;
-  useEffect(() => { if (!empty) end.current?.scrollIntoView({ block: 'end', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }, [chat.messages.length, chat.busy, streaming, empty]);
+  // Re-scroll as steps arrive and as streamed text grows, so progress never hides under the composer.
+  const progressMark = chat.progress.steps.length + Math.floor(chat.progress.text.length / 160);
+  const lastCoach = chat.messages.reduce((last, m, i) => m.role === 'coach' ? i : last, -1);
+  useEffect(() => { if (!empty) end.current?.scrollIntoView({ block: 'end', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }, [chat.messages.length, chat.busy, progressMark, empty]);
   const send = (text: string) => { if (!text.trim() || chat.busy || disabled) return; setDraft(''); void chat.ask(text); };
 
   const composer = (
@@ -72,19 +76,21 @@ export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, sc
 
   return (
     <section className={styles.chat} data-variant={variant}>
-      <div className={styles.thread} aria-live="polite">
+      <p className="sr-only" role="status" aria-live="polite">{chat.busy ? 'Pesä is working on your answer.' : lastCoach >= 0 ? 'Pesä answered.' : ''}</p>
+      <div className={styles.thread}>
         {chat.messages.map((m, i) => m.role === 'user'
           ? <div key={i} className={styles.user}><p>{m.text}</p></div>
           : <div key={i} className={styles.coach}>
-              <PesaEgg state={m.agentUnavailable ? 'sleepy' : 'idle'} size={26} />
+              <PesaEgg state={m.agentUnavailable ? "sleepy" : "idle"} size={32} />
               <div className={styles.answer}>
-                {renderVisual?.(m) ?? paragraphs(m.text)}
+                {(() => { const custom = renderVisual?.(m); return custom ?? <>{paragraphs(m.text)}{m.visual ? <AnswerVisualView visual={m.visual} format={c => formatEuro(c)} /> : null}</>; })()}
+                {m.kind === 'error' && i === lastCoach ? <div className={styles.actions}><button onClick={chat.retry} disabled={chat.busy}>Try again<ArrowRight size={13} aria-hidden="true" /></button></div> : null}
                 {m.kind !== 'error' ? <div className={styles.meta}>
                   <span className={styles.badge}>{m.mode === 'agent' ? <><Sparkles size={12} aria-hidden="true" />AI coach</> : <><Calculator size={12} aria-hidden="true" />Calculated</>}</span>
                   {m.evidence?.length ? <button className={styles.link} onClick={() => onEvidence(m)}>Inspect {m.evidence.length} source row{m.evidence.length === 1 ? '' : 's'}<ArrowUpRight size={13} aria-hidden="true" /></button> : null}
                 </div> : null}
                 <SourceChips domains={m.mode === 'agent' ? m.sources ?? [] : []} />
-                {m.source ? <small className={styles.note}>{[m.source.dataset, m.source.customerLabel].filter(Boolean).join(' · ')}</small> : null}
+                {m.source && i === lastCoach ? <small className={styles.source}>{[m.source.dataset, m.source.customerLabel].filter(Boolean).join(' · ')}</small> : null}
                 {m.rememberSuggestion && onRemember && m.scope===scopeKey ? <div className={styles.actions}>{remembered[i] === 'saved'
                   ? <span className={styles.badge}>Saved to what Pesä knows</span>
                   : <button onClick={async () => { const ok = await onRemember(m.rememberSuggestion!); setRemembered(r => ({ ...r, [i]: ok ? 'saved' : 'failed' })); }}>{remembered[i] === 'failed' ? 'Try again' : 'Remember this'}<ArrowRight size={13} aria-hidden="true" /></button>}</div> : null}
@@ -95,10 +101,10 @@ export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, sc
             </div>)}
         {chat.busy ? <div className={styles.coach}>
           {chat.progress.text
-            ? <><PesaEgg state="answering" size={26} /><div className={`${styles.answer} ${styles.streaming}`}>{paragraphs(chat.progress.text)}<SourceChips domains={chat.progress.sources} /></div></>
+            ? <><PesaEgg state="answering" size={32} /><div className={`${styles.answer} ${styles.streaming}`}>{paragraphs(chat.progress.text)}<SourceChips domains={chat.progress.sources} /></div></>
             : <PesaThinking progress={chat.progress} startedAt={chat.startedAt} />}
         </div> : null}
-        <div ref={end} />
+        <div ref={end} className={styles.end} />
       </div>
       <div className={styles.dock}>{composer}<p className={styles.note}>Pesä explains; the app calculates every figure. Not financial advice.</p></div>
     </section>
