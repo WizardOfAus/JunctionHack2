@@ -18,6 +18,8 @@ export function useCoachChat(request: { personaId: string; assumptions: unknown;
   const [progress, setProgress] = useState<ProgressState>(emptyProgress);
   const [startedAt, setStartedAt] = useState(0);
   const controller = useRef<AbortController | null>(null);
+  const messagesRef = useRef<CoachMessage[]>([]);
+  useEffect(() => { messagesRef.current = messages; });
   const latest = useRef(request);
   useEffect(() => { latest.current = request; });
 
@@ -28,13 +30,15 @@ export function useCoachChat(request: { personaId: string; assumptions: unknown;
     const question = text.trim();
     if (!question || controller.current) return;
     const { personaId, assumptions, context, scopeKey } = latest.current;
+    // The last few turns, so follow-ups work. Errors and confirmation prompts are left out.
+    const history = messagesRef.current.filter(m => m.kind !== 'error' && m.kind !== 'remember').slice(-6).map(m => ({ role: m.role, text: m.text.slice(0, 4000) }));
     const current = new AbortController(); controller.current = current;
     setMessages(m => [...m, { role: 'user', text: question }]);
     setBusy(true); setProgress(emptyProgress); setStartedAt(Date.now());
     let sources: string[] = [];
     const settle = (message: CoachMessage) => { if (!current.signal.aborted && latest.current.scopeKey === scopeKey) setMessages(m => [...m, message]); };
     try {
-      const final = await streamCoach({ question, assumptions, personaId, context }, { signal: current.signal, onProgress: event => {
+      const final = await streamCoach({ question, assumptions, personaId, context, history }, { signal: current.signal, onProgress: event => {
         if (current.signal.aborted || latest.current.scopeKey !== scopeKey) return;
         if (event.type === 'sources') sources = [...new Set([...sources, ...event.domains])];
         setProgress(p => applyProgress(p, event));
