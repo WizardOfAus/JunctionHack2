@@ -28,3 +28,28 @@ test('aborted requests permit fallback but cannot hide an explicit authenticatio
   assert.equal(isAgentOutage(new DOMException('Timed out','TimeoutError'),signal),true);
   assert.equal(isAgentOutage(new FlueApiError(401,'Unauthorized'),signal),false);
 });
+
+test('caller cancellation stops admitted durable work, without fallback', async t => {
+  const caller = new AbortController();
+  let aborts = 0, reading;
+  const started = new Promise(resolve => { reading = resolve; });
+  t.mock.method(globalThis, 'fetch', async (url, init) => {
+    const path = new URL(String(url)).pathname;
+    if (path.endsWith('/abort')) {
+      aborts++;
+      assert.equal(init.signal.aborted, false, 'abort uses an independent signal');
+      return Response.json({ ok: true });
+    }
+    if (init.method === 'POST') return Response.json({ submissionId:'test', streamUrl:String(url)+'?view=updates', offset:'0' }, {status:202});
+    reading();
+    return new Promise((_, reject) => {
+      if (init.signal.aborted) reject(init.signal.reason);
+      else init.signal.addEventListener('abort', () => reject(init.signal.reason), {once:true});
+    });
+  });
+  const reply = askAgent(config, input, {signal:caller.signal});
+  await started;
+  caller.abort();
+  await assert.rejects(reply, e => !(e instanceof AgentUnavailableError));
+  assert.equal(aborts, 1);
+});

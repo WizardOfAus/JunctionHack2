@@ -169,3 +169,21 @@ npm run build && npm start
 
 Dependency note: `@earendil-works/pi-ai` and `pi-agent-core` are pinned to 1.4.0 (`overrides` in
 `package.json`). Version 1.5.x removed an export that `@flue/runtime` 2.3.0 needs.
+
+
+### Stopping streamed coaching
+
+The app sends an explicit `/api/coach/cancel` request when a person presses Stop,
+changes scope, or leaves the page. A random per-question capability permits only
+aborting that run; it cannot read/resume it or select another customer. Keep it out
+of URLs and logs. This works across app isolates without a global request registry.
+SSE heartbeats and abort signals also handle disconnects where the runtime supports
+them. An abrupt network loss or browser crash cannot guarantee delivery of the stop
+request; the app's 60-second agent deadline also aborts admitted durable work.
+
+Local regression (mock only): configure a dedicated preview with
+`KOTI_AGENT_URL=http://127.0.0.1:5181/agents/koti`, then run
+`node tests/coach-stream-smoke.mjs http://127.0.0.1:5177` from `app/`.
+The test owns port 5181 and covers JSON/SSE parity, validation, heartbeats and the
+explicit Stop protocol. Raw disconnect alone is unreliable in the current Vite
+preview bridge; it is not the Stop mechanism.
