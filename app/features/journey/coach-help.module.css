@@ -4,9 +4,10 @@
 .dialog{position:fixed;inset:24px 24px 24px auto;margin:0;width:min(460px,calc(100vw - 32px));max-width:none;max-height:none;height:calc(100dvh - 48px);padding:0;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--ink);box-shadow:0 20px 80px #153e3133}
 .dialog[open]{display:flex;flex-direction:column}
 .dialog::backdrop{background:#173e322b}
-.header{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:20px;border-bottom:1px solid var(--line);flex-shrink:0}
-.header h2{font-size:22px;letter-spacing:-.025em}
-.header p{font-size:13px;color:var(--muted);margin-top:4px}
+.header{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:20px;border-bottom:1px solid var(--line);flex-shrink:0}
+.header>div{margin-right:auto}
+.header h2{font-size:19px;letter-spacing:-.025em}
+.header p{font-size:13px;color:var(--muted);margin-top:2px}
 .body{overflow-y:auto;min-height:0;padding:20px;overscroll-behavior:contain}
 .body :global(.coach-panel){padding:0;border:0;border-radius:0;background:none}
 .body :global(.coach-intro){padding:0 0 18px;text-align:left}

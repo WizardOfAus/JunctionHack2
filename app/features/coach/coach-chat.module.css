@@ -1,0 +1,56 @@
+.chat{display:flex;flex-direction:column;width:100%;max-width:760px;margin:0 auto;min-height:min(70vh,680px)}
+.chat[data-variant=sheet]{min-height:0;max-width:none}
+.empty{align-items:center;justify-content:center;text-align:center;gap:14px;padding:40px 0 24px}
+.empty h2{font-size:28px;letter-spacing:-.035em;margin-top:6px}
+.chat[data-variant=sheet].empty{align-items:stretch;text-align:left;padding:4px 0 8px;gap:8px}
+.chat[data-variant=sheet].empty h2{font-size:19px;margin-top:0}
+.lead{color:var(--muted);font-size:var(--type-context);max-width:46ch}
+.empty .composer{margin-top:14px}
+
+.composer{position:relative;display:flex;align-items:flex-end;gap:10px;width:100%;padding:8px 8px 8px 18px;background:#fff;border:1px solid #d6dfcd;border-radius:24px;transition:border-color 160ms var(--ease)}
+.composer:hover{border-color:#c2d0b6}
+/* The shared keyboard focus: a 3px olive outline (DESIGN.md). */
+.composer:focus-within{border-color:var(--green);outline:3px solid #739b47;outline-offset:3px}
+.composer textarea{flex:1;border:0;outline:0;resize:none;background:transparent;font:inherit;font-size:16px;line-height:1.5;padding:9px 0;max-height:180px;color:var(--ink)}
+.composer textarea::placeholder{color:#8a968a}
+.send{width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--forest);color:#fff;flex-shrink:0;transition:transform 140ms var(--ease),background 140ms ease,opacity 140ms ease}
+.send:hover:not(:disabled){background:var(--green)}
+.send:active:not(:disabled){transform:scale(.94)}
+.send:disabled{opacity:.25}
+
+.suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%;margin-top:10px}
+.chat[data-variant=sheet] .suggestions{grid-template-columns:1fr}
+.suggestions button{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;min-height:48px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:var(--type-context);color:var(--ink);line-height:1.45;transition:border-color 140ms ease,background 140ms ease}
+.suggestions button svg{color:var(--green);flex-shrink:0}
+.suggestions button:hover:not(:disabled){border-color:#c7d6b8;background:#f6f9f1}
+.suggestions button:active:not(:disabled){transform:scale(.99)}
+
+.thread{flex:1;display:flex;flex-direction:column;gap:26px;padding:12px 0 24px}
+.user{align-self:flex-end;max-width:78%;background:var(--mint);border-radius:20px 20px 6px 20px;padding:10px 16px;animation:rise 220ms var(--ease) both}
+.user p{font-size:15px}
+.coach{display:flex;gap:12px;align-items:flex-start;animation:rise 260ms var(--ease) both}
+.answer{display:grid;gap:10px;min-width:0;padding-top:2px;font-size:15px;line-height:1.7}
+.answer p{max-width:68ch}
+.streaming p:last-of-type::after{content:'';display:inline-block;width:7px;height:15px;margin-left:3px;vertical-align:-2px;border-radius:2px;background:var(--green);animation:caret 1s steps(2) infinite}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px;border-radius:999px;background:#f2f4ee;color:var(--muted);font-size:var(--type-meta);font-weight:650}
+.link{display:inline-flex;align-items:center;gap:4px;border:0;background:none;padding:0;color:var(--green);font-size:var(--type-meta);font-weight:700}
+.link:hover{text-decoration:underline}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.actions button{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border-radius:999px;border:1px solid #d6e2c9;background:#fff;color:var(--forest);font-size:var(--type-label);font-weight:700;transition:background 140ms ease,border-color 140ms ease}
+.actions button:hover:not(:disabled){background:var(--lime);border-color:var(--lime)}
+.stale{color:var(--muted)}
+
+.dock{position:sticky;bottom:0;padding:12px 0 4px;background:linear-gradient(to bottom,transparent,var(--paper) 30%)}
+.chat[data-variant=sheet] .dock{background:linear-gradient(to bottom,transparent,#fff 30%)}
+.note{text-align:center;font-size:var(--type-meta);color:var(--muted);margin:8px auto 0}
+
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes caret{50%{opacity:0}}
+@media(max-width:740px){
+  .empty{padding:24px 0 12px}.empty h2{font-size:23px}
+  .suggestions{grid-template-columns:1fr}
+  .user{max-width:88%}
+  .dock{bottom:76px}
+}
+@media(prefers-reduced-motion:reduce){.user,.coach,.suggestions button,.send{animation:none;transition:none}.streaming p:last-of-type::after{animation:none}}
