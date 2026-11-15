@@ -13,7 +13,7 @@ Read the repository `AGENTS.md` first. Setup and environment variables are in `R
   statistics both use (`RECENT_MONTHS` = 6).
 - `src/data/store.ts` — read-only SQLite access (`node:sqlite`). Every query stops at the data cutoff.
 - `scripts/import-data.ts` — builds `data/koti.db` from the pinned upstream dataset.
-- `src/model.ts` — the one model: OpenAI GPT-6.1 Sol (`openai/gpt-6.1-sol`) through the OpenAI API. Do not add other providers or a model override.
+- `src/model.ts` — the one model: OpenAI GPT-6 Luna (`openai/gpt-6-luna`) through the OpenAI API. Do not add other providers or a model override.
 - `src/app.ts` — the route map (`/health`, `/agents/koti`). `src/db.ts` — conversation storage.
 - The app calls this server from `app/lib/coach/agent.ts`, never from the browser.
 

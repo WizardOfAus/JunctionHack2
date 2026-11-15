@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Check, CheckCircle2, ShieldCheck, Wallet, Zap } 
 import { euro, type Forecast } from '@/lib/finance';
 import { checkPrediction, lessonRoom, practice } from './balance-model';
 import styles from './balance-lesson.module.css';
+import { BalanceAllocation } from './balance-allocation';
 
 type Props = { nextDiscovery?: { title:string; xp:number }; completed: boolean; forecast: Forecast; unavailable: boolean; onComplete: () => void; onMoney: () => void; onNext: () => void };
 export function BalanceLesson({ nextDiscovery = {title:'Build your safety net',xp:50}, completed, forecast, unavailable, onComplete, onMoney, onNext }: Props) {
@@ -26,9 +27,7 @@ export function BalanceLesson({ nextDiscovery = {title:'Build your safety net',x
       {stage === 0 ? <>
         <div className={styles.canvas}>
           <div className={styles.canvasHeader}><span>Illustrative account</span><strong>€1,000.00</strong></div>
-          <div className={styles.cells} role="img" aria-label={`100 squares, each worth €10. Rent €600. Reserve ${euro(reserve)}. Extra room ${euro(room)}.`}>{Array.from({ length: 100 }, (_, i) => <span aria-hidden="true" key={i} className={i < 60 ? styles.bills : i < 60 + reserve / 1000 ? styles.reserve : styles.free}/>)}</div>
-          <div className={styles.legend}><span><i className={styles.bills}/>Rent<strong>€600</strong></span><span><i className={styles.reserve}/>Reserve<strong>{euro(reserve)}</strong></span><span><i className={styles.free}/>Room<strong>{euro(room)}</strong></span></div>
-          <p className={styles.unit}>Each square = €10. The whole grid is still yours.</p>
+          <BalanceAllocation reserve={reserve} room={room}/>
           <label className={styles.sliderLabel} htmlFor="explore-reserve">Your reserve<strong>{euro(reserve)}</strong></label><input id="explore-reserve" type="range" min="10000" max="40000" step="5000" value={reserve} aria-valuetext={`${euro(reserve)} reserve; ${euro(room)} extra room`} onChange={event => setReserve(Number(event.target.value))}/><div className={styles.rangeLabels}><span>€100 reserve</span><span>€400 reserve</span></div>
         </div>
         <div className={styles.observation} aria-live="polite"><ShieldCheck size={21}/><p>{reserve === 40000 ? '€0 extra room. Everything is assigned—and that can be a sensible plan.' : `${euro(room)} left after rent and reserve. Your €1,000 balance stays the same.`}</p></div>
