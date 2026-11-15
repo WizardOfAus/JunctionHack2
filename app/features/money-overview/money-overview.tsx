@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { ArrowDownLeft, ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, ChevronRight, Heart, Home, Info, ShieldCheck, SlidersHorizontal, Utensils, Wallet, X } from 'lucide-react';
 import type { PersonaId } from '@/lib/contracts';
+import { ActionButton } from '@/components/mobile/action-button';
 import { euro, type Assumptions, type Basket, type Forecast } from '@/lib/finance';
 import { goals, type GoalId } from '../onboarding/model';
 import { CashflowTimeline } from '../money-insights/cashflow-timeline';
@@ -45,21 +46,26 @@ export function MoneyOverview({ personaId, forecast: f, goal, busy, failed, conn
     </section>;
 
   return <div className={styles.overview}>
-    <div className={styles.heading}><div><h1>Your money</h1></div><span className={styles.datePill}><CalendarDays size={15}/>{dateLabel(f.asOf, true)} · demo</span></div>
-    <div className={styles.contextRow}><span><span className={styles.sourceDot}/>One synthetic account · history through {dateLabel(f.dataThrough)}</span><button className="text-button" onClick={onSettings}><SlidersHorizontal size={15}/>Your assumptions</button></div>
+    <div className={styles.heading}><h1>Your money</h1><button className={styles.settings} onClick={onSettings} aria-label="Your assumptions"><SlidersHorizontal size={20}/></button></div>
+    <p className={styles.contextRow}>Synthetic demo · {dateLabel(f.asOf)} · history through {dateLabel(f.dataThrough)}</p>
     {failed || paused || signal.kind === 'attention' ? briefing : null}
     <div className={styles.outlookGrid}>
       <section className={styles.hero} aria-labelledby="money-title" aria-busy={busy}>
-        <div className={styles.heroLabel}><Wallet size={18}/><span>{f.horizonDays}-day estimate</span></div>
-        <h2 id="money-title">Estimated extra room</h2><strong className={styles.heroAmount}>{pending ? '—' : paused ? 'Paused' : euro(f.remainingCents, 2)}</strong>
-        <p className={styles.heroDescription}>{paused ? 'Confirm the picture before making a new plan.' : f.allocationCents>0?'After outgoings, reserve and home allocation. An estimate, not a spending target.':'After outgoings and your reserve. An estimate, not a spending target.'}</p>
-        <dl className={styles.balanceBreakdown}><div><dt>Recorded balance</dt><dd>{pending || !connected ? '—' : euro(f.balanceCents, 2)}</dd></div><div><dt>Lowest projected balance</dt><dd>{unavailable ? '—' : euro(f.minimumCents, 2)}</dd></div><div><dt>Protected reserve</dt><dd>{pending || !connected ? '—' : euro(f.protectedCents, 2)}</dd></div>{f.allocationCents > 0 && !unavailable ? <div><dt>Home scenario allocation</dt><dd>{euro(f.allocationCents, 2)}</dd></div> : null}</dl>
-        <button className={styles.heroAction} disabled={pending} onClick={paused ? onSettings : openScenario}>{paused ? 'Review your assumptions' : 'Explore a what-if'}<ArrowRight size={18}/></button><button className={styles.heroSecondary} onClick={onCalculation} disabled={unavailable}>How is this calculated?</button>
+        <div className={styles.heroLabel}><h2 id="money-title">Estimated extra room</h2><span>{f.horizonDays}-day forecast</span></div>
+        <strong className={styles.heroAmount}>{pending ? '—' : paused ? 'Paused' : euro(f.remainingCents, 2)}</strong>
+        <p className={styles.heroDescription}>{paused ? 'Review your data to resume the forecast.' : f.allocationCents>0?'After expected costs, reserve and home allocation.':'After expected costs and your protected reserve.'}</p>
+        <ActionButton className={styles.heroAction} disabled={pending} onClick={paused ? onSettings : openScenario}>{paused ? 'Review your assumptions' : 'Explore a what-if'}<ArrowRight size={18}/></ActionButton>
+        <details className={styles.balanceDetails}><summary>What’s behind this estimate?</summary>
+          <dl className={styles.balanceBreakdown}><div><dt>Recorded balance</dt><dd>{pending || !connected ? '—' : euro(f.balanceCents, 2)}</dd></div><div><dt>Lowest projected balance</dt><dd>{unavailable ? '—' : euro(f.minimumCents, 2)}</dd></div><div><dt>Protected reserve</dt><dd>{pending || !connected ? '—' : euro(f.protectedCents, 2)}</dd></div>{f.allocationCents > 0 && !unavailable ? <div><dt>Home scenario allocation</dt><dd>{euro(f.allocationCents, 2)}</dd></div> : null}</dl>
+          <p className={styles.heroDescription}>A forecast, not a spending target. One account may not show your full financial picture.</p>
+          <button className={styles.heroSecondary} onClick={onCalculation} disabled={unavailable}>See calculations and coverage</button>
+        </details>
       </section>
       <section className={styles.chartCard} aria-label="Cash-flow forecast">{unavailable ? <div className={styles.chartEmpty}><ShieldCheck size={30}/><h2>{failed ? 'Your forecast couldn’t refresh' : busy ? 'Your forecast is updating' : 'Your forecast is paused'}</h2><p hidden={!unavailable && signal.kind !== 'attention'}>{failed ? 'The update could not complete. Retry before using the forecast.' : busy ? 'The timeline will return with your updated numbers.' : 'Review the source and account coverage to see the projected timeline.'}</p>{!pending && <button className="button secondary" onClick={onSettings}>Review assumptions<ArrowRight size={16}/></button>}</div> : <CashflowTimeline forecast={f}/>}</section>
+    <div className={styles.snapshot} aria-label="Money snapshot"><div><span><ArrowDownLeft size={17}/>Typical monthly salary</span><strong>{pending || !connected ? '—' : euro(f.salaryCents)}</strong><small>Median used by the forecast</small></div><div><span><Wallet size={17}/>Average monthly spending</span><strong>{pending || !connected ? '—' : euro(f.consumptionCents)}</strong><small>{period} · excludes saving transfers</small></div><div><span><CalendarDays size={17}/>Next expected income</span><strong>{unavailable ? '—' : incomeDay ? dateLabel(incomeDay.date) : 'Outside this outlook'}</strong><small>Estimated timing · can change</small></div></div>
     </div>
     {!unavailable && signal.kind !== 'attention' ? briefing : null}
-    <div className={styles.snapshot} aria-label="Money snapshot"><div><span><ArrowDownLeft size={17}/>Typical monthly salary</span><strong>{pending || !connected ? '—' : euro(f.salaryCents)}</strong><small>Median used by the forecast</small></div><div><span><Wallet size={17}/>Average monthly spending</span><strong>{pending || !connected ? '—' : euro(f.consumptionCents)}</strong><small>{period} · excludes saving transfers</small></div><div><span><CalendarDays size={17}/>Next expected income</span><strong>{unavailable ? '—' : incomeDay ? dateLabel(incomeDay.date) : 'Outside this outlook'}</strong><small>Estimated timing · can change</small></div></div>
+
     <div className={styles.detailGrid}>
       <section className={styles.spending} aria-labelledby="spending-title"><div className={styles.sectionHeading}><div><h2 id="spending-title">Where your money goes</h2></div><span className={styles.smallTag}>Monthly average</span></div><p className={styles.supporting}>{period} · select a group to explore</p>
         <div className={styles.basketBar} aria-label="Spending group proportions">{baskets.map(({ id, title }) => <span key={id} title={title} className={styles[id]} style={{ width: `${!pending && connected && total > 0 ? f.baskets[id] / total * 100 : 0}%` }}/>)}</div>
@@ -72,6 +78,6 @@ export function MoneyOverview({ personaId, forecast: f, goal, busy, failed, conn
       </section>
     </div>
     <footer className={styles.footer}><ShieldCheck size={16}/><span>Synthetic data · estimated forecasts · no money moves.</span><button className="text-button" onClick={onSettings}>Review data & assumptions</button></footer>
-    {scenarioOpen && !unavailable && assumptions && onApplyScenario ? <ScenarioDialog personaId={personaId} key={`${f.accountId}:${f.asOf}`} assumptions={assumptions} baseline={f} onClose={() => setScenarioOpen(false)} onApply={onApplyScenario}/> : null}
+    {!unavailable && assumptions && onApplyScenario ? <ScenarioDialog open={scenarioOpen} personaId={personaId} key={`${f.accountId}:${f.asOf}`} assumptions={assumptions} baseline={f} onClose={() => setScenarioOpen(false)} onApply={onApplyScenario}/> : null}
   </div>;
 }

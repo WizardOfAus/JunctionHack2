@@ -1,5 +1,6 @@
 // Money sub-navigation: the overview and the accounts statement.
-import Link from 'next/link';
+// WorkspaceLink works around Vinext's production next/link navigation bug.
+import Link from '@/features/navigation/workspace-link';
 import styles from './accounts.module.css';
 
 export function MoneyTabs({ active }: { active: 'today' | 'accounts' }) {
