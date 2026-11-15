@@ -12,7 +12,7 @@ export function PesaThinking({ progress, startedAt }: { progress: ProgressState;
   const seconds = Math.max(0, Math.round((now - startedAt) / 1000));
   const current = [...progress.steps].reverse().find(step => !step.done);
   const done = progress.steps.filter(step => step.done);
-  const label = progress.text ? 'Writing your answer' : current?.label ?? 'Getting started';
+  const label = progress.text ? 'Writing your answer' : current?.label ?? 'Thinking it through';
   return (
     <div className={styles.thinking} role="status" aria-live="polite">
       <PesaEgg state={progress.text ? 'answering' : 'thinking'} size={30} />

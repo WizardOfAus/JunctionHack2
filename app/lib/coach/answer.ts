@@ -62,7 +62,8 @@ export async function coachResponse(request:Request,{onProgress,signal,onAdmitte
       }
     }
     if(calc.intent==='unsupported') unsupported=true;
-    const {intent:_intent,authoritative:_authoritative,...shown}=calc;
+    // The demo reply shows the calculation itself; intent and authority are agent-context details.
+    const shown:Partial<typeof calc>={...calc};delete shown.intent;delete shown.authoritative;
     return respond({...shown,mode:'demo',version:VERSION,account:provenance.accountId,dataThrough:HISTORY_THROUGH});
   }catch(error){if(error instanceof DemoDataUnavailableError)return demoDataUnavailable(error);return Response.json({error:'That question could not be processed. Shorten it and try again.'},{status:400});}
 }
