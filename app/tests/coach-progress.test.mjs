@@ -23,8 +23,11 @@ test('agent events become allowlisted steps without tool inputs or customer data
 });
 
 test('source domains are deduplicated, stripped of www and capped',()=>{
-  assert.deepEqual(sourceDomains('see https://www.a.fi/x and http://b.com/y?z https://a.fi'),['a.fi','b.com']);
-  assert.equal(sourceDomains(Array.from({length:9},(_,i)=>`https://s${i}.fi`).join(' ')).length,5);
+  assert.deepEqual(sourceDomains({results:[{url:'https://www.a.fi/x'},{url:'http://b.com/y?z'},{url:'https://a.fi'}]}),['a.fi','b.com']);
+  assert.equal(sourceDomains({results:Array.from({length:9},(_,i)=>({url:`https://s${i}.fi`}))}).length,5);
+  assert.deepEqual(sourceDomains({answer:'Mention https://not-read.fi',results:[{url:'https://read.fi',text:'https://also-not-read.fi'}],citations:[{sources:[{url:'https://cited.fi'}]}]}),['read.fi','cited.fi']);
+  assert.deepEqual(sourceDomains('see https://not-read.fi'),[]);
+  assert.deepEqual(sourceDomains(JSON.stringify({sources:[{url:'https://read.fi'}]})),['read.fi']);
 });
 
 test('the progress state tracks steps, sources and streamed text',()=>{

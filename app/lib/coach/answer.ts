@@ -52,6 +52,7 @@ export async function coachResponse(request:Request,{onProgress,signal}:CoachOpt
         const evidence=calc.authoritative?{evidence:calc.evidence,category:calc.category,basket:calc.basket,from:calc.from,to:calc.to}:{evidence:[]};
         return respond({text:reply.text,kind:'answer',mode:'agent',intent:calc.intent,...evidence,conversationId:reply.conversationId,account:provenance.accountId,dataThrough:HISTORY_THROUGH});
       } catch(e) {
+        if(signal?.aborted) throw e;
         if(!(e instanceof AgentUnavailableError)) {
           console.error('Koti agent request failed:', e instanceof Error ? e.name : 'UnknownError');
           return Response.json({error:'The AI coach could not complete this request. Check the server configuration or try again.'},{status:502});

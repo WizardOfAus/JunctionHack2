@@ -37,16 +37,24 @@ export async function askAgent(config: AgentConfig, input: { customerId: string;
   const signal = options.signal ? AbortSignal.any([timeout, options.signal]) : timeout;
   const map = progressMapper();
   const onEvent = options.onProgress ? (chunk: Parameters<typeof map>[0]) => { for (const event of map(chunk)) options.onProgress!(event); } : undefined;
+  let abortWork: Promise<unknown> | undefined;
+  // Stopping the event reader does not stop durable model/tool execution.
+  const stopWork = () => { abortWork ??= conversation.abort({ signal: AbortSignal.timeout(5000) }).catch(() => {}); };
   try {
     const admission = await conversation.send({
       ...request.options,
       signal,
     });
+    signal.addEventListener('abort', stopWork, { once: true });
+    if (signal.aborted) stopWork();
     const reply = await conversation.read(admission, { signal, onEvent });
     return { text: reply.text.trim(), submissionId: reply.submissionId, conversationId: request.conversationId };
   } catch (error) {
     if (options.signal?.aborted) throw error;
     if (isAgentOutage(error, signal)) throw new AgentUnavailableError('The AI coach is temporarily unavailable.', { cause: error });
     throw error;
+  } finally {
+    signal.removeEventListener('abort', stopWork);
+    await abortWork;
   }
 }
