@@ -36,7 +36,7 @@ test('the Enable Banking token is RS256 with the application id and the right au
 test('a code becomes one connection with mapped accounts, balances and signed transactions',async()=>{
   const calls=[];
   const fetcher=async(url,init)=>{calls.push([init.method??'GET',url.replace('https://api.enablebanking.com','')]);const path=new URL(url).pathname;
-    const body=path==='/sessions'?{session_id:'s1',accounts:[{uid:'u1',account_id:{iban:'FI2112345600000785'},name:'Käyttötili',currency:'EUR',cash_account_type:'CACC'}],access:{valid_until:'2027-01-01T00:00:00Z'}}
+    const body=path==='/application'?{environment:'SANDBOX'}:path==='/sessions'?{session_id:'s1',accounts:[{uid:'u1',account_id:{iban:'FI2112345600000785'},name:'Käyttötili',currency:'EUR',cash_account_type:'CACC'}],access:{valid_until:'2027-01-01T00:00:00Z'}}
       :path.endsWith('/balances')?{balances:[{balance_amount:{amount:'10.00',currency:'EUR'},balance_type:'ITAV'},{balance_amount:{amount:'1234.56',currency:'EUR'},balance_type:'CLBD',reference_date:'2026-09-30'}]}
       :{transactions:[{entry_reference:'e1',transaction_amount:{amount:'25.10',currency:'EUR'},credit_debit_indicator:'DBIT',booking_date:'2026-09-29',creditor:{name:'S-market'},remittance_information:['Groceries']},
         {entry_reference:'e2',transaction_amount:{amount:'2500.00',currency:'EUR'},credit_debit_indicator:'CRDT',booking_date:'2026-09-15',debtor:{name:'Employer Oy'}}]};
@@ -46,7 +46,7 @@ test('a code becomes one connection with mapped accounts, balances and signed tr
   assert.equal(c.sessionId,'s1');assert.equal(c.label,'S-Pankki via Enable Banking (sandbox)');assert.equal(c.validUntil,'2027-01-01T00:00:00Z');
   assert.deepEqual(c.accounts,[{id:'u1',name:'Käyttötili',type:'current',iban:'FI2112345600000785',currency:'EUR',balanceCents:123456,balanceDate:'2026-09-30'}]);
   assert.deepEqual(c.transactions.map(t=>[t.date,t.amountCents,t.description]),[['2026-09-29',-2510,'Groceries'],['2026-09-15',250000,'Employer Oy']]);
-  assert.deepEqual(calls[0],['POST','/sessions']);assert.ok(calls.some(([,u])=>u==='/accounts/u1/transactions?date_from=2026-04-01'));
+  assert.deepEqual(calls[0],['GET','/application']);assert.ok(!c.id.includes(c.sessionId));assert.ok(calls.some(([,u])=>u==='/accounts/u1/transactions?date_from=2026-04-01'));
 });
 
 test('balances prefer booked closing balance and pending transactions stay pending',()=>{
@@ -69,4 +69,35 @@ test('the full picture adds each source, compares visible cash with the deposit 
   const text=fullPictureContext(p,c=>euro(c));
   assert.match(text,/Demo bank is simulated/);assert.match(text,/does not change your application record/);
   assert.equal(fullPicture({forecast,connections:[],readiness:null,asOf:'2026-09-30'}).deposit,null);
+});
+
+
+test('production credentials cannot be presented as a sandbox',async()=>{
+ const calls=[];const client=enableBankingClient({token:async()=>'t',fetcher:async url=>{calls.push(new URL(url).pathname);return Response.json({environment:'PRODUCTION'});}});
+ await assert.rejects(client.startAuthorisation({bank:'test',country:'FI',redirectUrl:'https://app.invalid',state:'x',validUntil:'2026-12-01'}),/Only sandbox/);
+ assert.deepEqual(calls,['/application']);
+});
+
+test('full picture excludes other currencies, pending spending and dates after the snapshot',async()=>{
+ const {fullPicture}=await import('../lib/open-banking/full-picture.ts');
+ const demo=demoConnection('reference',clocks.current,new Date('2026-10-01'));
+ demo.accounts=[{id:'usd',currency:'USD',type:'savings',balanceCents:999999},{id:'card',currency:'EUR',type:'card',balanceCents:-3000}];
+ demo.transactions=[{accountId:'card',date:'2026-09-20',amountCents:-3000,status:'booked',description:'Purchase'},
+ {accountId:'card',date:'2026-09-21',amountCents:-9000,status:'pending',description:'Purchase'},
+ {accountId:'card',date:'2026-10-20',amountCents:-9000,status:'booked',description:'Purchase'}];
+ const p=fullPicture({forecast:{balanceCents:10000},connections:[demo],readiness:null,asOf:'2026-09-30'});
+ assert.equal(p.cashCents,10000);assert.equal(p.cardMonthlySpendCents,1000);assert.equal(p.cardOwedCents,3000);
+});
+
+test('bank state is browser/persona scoped, expires and does not consume another browser callback',async()=>{
+ const {ensureSession,saveConnection,listConnections,removeConnection,addPending,takePending,publicConnection}=await import('../lib/open-banking/state.ts');
+ const a=ensureSession(new Request('http://app.local')),b=ensureSession(new Request('http://app.local'));
+ const c={...demoConnection('reference',clocks.current,new Date()),sessionId:'provider-secret'};
+ saveConnection(a.sid,'reference',c);
+ assert.equal(listConnections(b.sid,'reference').length,0);assert.equal(listConnections(a.sid,'tight-budget').length,0);
+ assert.equal(removeConnection(b.sid,'reference',c.id),null);
+ assert.equal(publicConnection(c).sessionId,undefined);
+ addPending('state1',{sid:a.sid,personaId:'reference',bank:'demo',createdAt:Date.now()});
+ assert.equal(takePending('state1',b.sid),null);assert.equal(takePending('state1',a.sid).sid,a.sid);assert.equal(takePending('state1',a.sid),null);
+ saveConnection(a.sid,'reference',{...c,validUntil:'2000-01-01'});assert.equal(listConnections(a.sid,'reference').length,0);
 });
