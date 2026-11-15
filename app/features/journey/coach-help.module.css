@@ -1,0 +1,24 @@
+.launcher{position:fixed;right:26px;bottom:24px;z-index:25;display:flex;align-items:center;gap:9px;min-height:48px;padding:12px 18px;border:1px solid #456647;border-radius:24px;background:var(--forest);color:white;font-size:14px;font-weight:700;box-shadow:0 4px 16px #153e3120}
+.launcher:hover{background:#315d3d}
+.launcher:focus-visible{outline:3px solid var(--green);outline-offset:4px}
+.dialog{position:fixed;inset:24px 24px 24px auto;margin:0;width:min(460px,calc(100vw - 32px));max-width:none;max-height:none;height:calc(100dvh - 48px);padding:0;border:1px solid var(--line);border-radius:20px;background:var(--paper);color:var(--ink);box-shadow:0 20px 80px #153e3133}
+.dialog[open]{display:flex;flex-direction:column}
+.dialog::backdrop{background:#173e322b}
+.header{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:20px;border-bottom:1px solid var(--line);flex-shrink:0}
+.header h2{font-size:22px;letter-spacing:-.025em}
+.header p{font-size:13px;color:var(--muted);margin-top:4px}
+.body{overflow-y:auto;min-height:0;padding:20px;overscroll-behavior:contain}
+.body :global(.coach-panel){padding:0;border:0;border-radius:0;background:none}
+.body :global(.coach-intro){padding:0 0 18px;text-align:left}
+.body :global(.coach-intro h2){font-size:24px}
+.body :global(.suggestions){grid-template-columns:1fr}
+.body :global(.composer){margin:14px 0}
+.body :global(.messages){margin-top:12px}
+.body :global(.message){gap:9px}
+.body :global(.message)>div{min-width:0}
+.footer{padding:14px 20px;border-top:1px solid var(--line);margin-top:auto;flex-shrink:0}
+.footer a{display:flex;align-items:center;gap:8px;width:fit-content;font-size:13px;font-weight:700;color:var(--green)}
+.footer a:hover{text-decoration:underline}
+@media(max-width:740px){.launcher{display:none}.dialog{inset:auto 8px 8px;margin:0;width:calc(100vw - 16px);height:calc(100dvh - 24px);border-radius:18px}.body{padding:18px}.header{padding:16px}.footer{padding-bottom:calc(14px + env(safe-area-inset-bottom))}}
+
+.body :global(.message.coach)>div{max-width:100%}.body :global(.coach-panel){min-height:0}
