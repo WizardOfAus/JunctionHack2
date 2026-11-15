@@ -72,7 +72,6 @@ function CardView({ card, format, onResult, onNext, onAsk }: { card: Card; forma
   const finish = (value: string, isCorrect: boolean) => { setAnswer(value); onResult(isCorrect); };
   return (
     <article className={styles.card}>
-      <span className={styles.kicker}>{card.kind === 'predict' ? 'Guess, then reveal' : card.kind === 'quiz' ? 'Quick check' : 'Good to know'} · {concepts[card.conceptId]}</span>
       <h3>{card.title}</h3>
       {card.kind === 'concept' ? <><p>{card.body}</p><a className={styles.source} href={card.sourceUrl} target="_blank" rel="noreferrer">{card.source}<ArrowUpRight size={13} /></a></> : <p>{card.prompt}</p>}
       {card.kind === 'predict' ? (!answered ? <div className={styles.guess}>

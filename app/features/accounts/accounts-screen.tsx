@@ -2,7 +2,7 @@
 // Accounts: every account Koti can see, a statement like a bank's, and the home-loan application record.
 // Each figure says where it comes from: the S-Bank Junction dataset, a connected bank, or the Demo bank.
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ArrowRightLeft, Banknote, Bus, Clapperboard, Coins, CreditCard, HeartPulse, Home, Landmark, MessageCircle, PiggyBank, Plane, Plus, Search, Shirt, ShoppingBasket, Sofa, TrendingDown, TrendingUp, Utensils, Zap, type LucideIcon } from 'lucide-react';
+import { ArrowRightLeft, Banknote, CircleCheck, CircleDashed, Bus, Clapperboard, Coins, CreditCard, HeartPulse, Home, Landmark, MessageCircle, PiggyBank, Plane, Plus, Search, Shirt, ShoppingBasket, Sofa, TrendingDown, TrendingUp, Utensils, Zap, type LucideIcon } from 'lucide-react';
 import { ResponsiveSheet } from '@/components/mobile/responsive-sheet';
 import { addDays, HISTORY_THROUGH, type Forecast } from '@/lib/finance';
 import type { MortgageView } from '@/lib/personas/view';
@@ -143,7 +143,7 @@ function FullPictureCard({ picture: p, format, onAsk }: { picture: ReturnType<ty
         <div><dt>Card balance owed</dt><dd>{format(p.cardOwedCents)}</dd></div>
         <div><dt>Card spending · 90-day monthly mean</dt><dd>{format(p.cardMonthlySpendCents)}</dd></div>
       </dl>
-      {p.deposit ? <p className={styles.check} data-ok={p.deposit.coveredByVisibleCash}>{p.deposit.coveredByVisibleCash ? '✓' : '•'} The app’s illustrative own-funds target is {format(p.deposit.neededCents)}. Reported EUR cash, before reserves and debts, {p.deposit.coveredByVisibleCash ? 'covers it' : 'does not cover it yet'}.</p> : null}
+      {p.deposit ? <p className={styles.check} data-ok={p.deposit.coveredByVisibleCash}>{p.deposit.coveredByVisibleCash ? <CircleCheck size={16} aria-hidden="true" /> : <CircleDashed size={16} aria-hidden="true" />}The app’s illustrative own-funds target is {format(p.deposit.neededCents)}. Reported EUR cash, before reserves and debts, {p.deposit.coveredByVisibleCash ? 'covers it' : 'does not cover it yet'}.</p> : null}
       <p className={styles.note}>Sources: {p.sources.join('; ')}. {p.notes.join(' ')}</p>
       <button className="text-button" onClick={() => onAsk('Looking at all my connected accounts, how does my full picture change my plan?')}><MessageCircle size={14} />Ask Pesä about my full picture</button>
     </section>
