@@ -8,7 +8,7 @@ import { applyProgress, emptyProgress, type ProgressState } from '@/lib/coach/pr
 import { streamCoach } from '@/lib/coach/stream-client';
 
 export type CoachMessage = {
-  role: 'user' | 'coach'; text: string; kind?: string; mode?: string; intent?: string; category?: string; from?: string; to?: string;
+  role: 'user' | 'coach'; text: string; source?: {dataset?: string; customerLabel?: string}; kind?: string; mode?: string; intent?: string; category?: string; from?: string; to?: string;
   evidence?: string[]; reductionPercent?: number; basket?: Basket; actions?: CoachAction[]; scope?: string; sources?: string[]; agentUnavailable?: boolean;
 };
 
@@ -35,11 +35,12 @@ export function useCoachChat(request: { personaId: string; assumptions: unknown;
     const settle = (message: CoachMessage) => { if (!current.signal.aborted && latest.current.scopeKey === scopeKey) setMessages(m => [...m, message]); };
     try {
       const final = await streamCoach({ question, assumptions, personaId, context }, { signal: current.signal, onProgress: event => {
+        if (current.signal.aborted || latest.current.scopeKey !== scopeKey) return;
         if (event.type === 'sources') sources = [...new Set([...sources, ...event.domains])];
         setProgress(p => applyProgress(p, event));
       } });
       if (final.status !== 200) throw new Error(String(final.body.error ?? 'failed'));
-      settle({ role: 'coach', ...(final.body as Omit<CoachMessage, 'role'>), sources, scope: scopeKey });
+      settle({ role: 'coach', ...(final.body as Omit<CoachMessage, 'role'>), sources: final.body.mode === 'agent' ? sources : [], scope: scopeKey });
     } catch {
       settle({ role: 'coach', text: 'I couldn’t load that answer. Please try your question again.', kind: 'error' });
     } finally {
