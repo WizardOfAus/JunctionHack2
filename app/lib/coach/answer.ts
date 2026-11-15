@@ -13,6 +13,7 @@ import { agentConfig, askAgent, AgentUnavailableError } from '@/lib/coach/agent'
 import { journeyContextSchema, defaultContext, journeyActions, coachJourneyContext } from '@/lib/journey/context';
 import { basketContext } from '@/lib/coach/context';
 import { calculatedAnswer,calculatedContext } from '@/lib/coach/calculated';
+import { historySchema,historyContext,resolveFollowUp } from '@/lib/coach/history';
 import { CALCULATING_STEP,type CoachProgress } from '@/lib/coach/progress';
 import { learnedFacts,memoryContext,rememberRequest } from '@/lib/memory/memory';
 import { visitorId } from '@/lib/memory/scope';
@@ -24,7 +25,8 @@ import { personaIdSchema,DEFAULT_PERSONA_ID } from '@/lib/contracts';
 export type CoachOptions={onProgress?:(event:CoachProgress)=>void;signal?:AbortSignal;onAdmitted?:(capability:string)=>void};
 export async function coachResponse(request:Request,{onProgress,signal,onAdmitted}:CoachOptions={}):Promise<Response> {
   try {
-    const body=z.object({question:z.string().min(1).max(1500),assumptions:assumptionsSchema,personaId:z.unknown().optional(),context:journeyContextSchema.optional()}).strict().parse(await request.json());
+    const body=z.object({question:z.string().min(1).max(1500),assumptions:assumptionsSchema,personaId:z.unknown().optional(),context:journeyContextSchema.optional(),history:historySchema.optional()}).strict().parse(await request.json());
+    const history=body.history??[];
     const persona=await personaFromRequest(body.personaId);if(!persona) return unknownPersona();
     const transactions=persona.transactions,provenance={customerId:persona.customerId,accountId:persona.accountId};
     const {assumptions:a}=body;const q=body.question.toLowerCase();
@@ -43,7 +45,8 @@ export async function coachResponse(request:Request,{onProgress,signal,onAdmitte
     const readiness=loanReadiness({forecast:f,assumptions:a,mortgage:persona.view.mortgage,marketRate:latestMortgageRate(CLOCK)});
     const comparison=benchmarks({rows:transactions,salaryCents:f.salaryCents,age:persona.view.customer.age,tables:benchmarkTables,isSpending:isConsumption});
     // The app's own answer, when it can calculate one. The demo coach replies with it; the agent quotes it.
-    const calc=calculatedAnswer({question:body.question,transactions,customerId:persona.customerId,assumptions:a,forecast:f,profile,readiness,mortgage:persona.view.mortgage,comparison,context,actions});
+    // A short follow-up ("and in July?") borrows the previous question's topic when it has none of its own.
+    const {calc}=resolveFollowUp(body.question,history,question=>calculatedAnswer({question,transactions,customerId:persona.customerId,assumptions:a,forecast:f,profile,readiness,mortgage:persona.view.mortgage,comparison,context,actions}));
     // "Remember that …" is saved only after the person confirms it in the app.
     const remember=rememberRequest(body.question);
     if(remember) return respond({text:`Want me to remember this? “${remember}” You can see or remove it any time under What Pesä knows.`,kind:'remember',mode:'demo',rememberSuggestion:remember,evidence:[]});
@@ -64,7 +67,7 @@ export async function coachResponse(request:Request,{onProgress,signal,onAdmitte
         const bankSession=sessionId(request);
         const connections=bankSession?listConnections(bankSession,personaKey):[];
         const connectedContext=connections.length?fullPictureContext(fullPicture({forecast:f,connections,readiness,asOf:HISTORY_THROUGH}),c=>euro(c)):'';
-        const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext:[calculatedContext(calc),appContext,readinessContext(readiness,persona.view.mortgage,c=>euro(c)),benchmarkContext(comparison,c=>euro(c)),memory,connectedContext].filter(Boolean).join('\n\n')},{onProgress,signal,onAdmitted});
+        const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext:[historyContext(history),calculatedContext(calc),appContext,readinessContext(readiness,persona.view.mortgage,c=>euro(c)),benchmarkContext(comparison,c=>euro(c)),memory,connectedContext].filter(Boolean).join('\n\n')},{onProgress,signal,onAdmitted});
         // Source rows stay inspectable when the agent quotes an authoritative app calculation.
         const evidence=calc.authoritative?{evidence:calc.evidence,category:calc.category,basket:calc.basket,from:calc.from,to:calc.to}:{evidence:[]};
         return respond({text:reply.text,kind:'answer',mode:'agent',intent:calc.intent,...evidence,conversationId:reply.conversationId,account:provenance.accountId,dataThrough:HISTORY_THROUGH});

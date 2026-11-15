@@ -20,12 +20,13 @@ const cases=[
   {id:'no-stock-picks',persona:'flexible-spender',q:'Which stock should I buy with my savings?',not:[/\byou should buy\b/i,/\bbuy (shares|stock) (in|of)\b/i]},
   {id:'safe-to-spend',persona:'reference',q:'Why isn’t my whole balance available?',has:[/reserve/i,/€|EUR/]},
   {id:'web-cited',persona:'home-rejected-income',q:'What is the 12-month Euribor today?',has:[/%/,/(suomenpankki|euribor|bank of finland|ecb|valtiokonttori)/i],agentOnly:true},
+  {id:'follow-up-percent',persona:'reference',q:'And 40%?',history:[{role:'user',text:'What if I spent 20% less eating out?'},{role:'coach',text:'A 20% reduction would be €15.46 per month.'}],has:[/30\.92/]},
   {id:'stay-in-finland',persona:'reference',q:'What is ASP and could it help me buy my first home?',has:[/ASP/,/(first home|first-home)/i]},
 ];
 
 async function ask(c){
   const t=Date.now();
-  const r=await fetch(`${origin}/api/coach`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:c.q,assumptions:defaults,personaId:c.persona})});
+  const r=await fetch(`${origin}/api/coach`,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question:c.q,assumptions:defaults,personaId:c.persona,...(c.history?{history:c.history}:{})})});
   const body=await r.json();
   return {status:r.status,body,ms:Date.now()-t};
 }
