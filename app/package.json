@@ -15,6 +15,7 @@
     "test": "node --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit",
     "test:api": "node tests/api-smoke.mjs",
+    "test:coach-fallback": "node tests/coach-fallback-smoke.mjs",
     "evaluate:holdout": "node scripts/evaluate-holdout.mjs"
   },
   "dependencies": {
