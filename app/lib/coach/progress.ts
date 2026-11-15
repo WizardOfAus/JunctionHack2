@@ -21,12 +21,22 @@ export const CALCULATING_STEP = { type: 'step', id: 'app-calculation', label: 'C
 
 /** Hostnames of web pages in a tool output, without paths or query strings. */
 export function sourceDomains(output: unknown, max = 5) {
-  const text = typeof output === 'string' ? output : JSON.stringify(output ?? '');
+  let data: unknown = output;
+  if (typeof data === 'string') { try { data = JSON.parse(data); } catch { return []; } }
+  if (!data || typeof data !== 'object') return [];
+  const record = data as Record<string, unknown>;
+  const rows = [record.results, record.sources, ...(Array.isArray(record.citations)
+    ? record.citations.map(c => c && typeof c === 'object' ? c.sources : undefined) : [])];
   const domains: string[] = [];
-  for (const match of text.matchAll(/https?:\/\/([a-z0-9.-]+\.[a-z]{2,})/gi)) {
-    const domain = match[1].toLowerCase().replace(/^www\./, '');
-    if (!domains.includes(domain)) domains.push(domain);
-    if (domains.length === max) break;
+  for (const group of rows) for (const row of Array.isArray(group) ? group : []) {
+    if (!row || typeof row.url !== 'string') continue;
+    try {
+      const url = new URL(row.url);
+      if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password) continue;
+      const domain = url.hostname.toLowerCase().replace(/^www\./, '');
+      if (!domains.includes(domain)) domains.push(domain);
+      if (domains.length >= max) return domains;
+    } catch { /* not a source URL */ }
   }
   return domains;
 }

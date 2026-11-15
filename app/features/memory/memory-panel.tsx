@@ -26,7 +26,8 @@ export function MemoryPanel({ personaId, assumptions, goal }: { personaId: strin
   const load = useCallback(async (signal?: AbortSignal) => {
     try {
       const response = await post({ action: 'list', personaId, assumptions, goal });
-      if (!signal?.aborted && response.ok) { setState(await response.json()); setFailed(false); }
+      const data = await response.json() as State;
+      if (!signal?.aborted) { if (response.ok) { setState(data); setFailed(false); } else setFailed(true); }
     } catch { if (!signal?.aborted) setFailed(true); }
   }, [personaId, assumptions, goal]);
   useEffect(() => {
@@ -52,7 +53,7 @@ export function MemoryPanel({ personaId, assumptions, goal }: { personaId: strin
           <input id="pesa-memory-add" value={draft} maxLength={200} placeholder="Tell Pesä something to remember…" onChange={e => setDraft(e.target.value)} />
           <button type="submit" disabled={!draft.trim()} aria-label="Remember this"><Plus size={16} /></button>
         </form>
-        <p className={styles.note}>{state.storage === 'session' ? 'Saved on this server until it restarts (demo).' : 'Saved for this demo persona.'} You can remove anything at any time.</p>
+        <p className={styles.note}>{state.storage === 'session' ? 'Saved for this browser and demo persona until the server restarts.' : 'Saved for this browser and demo persona. Clearing browser cookies removes access.'} You can remove anything at any time.</p>
       </div>}
     </details>
   );

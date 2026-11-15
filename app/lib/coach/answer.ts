@@ -15,11 +15,12 @@ import { basketContext } from '@/lib/coach/context';
 import { calculatedAnswer,calculatedContext } from '@/lib/coach/calculated';
 import { CALCULATING_STEP,type CoachProgress } from '@/lib/coach/progress';
 import { learnedFacts,memoryContext,rememberRequest } from '@/lib/memory/memory';
+import { visitorId } from '@/lib/memory/scope';
 import { memoryStore } from '@/lib/memory/store';
 import { personaIdSchema,DEFAULT_PERSONA_ID } from '@/lib/contracts';
 
-export type CoachOptions={onProgress?:(event:CoachProgress)=>void;signal?:AbortSignal};
-export async function coachResponse(request:Request,{onProgress,signal}:CoachOptions={}):Promise<Response> {
+export type CoachOptions={onProgress?:(event:CoachProgress)=>void;signal?:AbortSignal;onAdmitted?:(capability:string)=>void};
+export async function coachResponse(request:Request,{onProgress,signal,onAdmitted}:CoachOptions={}):Promise<Response> {
   try {
     const body=z.object({question:z.string().min(1).max(1500),assumptions:assumptionsSchema,personaId:z.unknown().optional(),context:journeyContextSchema.optional()}).strict().parse(await request.json());
     const persona=await personaFromRequest(body.personaId);if(!persona) return unknownPersona();
@@ -55,13 +56,15 @@ export async function coachResponse(request:Request,{onProgress,signal}:CoachOpt
         // Application record, loan readiness and benchmarks, so the agent explains the app's figures instead of guessing.
         // What Pesä knows: derived facts plus what the person asked it to remember. Storage failures never block an answer.
         const personaKey=personaIdSchema.optional().safeParse(body.personaId).data??DEFAULT_PERSONA_ID;
-        const told=await memoryStore().list(personaKey).catch(()=>[]);
+        const owner=visitorId(request);
+        const told=owner?await memoryStore().list({visitorId:owner,personaId:personaKey}).catch(()=>[]):[];
         const memory=memoryContext(learnedFacts({rows:transactions,forecast:f,comparison,mortgage:persona.view.mortgage,goal:context.goal,format:c=>euro(c)}),told);
-        const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext:[calculatedContext(calc),appContext,readinessContext(readiness,persona.view.mortgage,c=>euro(c)),benchmarkContext(comparison,c=>euro(c)),memory].filter(Boolean).join('\n\n')},{onProgress,signal});
+        const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext:[calculatedContext(calc),appContext,readinessContext(readiness,persona.view.mortgage,c=>euro(c)),benchmarkContext(comparison,c=>euro(c)),memory].filter(Boolean).join('\n\n')},{onProgress,signal,onAdmitted});
         // Source rows stay inspectable when the agent quotes an authoritative app calculation.
         const evidence=calc.authoritative?{evidence:calc.evidence,category:calc.category,basket:calc.basket,from:calc.from,to:calc.to}:{evidence:[]};
         return respond({text:reply.text,kind:'answer',mode:'agent',intent:calc.intent,...evidence,conversationId:reply.conversationId,account:provenance.accountId,dataThrough:HISTORY_THROUGH});
       } catch(e) {
+        if(signal?.aborted) throw e;
         if(!(e instanceof AgentUnavailableError)) {
           console.error('Koti agent request failed:', e instanceof Error ? e.name : 'UnknownError');
           return Response.json({error:'The AI coach could not complete this request. Check the server configuration or try again.'},{status:502});
