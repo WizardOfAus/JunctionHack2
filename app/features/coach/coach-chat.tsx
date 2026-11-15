@@ -1,7 +1,7 @@
 'use client';
 // The coach conversation: a centred column, a large composer and live progress while Pesä works.
 // The shell passes the actions it owns (source rows, lessons, plan previews, answer visuals).
-import { useEffect, useRef, useState, type ReactNode, type Ref } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode, type Ref } from 'react';
 import { ArrowRight, ArrowUp, ArrowUpRight, Calculator, Sparkles, Square } from 'lucide-react';
 import type { CoachAction } from '@/lib/journey/context';
 import { PesaEgg } from '@/features/pesa/pesa-egg';
@@ -31,18 +31,19 @@ type Props = {
 const paragraphs = (text: string) => text.split(/\n{2,}/).map((p, i) => <p key={i}>{p}</p>);
 
 export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, scopeKey, disabled, inputRef, renderVisual, onEvidence, onAction, actionLabel, actionDisabled, memory, onRemember }: Props) {
+  const inputId = useId();
   const [draft, setDraft] = useState('');
   const [remembered, setRemembered] = useState<Record<number, 'saved' | 'failed'>>({});
   const end = useRef<HTMLDivElement>(null);
   const empty = !chat.messages.length && !chat.busy;
   const streaming = chat.progress.text.length > 0;
-  useEffect(() => { if (!empty) end.current?.scrollIntoView({ block: 'end', behavior: 'smooth' }); }, [chat.messages.length, chat.busy, streaming, empty]);
+  useEffect(() => { if (!empty) end.current?.scrollIntoView({ block: 'end', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); }, [chat.messages.length, chat.busy, streaming, empty]);
   const send = (text: string) => { if (!text.trim() || chat.busy || disabled) return; setDraft(''); void chat.ask(text); };
 
   const composer = (
     <form className={styles.composer} onSubmit={e => { e.preventDefault(); send(draft); }}>
-      <label className="sr-only" htmlFor="coach-question">Ask Pesä a money question</label>
-      <textarea id="coach-question" ref={inputRef} rows={1} maxLength={1500} value={draft} placeholder="Ask Pesä about your money…" disabled={disabled}
+      <label className="sr-only" htmlFor={inputId}>Ask Pesä a money question</label>
+      <textarea id={inputId} ref={inputRef} rows={1} maxLength={1500} value={draft} placeholder="Ask Pesä about your money…" disabled={disabled}
         onChange={e => { setDraft(e.target.value); e.target.style.height = 'auto'; e.target.style.height = `${Math.min(e.target.scrollHeight, 180)}px`; }}
         onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); send(draft); } }} />
       {chat.busy
@@ -75,8 +76,9 @@ export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, sc
                   <span className={styles.badge}>{m.mode === 'agent' ? <><Sparkles size={12} aria-hidden="true" />AI coach</> : <><Calculator size={12} aria-hidden="true" />Calculated</>}</span>
                   {m.evidence?.length ? <button className={styles.link} onClick={() => onEvidence(m)}>Inspect {m.evidence.length} source row{m.evidence.length === 1 ? '' : 's'}<ArrowUpRight size={13} aria-hidden="true" /></button> : null}
                 </div> : null}
-                <SourceChips domains={m.sources ?? []} />
-                {m.rememberSuggestion && onRemember ? <div className={styles.actions}>{remembered[i] === 'saved'
+                <SourceChips domains={m.mode === 'agent' ? m.sources ?? [] : []} />
+                {m.source ? <small className={styles.note}>{[m.source.dataset, m.source.customerLabel].filter(Boolean).join(' · ')}</small> : null}
+                {m.rememberSuggestion && onRemember && m.scope===scopeKey ? <div className={styles.actions}>{remembered[i] === 'saved'
                   ? <span className={styles.badge}>Saved to what Pesä knows</span>
                   : <button onClick={async () => { const ok = await onRemember(m.rememberSuggestion!); setRemembered(r => ({ ...r, [i]: ok ? 'saved' : 'failed' })); }}>{remembered[i] === 'failed' ? 'Try again' : 'Remember this'}<ArrowRight size={13} aria-hidden="true" /></button>}</div> : null}
                 {m.actions?.length ? <div className={styles.actions}>{m.actions.map((action, j) =>

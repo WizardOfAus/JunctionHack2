@@ -143,7 +143,7 @@ export default function KotiApp({initialForecast,personas}:{initialForecast:Fore
     onAction={action=>{setHelpOpen(false);if(action.type==='lesson')openLesson(lessons.findIndex(l=>l.id===action.lessonId));else setCoachPreview(action);}}
     actionLabel={action=>action.type==='lesson'?`Explore: ${lessons.find(l=>l.id===action.lessonId)?.title}`:action.scenario==='expense'?'Preview an unexpected cost':action.scenario==='payday'?'Preview a later payday':`Preview ${action.reductionPercent ?? 20}% less eating out`}
     actionDisabled={(action,m)=>action.type==='preview'&&(busy||!!error||m.scope!==scopeKey)}
-    memory={<MemoryPanel personaId={personaId} assumptions={a} goal={goalId}/>} onRemember={text=>saveMemory(personaId,text)}/>;
+    memory={<MemoryPanel key={personaId} personaId={personaId} assumptions={a} goal={goalId}/>} onRemember={text=>saveMemory(personaId,text)}/>;
 
   return <div className={`app-shell ${sliceStyles.shell}`}>
     <a href="#main-content" className="skip-link">Skip to content</a>
