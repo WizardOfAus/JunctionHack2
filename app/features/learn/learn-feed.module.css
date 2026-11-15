@@ -1,0 +1,51 @@
+.learn{display:grid;gap:18px;margin-bottom:34px}
+.header{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.header h2{font-size:24px;letter-spacing:-.03em}
+.header p{color:var(--muted);font-size:var(--type-context);margin-top:4px}
+.mastery{display:flex;align-items:center;gap:5px}
+.mastery span{width:22px;height:8px;border-radius:999px;background:linear-gradient(90deg,var(--green) var(--fill),#e5eadf var(--fill))}
+.mastery small{margin-left:6px;color:var(--muted);font-variant-numeric:tabular-nums}
+.note{color:var(--muted);font-size:var(--type-context)}
+.stack{position:relative;display:grid;gap:14px}
+.peek{position:absolute;inset:14px 18px auto;height:100%;border-radius:24px;background:#fff;border:1px solid var(--line);transform:translateY(10px) scale(.97);opacity:.6;z-index:0}
+.card{position:relative;z-index:1;display:grid;gap:14px;padding:28px;border-radius:24px;background:#fff;border:1px solid var(--line);animation:enter 320ms var(--ease) both}
+.card h3{font-size:22px;letter-spacing:-.025em}
+.card>p{font-size:15px;line-height:1.65;max-width:62ch}
+.kicker{font-size:var(--type-meta);font-weight:700;color:var(--green);text-transform:uppercase;letter-spacing:.06em}
+.source{display:inline-flex;align-items:center;gap:4px;font-size:var(--type-label);color:var(--green);font-weight:700}
+.guess{display:grid;gap:12px;justify-items:start}
+.guess output{font-size:34px;font-weight:750;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.guess input{width:100%}
+.reveal{display:grid;gap:10px}
+.bar{display:grid;grid-template-columns:120px 1fr auto;align-items:center;gap:12px;font-size:var(--type-label)}
+.bar div{height:12px;border-radius:999px;background:#eef1ea;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:inherit;background:#c9b8e6;animation:grow 700ms var(--ease) both}
+.bar[data-real=true] i{background:var(--green);animation-delay:250ms}
+.bar strong{font-variant-numeric:tabular-nums}
+.options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.options button{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 16px;border-radius:14px;border:1px solid var(--line);background:#fff;font-weight:650;text-align:left;transition:border-color 140ms ease,background 140ms ease,transform 140ms var(--ease)}
+.options button:hover:not(:disabled){border-color:#bccfac;transform:translateY(-1px)}
+.options button:disabled{opacity:1;cursor:default}
+.options button[data-state=right]{background:#e8f3dc;border-color:#9cc276;color:var(--forest)}
+.options button[data-state=wrong]{background:var(--peach);border-color:#e9b796}
+.feedback{display:grid;gap:4px;padding:14px 16px;border-radius:14px;background:#f5f7f1;animation:enter 240ms var(--ease) both}
+.feedback[data-correct=true] strong{color:var(--green)}
+.feedback[data-correct=false] strong{color:#9b5a32}
+.feedback p{font-size:var(--type-context)}
+.footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:4px}
+.ask{display:inline-flex;align-items:center;gap:6px;border:0;background:none;color:var(--green);font-weight:700;font-size:var(--type-label);padding:0}
+.ask:hover{text-decoration:underline}
+.dots{display:flex;justify-content:center;gap:6px}
+.dots span{width:7px;height:7px;border-radius:50%;background:#dfe5d8;transition:width 200ms var(--ease),background 200ms ease}
+.dots span[data-state=done]{background:#9cc276}
+.dots span[data-state=current]{width:22px;border-radius:999px;background:var(--green)}
+.done{justify-items:center;text-align:center}
+.done p{color:var(--muted)}
+.teach{display:flex;gap:8px;width:100%;max-width:520px;border:1px solid var(--line);border-radius:18px;padding:5px 5px 5px 14px}
+.teach input{flex:1;border:0;outline:0;background:none;font-size:15px;min-width:0}
+.teach button{width:38px;height:38px;border-radius:12px;border:0;background:var(--forest);color:#fff;display:grid;place-items:center}
+.teach button:disabled{opacity:.3}
+@keyframes enter{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:none}}
+@keyframes grow{from{width:0}}
+@media(max-width:740px){.card{padding:22px}.options{grid-template-columns:1fr}.bar{grid-template-columns:96px 1fr auto}}
+@media(prefers-reduced-motion:reduce){.card,.feedback,.bar i{animation:none}}
