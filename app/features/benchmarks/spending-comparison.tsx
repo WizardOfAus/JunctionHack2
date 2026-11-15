@@ -51,7 +51,7 @@ export function SpendingComparison({ data }: { data: Benchmarks }) {
       </div>
       <details className={styles.sources}>
         <summary>Periods, groups and sources</summary>
-        <p>Your average covers {data.period.months} calendar months{data.period.from && data.period.to ? `, ${dateLabel(data.period.from)}–${dateLabel(data.period.to)}` : ''}. Saving transfers are excluded. Scenario changes do not rewrite recorded spending.</p>
+        <p>Your average covers {data.period.months} calendar months{data.period.from && data.period.to ? `, ${dateLabel(data.period.from, true)}–${dateLabel(data.period.to, true)}` : ''}. Saving transfers are excluded. Scenario changes do not rewrite recorded spending.</p>
         <p>{data.groups.dataset}. The middle 80% in this category spans {euro(selected.dataset.p10)}–{euro(selected.dataset.p90)} per month.</p>
         <p>Salary groups and recorded age groups are separate comparisons; they do not describe identical households.</p>
         <p>{data.groups.national.label}. {data.groups.national.priceBasis}.</p>
