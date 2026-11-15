@@ -9,7 +9,7 @@ import { streamCoach } from '@/lib/coach/stream-client';
 
 export type CoachMessage = {
   role: 'user' | 'coach'; text: string; source?: {dataset?: string; customerLabel?: string}; kind?: string; mode?: string; intent?: string; category?: string; from?: string; to?: string;
-  evidence?: string[]; reductionPercent?: number; basket?: Basket; actions?: CoachAction[]; scope?: string; sources?: string[]; agentUnavailable?: boolean;
+  evidence?: string[]; reductionPercent?: number; basket?: Basket; actions?: CoachAction[]; scope?: string; sources?: string[]; agentUnavailable?: boolean; rememberSuggestion?: string;
 };
 
 export function useCoachChat(request: { personaId: string; assumptions: unknown; context: unknown; scopeKey: string }) {
