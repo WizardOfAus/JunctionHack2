@@ -1,6 +1,6 @@
 # Claude UI/UX handoff
 
-The user asked Claude to take over from this work on 15 November 2026. Codex's Money/mobile/shared-component package is released for Claude to continue. The separate integration Codex still coordinates the shared checkout/server; confirm its current ownership before editing that checkout. Use your own branch/worktree from current main.
+The user asked Claude to take over from this work on 15 November 2026. Both the UI Codex and integration Codex have released their source ownership for Claude to continue. Use your own branch/worktree from current main, and coordinate any future changes to the shared checkout/server with whoever is actively running it.
 
 ## Start here
 
