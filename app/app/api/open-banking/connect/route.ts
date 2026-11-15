@@ -1,15 +1,17 @@
 // Starts a read-only PSD2 connection. The Demo bank connects at once; a real (sandbox) bank returns the
 // URL of the bank's own login, which sends the person back to /api/open-banking/callback.
+import { isSameOrigin } from '@/lib/memory/scope';
 import { z } from 'zod';
 import { personaIdSchema, DEFAULT_PERSONA_ID } from '@/lib/contracts';
 import { CLOCK } from '@/lib/finance';
 import { demoConnection } from '@/lib/open-banking/demo-bank';
-import { addPending, enableBanking, ensureSession, publicConnection, saveConnection } from '@/lib/open-banking/server';
+import { addPending, enableBanking, ensureSession, listConnections, publicConnection, saveConnection } from '@/lib/open-banking/server';
 import { CONSENT_DAYS } from '@/lib/open-banking/types';
 
 const body = z.object({ personaId: personaIdSchema.optional(), provider: z.enum(['demo', 'enable-banking']), bank: z.string().min(1).max(80).optional() }).strict();
 
 export async function POST(request: Request) {
+  if(!isSameOrigin(request)) return Response.json({error:'Origin not allowed'},{status:403});
   const parsed = body.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return Response.json({ error: 'Choose a bank to connect.' }, { status: 400 });
   const { provider, bank } = parsed.data, personaId = parsed.data.personaId ?? DEFAULT_PERSONA_ID;
@@ -20,6 +22,7 @@ export async function POST(request: Request) {
     saveConnection(sid, personaId, connection);
     return Response.json({ connected: true, connection: publicConnection(connection) }, { headers });
   }
+  if(listConnections(sid,personaId).some(c=>c.provider===provider&&c.bankName===bank)) return Response.json({error:'This bank is already connected. Revoke it before reconnecting.'},{status:409});
   const client = enableBanking();
   if (!client || !bank) return Response.json({ error: 'The live bank sandbox is not available on this server.' }, { status: 503 });
   const stateId = crypto.randomUUID();
