@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { ArrowUpRight, X } from 'lucide-react';
 import { PesaEgg } from '@/features/pesa/pesa-egg';
-import Link from 'next/link';
+import Link from '@/features/navigation/workspace-link';
 import styles from './coach-help.module.css';
 
 export function CoachHelp({ open, onOpen, onClose, screen, children }: {

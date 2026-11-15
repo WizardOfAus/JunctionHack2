@@ -1,51 +1,48 @@
 .overview{min-width:0}
 .heading{display:flex;align-items:center;justify-content:space-between;gap:20px}
-.eyebrow{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--muted)}
-.heading h1{font-size:clamp(26px,2.5vw,35px);margin-top:7px;letter-spacing:-.03em}
-.datePill{display:flex;align-items:center;gap:8px;padding:8px 13px;border:1px solid var(--line);border-radius:30px;white-space:nowrap;font-size:12px;background:white}
-.contextRow{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:12px 0 20px;color:var(--muted);font-size:12px}
-.contextRow>span{display:flex;align-items:center;gap:8px}
-.sourceDot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+.heading h1{font-size:clamp(1.625rem,2.5vw,2.1875rem);margin:0;letter-spacing:-.03em}
+.settings{display:grid;place-items:center;min-width:44px;min-height:44px;background:transparent;border:1px solid var(--line);border-radius:12px;color:var(--ink)}
+.contextRow{margin:4px 0 18px;color:var(--muted);font-size:.75rem;line-height:1.5}
 
 .briefing{display:flex;align-items:center;gap:15px;padding:18px 21px;border:1px solid #dde5d4;background:#eff3e9;border-radius:14px;margin-bottom:22px}
 .signalIcon{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:#dce9c7;flex-shrink:0}
 .attentionIcon{background:var(--peach)}
 .briefing>div{flex:1}
-.briefing strong{font-size:14px}
-.briefing p{margin-top:3px;font-size:13px;color:#536452;max-width:85ch}
+.briefing strong{font-size:0.875rem}
+.briefing p{margin-top:3px;font-size:0.8125rem;color:#536452;max-width:85ch}
 .briefing>button{white-space:nowrap}
 
-.outlookGrid{display:grid;grid-template-columns:minmax(285px,.82fr) minmax(0,1.45fr);gap:22px;align-items:stretch}
+.outlookGrid{display:grid;grid-template-columns:minmax(285px,.82fr) minmax(0,1.45fr);gap:22px;align-items:start}
 .hero{padding:28px;background:var(--forest);color:#fffefa;border-radius:18px;display:flex;flex-direction:column}
-.heroLabel{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;color:#c1d6bf;margin-bottom:18px}
+.heroLabel{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:.75rem;color:#d5e3cf;margin-bottom:0}
 .heroLabel>span:first-child{display:flex;align-items:center;gap:8px}
-.hero h2{font-size:14px;font-weight:500;letter-spacing:0;color:#d5e3cf}
-.heroAmount{font-size:clamp(39px,3.6vw,58px);letter-spacing:-.03em;line-height:1.2;font-variant-numeric:tabular-nums;margin:8px 0 14px}
-.heroDescription{font-size:14px;color:#d8e6d2;line-height:1.6}
-.balanceBreakdown{display:grid;gap:12px;margin:23px 0 26px;border-top:1px solid #46614e;padding-top:20px}
-.balanceBreakdown>div{display:flex;align-items:center;justify-content:space-between;gap:14px;font-size:12px}
+.hero h2{font-size:.875rem;font-weight:600;letter-spacing:0;color:#d5e3cf}
+.heroAmount{font-size:clamp(2rem,3.6vw,3.625rem);letter-spacing:-.03em;line-height:1.2;font-variant-numeric:tabular-nums;margin:10px 0 12px}
+.heroDescription{font-size:.875rem;color:#d8e6d2;line-height:1.6}
+.balanceBreakdown{display:grid;gap:12px;margin:8px 0 16px}
+.balanceBreakdown>div{display:flex;align-items:center;justify-content:space-between;gap:14px;font-size:0.75rem}
 .balanceBreakdown dt{color:#c9d9c4}
-.balanceBreakdown dd{margin:0;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
-.heroAction{transition:background-color 150ms ease;display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:auto;background:var(--lime);color:var(--forest);border:0;border-radius:10px;padding:13px 16px;font-size:13px;font-weight:750;min-height:48px}
-.heroAction:hover{background:#c9e88e}
-.heroSecondary{background:transparent;border:0;color:#d7e5cf;min-height:44px;margin-top:4px;font-size:12px;text-decoration:underline;text-underline-offset:4px}
+.balanceBreakdown dd{margin:0;font-size:0.875rem;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hero .heroAction{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:20px;background:var(--lime);color:var(--forest);border:0;border-radius:10px;padding:13px 16px;font-size:.9375rem;font-weight:750;min-height:48px}
+
+.heroSecondary{background:transparent;border:0;color:#d7e5cf;min-height:44px;margin-top:4px;font-size:0.75rem;text-decoration:underline;text-underline-offset:4px}
 .chartCard{border:1px solid var(--line);background:white;border-radius:18px;padding:26px 25px 18px;min-width:0}
 .chartEmpty{min-height:380px;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:15px;padding:30px;color:var(--muted)}
 .chartEmpty h2{color:var(--ink)}
-.chartEmpty p{font-size:14px;max-width:35ch}
+.chartEmpty p{font-size:0.875rem;max-width:35ch}
 
 .snapshot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:24px 0 30px;padding:23px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .snapshot>div{display:grid;gap:8px;padding:0 24px;border-left:1px solid var(--line)}
 .snapshot>div:first-child{padding-left:0;border:0}
-.snapshot>div>span{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
-.snapshot strong{font-size:25px;line-height:1.2;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
-.snapshot small{color:var(--muted);font-size:11px}
+.snapshot>div>span{display:flex;align-items:center;gap:8px;font-size:0.75rem;color:var(--muted)}
+.snapshot strong{font-size:1.5625rem;line-height:1.2;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.snapshot small{color:var(--muted);font-size:0.6875rem}
 .detailGrid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(270px,.82fr);gap:22px;align-items:start}
 .spending{border:1px solid var(--line);background:white;border-radius:18px;padding:26px}
 .sectionHeading{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.sectionHeading h2{margin-top:7px;font-size:21px}
-.smallTag{background:#f0f3eb;color:#54634c;padding:5px 9px;border-radius:6px;font-size:11px;white-space:nowrap}
-.supporting{color:var(--muted);font-size:13px;margin-top:10px}
+.sectionHeading h2{margin-top:7px;font-size:1.3125rem}
+.smallTag{background:#f0f3eb;color:#54634c;padding:5px 9px;border-radius:6px;font-size:0.6875rem;white-space:nowrap}
+.supporting{color:var(--muted);font-size:0.8125rem;margin-top:10px}
 .basketBar{display:flex;gap:3px;height:10px;overflow:hidden;border-radius:5px;margin:22px 0 12px}
 .basketBar>span{min-width:0}
 .regular{background:#e0ebcd}
@@ -58,80 +55,80 @@
 .basket:hover{background:#eef4e7}
 .basketIcon{width:40px;height:40px;display:grid;place-items:center;border-radius:12px;flex-shrink:0}
 .basketCopy{flex:1;min-width:0}
-.basketCopy strong{display:block;font-size:13px}
-.basketCopy>span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+.basketCopy strong{display:block;font-size:0.8125rem}
+.basketCopy>span{display:block;color:var(--muted);font-size:0.75rem;margin-top:3px}
 .basketAmount{text-align:right;flex-shrink:0}
-.basketAmount strong{display:block;font-size:16px;font-variant-numeric:tabular-nums}
-.basketAmount small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.basketAmount strong{display:block;font-size:1rem;font-variant-numeric:tabular-nums}
+.basketAmount small{display:block;color:var(--muted);font-size:0.6875rem;margin-top:3px}
 .expandedChevron{transform:rotate(90deg)}
 .basketDetail{padding:16px 18px;background:#f4f6ef;border-radius:0 0 10px 10px}
-.basketDetail p{font-size:13px;color:#536452;margin-bottom:8px}
+.basketDetail p{font-size:0.8125rem;color:#536452;margin-bottom:8px}
 .basketDetail>button{display:flex}
-.smallPrint{font-size:12px;color:var(--muted);margin-top:18px}
+.smallPrint{font-size:0.75rem;color:var(--muted);margin-top:18px}
 
 .nextStep{position:relative;padding:26px;background:#edf2e4;border:1px solid #e0e7d4;border-radius:18px}
 .nextIcon{display:grid;place-items:center;width:53px;height:53px;border-radius:15px;background:var(--lime);margin:0 0 17px}
-.nextStep h2{font-size:24px;max-width:20ch;line-height:1.25}
-.nextStep>p{font-size:14px;color:#58684f;margin:13px 0 21px}
+.nextStep h2{font-size:1.5rem;max-width:20ch;line-height:1.25}
+.nextStep>p{font-size:0.875rem;color:#58684f;margin:13px 0 21px}
 .dismiss{position:absolute;top:17px;right:14px;background:none;border:0;color:#68765f;width:36px;height:36px;display:grid;place-items:center;border-radius:50%}
 .dismiss:hover{background:#dfe7d2}
-.why{margin-top:18px;font-size:12px;color:#526446}
+.why{margin-top:18px;font-size:0.75rem;color:#526446}
 .why summary{cursor:pointer;min-height:36px;display:flex;align-items:center;gap:6px;text-decoration:underline;text-underline-offset:3px}
-.why p{margin-top:8px;font-size:13px}
+.why p{margin-top:8px;font-size:0.8125rem}
 .planLink{margin-top:23px;padding-top:18px;border-top:1px solid #d7dfcb}
-.planLink>span{display:block;font-size:11px;color:var(--muted)}
-.planLink button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;font-size:13px;font-weight:750;background:none;border:0;padding:7px 0;text-align:left;min-height:40px}
-.footer{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--muted);padding:22px 0 4px}
+.planLink>span{display:block;font-size:0.6875rem;color:var(--muted)}
+.planLink button{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;font-size:0.8125rem;font-weight:750;background:none;border:0;padding:7px 0;text-align:left;min-height:40px}
+.footer{display:flex;align-items:center;gap:9px;font-size:0.75rem;color:var(--muted);padding:22px 0 4px}
 .footer>span{flex:1}
 
 @media(max-width:1150px){.outlookGrid{grid-template-columns:minmax(265px,.85fr) minmax(0,1.15fr);gap:16px}
 .hero,.chartCard{padding:22px}
-.heroLabel{flex-wrap:wrap;margin-bottom:23px}
-.heroAmount{font-size:43px}
+.heroLabel{flex-wrap:wrap}
+.heroAmount{font-size:2.6875rem}
 .detailGrid{grid-template-columns:minmax(0,1.3fr) minmax(260px,1fr);gap:16px}
 .spending,.nextStep{padding:22px}
-.basketCopy>span{font-size:11px}
+.basketCopy>span{font-size:0.6875rem}
 }
 
 @media(max-width:920px){.outlookGrid{grid-template-columns:1fr}
-.heroLabel{margin-bottom:20px}
-.heroAmount{font-size:52px}
-.detailGrid{grid-template-columns:1fr}
+
+.heroAmount{font-size:3rem}
+.detailGrid{grid-template-columns:minmax(0,1fr)}
 .nextStep h2{max-width:32ch}
 }
 
 @media(max-width:740px){.heading{align-items:flex-start;flex-direction:column;gap:13px}
-.heading h1{font-size:28px;max-width:19ch}
-.datePill{font-size:11px;padding:5px 10px}
-.contextRow{align-items:flex-start;flex-direction:column;gap:0;margin:12px 0;font-size:11px}
-.contextRow :global(.text-button){font-size:12px}
+.heading h1{font-size:1.75rem;max-width:19ch}
+.datePill{font-size:0.6875rem;padding:5px 10px}
+.contextRow{align-items:flex-start;flex-direction:column;gap:0;margin:12px 0;font-size:0.6875rem}
+.contextRow :global(.text-button){font-size:0.75rem}
 .briefing{padding:16px;gap:10px;flex-wrap:wrap;align-items:flex-start}
 .briefing>div{min-width:0;flex-basis:calc(100% - 52px)}
 .briefing>button{margin-left:50px;min-height:30px}
-.briefing strong,.briefing p{font-size:13px}
+.briefing strong,.briefing p{font-size:0.8125rem}
 .signalIcon{width:36px;height:36px}
 .hero,.chartCard,.spending,.nextStep{border-radius:15px;padding:22px 18px}
-.heroAmount{font-size:48px}
-.heroLabel{font-size:11px}
+.heroAmount{font-size:clamp(2rem,11.5vw,3rem);overflow-wrap:anywhere}
+.heroLabel{font-size:.75rem}
 .chartCard{padding-inline:14px}
 .snapshot{grid-template-columns:1fr;gap:17px;padding:20px 0;margin:20px 0 24px}
 .snapshot>div,.snapshot>div:first-child{display:grid;grid-template-columns:1fr auto;padding:0 2px 15px;border:0;border-bottom:1px solid var(--line);gap:4px 12px}
 .snapshot>div:last-child{border:0;padding-bottom:0}
-.snapshot>div>span{grid-column:1;font-size:12px}
-.snapshot strong{grid-column:2;grid-row:1 / 3;align-self:center;font-size:21px;max-width:12ch;text-align:right}
-.snapshot small{grid-column:1;font-size:11px}
+.snapshot>div>span{grid-column:1;font-size:0.75rem}
+.snapshot strong{grid-column:2;grid-row:1 / 3;align-self:center;font-size:1.3125rem;max-width:12ch;text-align:right}
+.snapshot small{grid-column:1;font-size:0.6875rem}
 .sectionHeading{align-items:flex-start;flex-wrap:wrap;gap:8px}
-.sectionHeading h2{font-size:21px}
+.sectionHeading h2{font-size:1.3125rem}
 .basket{gap:9px;padding:17px 0}
 .basketIcon{width:32px;height:36px;border-radius:9px}
 .basketIcon svg{width:17px}
-.basketCopy strong{font-size:12px}
+.basketCopy strong{font-size:0.75rem}
 .basketCopy>span{display:none}
-.basketAmount strong{font-size:14px}
-.basketAmount small{font-size:10px}
+.basketAmount strong{font-size:0.875rem}
+.basketAmount small{font-size:0.625rem}
 .basket>svg{width:14px}
-.nextStep h2{font-size:24px}
-.footer{flex-wrap:wrap;align-items:flex-start;font-size:11px}
+.nextStep h2{font-size:1.5rem}
+.footer{flex-wrap:wrap;align-items:flex-start;font-size:0.6875rem}
 .footer>button{margin-left:25px}
 }
 
@@ -139,23 +136,47 @@
 /* Keep the money figure near the top; detail follows the outlook. */
 .outlookGrid{margin-bottom:22px}
 .heading h1{margin-top:0}
-.snapshot small{font-size:12px}
-.basketAmount small{font-size:12px}
+.snapshot small{font-size:0.75rem}
+.basketAmount small{font-size:0.75rem}
 
 @media(max-width:740px){.heading{flex-direction:row;align-items:center;gap:10px}
-.heading h1{font-size:28px;max-width:none}
-.datePill{font-size:11px;padding:6px 9px}
+.heading h1{font-size:1.75rem;max-width:none}
+.datePill{font-size:0.6875rem;padding:6px 9px}
 .contextRow{margin-bottom:14px}
-.basketAmount small{font-size:11px}
-.snapshot small{font-size:12px}
+.basketAmount small{font-size:0.6875rem}
+.snapshot small{font-size:0.75rem}
 }
 
 
 /* Local controls share the same visible interaction vocabulary. */
-.basketCopy strong,.basketAmount small{font-size:14px}
-.basketCopy>span,.supporting,.smallPrint{font-size:13px}
-.heroSecondary{font-size:13px;border-radius:8px}
+.basketCopy strong,.basketAmount small{font-size:0.875rem}
+.basketCopy>span,.supporting,.smallPrint{font-size:0.8125rem}
+.heroSecondary{font-size:0.8125rem;border-radius:8px}
 .briefing p[hidden]{display:none}
 .planLink button{border-radius:6px;padding-inline:6px}
 @media(hover:hover) and (pointer:fine){.heroSecondary:not(:disabled):hover{color:white;background:#2b5140}.planLink button:hover{background:#dfe9d2}.why summary:hover{color:var(--forest);text-decoration-thickness:2px}}
 @media(prefers-reduced-motion:reduce){.heroAction{transition:none}}
+
+.balanceDetails{border-top:1px solid #46614e;margin-top:16px;padding-top:4px;color:#d8e6d2}
+.balanceDetails summary{font-size:.8125rem;line-height:1.5;min-height:44px;padding:12px 0;cursor:pointer}
+.balanceDetails .heroSecondary{padding-inline:0;text-align:left}
+@media(hover:hover) and (pointer:fine){.hero .heroAction:not(:disabled):hover{background:#c9e88e}.settings:hover{background:#eef2e8}.balanceDetails summary:hover{text-decoration:underline;text-underline-offset:4px}}
+@media(max-width:740px){.hero{padding:20px}.outlookGrid{gap:16px}.heading h1{font-size:1.625rem}.chartCard{padding-top:18px}.contextRow{margin:0 0 16px}.hero .heroAction{margin-top:16px}.balanceDetails{margin-top:14px}}
+@media(max-width:740px){
+ .basket{display:grid;grid-template-columns:32px minmax(0,1fr) 16px;gap:6px 10px}
+ .basketIcon{grid-row:1 / 3}
+ .basketCopy{grid-column:2;overflow-wrap:anywhere}
+ .basketAmount{grid-column:2;grid-row:2;display:flex;flex-wrap:wrap;gap:4px 10px;text-align:left}
+ .basketAmount small{margin:0;align-self:center}
+ .basket>svg{grid-column:3;grid-row:1 / 3}
+ .balanceBreakdown>div{flex-wrap:wrap;gap:4px 12px}
+ .nextStep{min-width:0;overflow-wrap:anywhere}
+}
+@media(min-width:921px){
+ .chartCard{grid-column:2;grid-row:1 / 3}
+ .snapshot{grid-column:1;grid-row:2;grid-template-columns:1fr;gap:14px;margin:0;padding:0 8px 8px;border:0}
+ .snapshot>div,.snapshot>div:first-child{display:grid;grid-template-columns:1fr auto;gap:4px 12px;padding:0 0 14px;border:0;border-bottom:1px solid var(--line)}
+ .snapshot>div>span,.snapshot small{grid-column:1}
+ .snapshot strong{grid-column:2;grid-row:1 / 3;align-self:center;font-size:1.25rem;text-align:right}
+ .snapshot>div:last-child{border:0;padding-bottom:0}
+}
