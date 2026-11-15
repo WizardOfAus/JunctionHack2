@@ -25,19 +25,19 @@ export function PesaEgg({ state = 'idle', size = 40, label = 'Pesä' }: { state?
           <g className={styles.face}>
             {closed ? (
               <>
-                <path d="M21 39q3 2 6 0M37 39q3 2 6 0" stroke="#203d31" strokeWidth="2" strokeLinecap="round" fill="none" />
+                <path d="M21 39q3 2 6 0M37 39q3 2 6 0" stroke="var(--ink)" strokeWidth="2" strokeLinecap="round" fill="none" />
               </>
             ) : (
               <g className={styles.eyes}>
-                <ellipse cx="24" cy="38" rx="2.6" ry="3.3" fill="#203d31" />
-                <ellipse cx="40" cy="38" rx="2.6" ry="3.3" fill="#203d31" />
+                <ellipse cx="24" cy="38" rx="2.6" ry="3.3" fill="var(--ink)" />
+                <ellipse cx="40" cy="38" rx="2.6" ry="3.3" fill="var(--ink)" />
                 <circle cx="25" cy="37" r=".9" fill="#fff" />
                 <circle cx="41" cy="37" r=".9" fill="#fff" />
               </g>
             )}
             <ellipse cx="18" cy="45" rx="3.4" ry="2" fill="#f4b9a0" opacity=".7" />
             <ellipse cx="46" cy="45" rx="3.4" ry="2" fill="#f4b9a0" opacity=".7" />
-            <path className={styles.mouth} d={state === 'happy' ? 'M27 45q5 6 10 0' : state === 'thinking' ? 'M29 47h6' : 'M28 45q4 3.5 8 0'} stroke="#203d31" strokeWidth="2" strokeLinecap="round" fill="none" />
+            <path className={styles.mouth} d={state === 'happy' ? 'M27 45q5 6 10 0' : state === 'thinking' ? 'M29 47h6' : 'M28 45q4 3.5 8 0'} stroke="var(--ink)" strokeWidth="2" strokeLinecap="round" fill="none" />
           </g>
           {state === 'happy' ? <path className={styles.crack} d="M14 26l5 3 3-4 4 4 3-3" stroke="#c8b98c" strokeWidth="1.2" fill="none" strokeLinecap="round" /> : null}
         </g>
@@ -47,7 +47,7 @@ export function PesaEgg({ state = 'idle', size = 40, label = 'Pesä' }: { state?
             <path d="M57 8l1 2 2 1-2 1-1 2-1-2-2-1 2-1Z" />
           </g>
         ) : null}
-        {state === 'sleepy' ? <text className={styles.zzz} x="48" y="14" fontSize="10" fill="#617064">z</text> : null}
+        {state === 'sleepy' ? <text className={styles.zzz} x="48" y="14" fontSize="10" fill="var(--muted)">z</text> : null}
       </svg>
     </span>
   );
