@@ -33,7 +33,7 @@ Do not commit `.env`. See `.env.example` for all variables:
 ## Model
 
 The agent uses one model and one endpoint, in development and in deployment:
-OpenAI GPT-6.1 Sol (`openai/gpt-6.1-sol`) through the OpenAI API (`https://api.openai.com/v1`).
+OpenAI GPT-6 Luna (`openai/gpt-6-luna`) through the OpenAI API (`https://api.openai.com/v1`).
 The key is `OPENAI_API_KEY`. No other provider (Anthropic, Azure, Gemini or a gateway) is configured.
 
 The model id is a constant in `src/model.ts`. There is no environment override: if `KOTI_MODEL` is set
