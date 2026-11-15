@@ -29,7 +29,7 @@
   .primary:hover:not(:disabled) { background: #2b652b; }
   .secondary:hover:not(:disabled), .quiet:hover:not(:disabled) { background: #e1ead9; }
 }
-.overlay[data-vaul-overlay] {
+.overlay[data-vaul-overlay][data-vaul-snap-points='false'] {
   position: fixed;
   inset: 0;
   z-index: 100;
@@ -75,12 +75,13 @@
 .sheetFooter > * { flex: 1 1 100%; }
 @media (min-width: 741px) {
   .sheet[data-vaul-drawer] { inset: 50% 0 auto; translate: 0 -50%; width: min(620px, calc(100vw - 48px)); max-height: calc(100dvh - 64px); margin-inline: auto; border: 1px solid #e2e7dc; border-radius: 20px; box-shadow: 0 24px 64px #183f3230; }
-  .sheet[data-vaul-drawer][data-state='open'] { animation-name: desktopIn; }
-  .sheet[data-vaul-drawer][data-state='closed'] { animation-name: desktopOut; }
+  .sheet[data-vaul-drawer]::after { display: none; }
+  .sheet[data-vaul-drawer][data-vaul-snap-points='false'][data-vaul-drawer-direction='bottom'][data-state='open'] { animation-name: desktopIn; }
+  .sheet[data-vaul-drawer][data-vaul-snap-points='false'][data-vaul-drawer-direction='bottom'][data-state='closed'] { animation-name: desktopOut; }
   .handle[data-vaul-handle] { display: none; }
   .sheetHeader { padding: 24px 24px 20px; }
   .sheetBody { padding-inline: 24px; }
-  .sheetFooter { padding: 16px 24px; }
+  .sheetFooter { padding: 16px 24px; border-radius: 0 0 20px 20px; }
   .sheetFooter > * { flex-basis: auto; }
 }
 @keyframes desktopIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -88,5 +89,6 @@
 @media (prefers-reduced-motion: reduce) {
   .action { transition: none; }
   .action:active:not(:disabled) { transform: none; }
-  .sheet[data-vaul-drawer], .overlay[data-vaul-overlay] { animation: none; transition: none; }
+  .sheet[data-vaul-drawer][data-vaul-snap-points='false'][data-vaul-drawer-direction='bottom'][data-state],
+  .overlay[data-vaul-overlay][data-vaul-snap-points='false'][data-state] { animation: none; transition: none; }
 }
