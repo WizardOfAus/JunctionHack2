@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useId, useRef, type ReactNode } from 'react';
-import { ArrowUpRight, MessageCircle, X } from 'lucide-react';
+import { ArrowUpRight, X } from 'lucide-react';
+import { PesaEgg } from '@/features/pesa/pesa-egg';
 import Link from 'next/link';
 import styles from './coach-help.module.css';
 
@@ -20,9 +21,9 @@ export function CoachHelp({ open, onOpen, onClose, screen, children }: {
   }, [open]);
 
   return <>
-    <button className={styles.launcher} onClick={onOpen} aria-haspopup="dialog" aria-expanded={open}><MessageCircle size={19}/>Ask Pesä</button>
+    <button className={styles.launcher} onClick={onOpen} aria-haspopup="dialog" aria-expanded={open}><PesaEgg size={22} label=""/>Ask Pesä</button>
     <dialog ref={dialog} className={styles.dialog} aria-labelledby={headingId} onCancel={event => { event.preventDefault(); onClose(); }} onClick={event => { if (event.target === event.currentTarget) onClose(); }}>
-      <header className={styles.header}><div><h2 id={headingId}>Pesä</h2><p>Alongside {screen}</p></div><button className="icon-button" aria-label="Close Pesä" onClick={onClose}><X size={21}/></button></header>
+      <header className={styles.header}><PesaEgg size={34} label=""/><div><h2 id={headingId}>Pesä</h2><p>Your money coach · alongside {screen}</p></div><button className="icon-button" aria-label="Close Pesä" onClick={onClose}><X size={21}/></button></header>
       <div className={styles.body}>{open ? children : null}</div>
       <footer className={styles.footer}><Link href="/coach" onClick={onClose}>Open full conversation<ArrowUpRight size={15}/></Link></footer>
     </dialog>

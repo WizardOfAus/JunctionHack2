@@ -138,7 +138,7 @@ export default function KotiApp({initialForecast,personas}:{initialForecast:Fore
 
   const coachMode=coach.messages.findLast(m=>m.role==='coach'&&m.mode)?.mode;
   const coachPanel = <CoachChat chat={coach} variant={tab==='coach'?'page':'sheet'} scopeKey={scopeKey} dataThrough={dateLabel(HISTORY_THROUGH)} inputRef={coachInput}
-    suggestions={tab==='learn'?['Why isn’t my whole balance available?','What should I learn next?']:['Help me understand my flexible spending basket.','What if I spent 20% less eating out?','How do I compare with people like me?','How much did I spend on groceries last month?']}
+    suggestions={tab==='learn'?['Why isn’t my whole balance available?','What should I learn next?','What is ASP and could it help me?']:tab==='plan'?['Can I save €200 this month safely?','What happens to my reserve if a €500 bill arrives?','What if I spent 20% less eating out?']:['Help me understand my flexible spending basket.','What if I spent 20% less eating out?','How do I compare with people like me?','How much did I spend on groceries last month?']}
     renderVisual={m=>m.scope===scopeKey&&!busy&&!error&&a.connected&&(m.kind==='basket'||(m.kind==='forecast'&&!f.blocked))?<CoachAnswerVisual kind={m.kind} forecast={f} explanation={m.text} onEvidence={basket=>{setHelpOpen(false);evidence({basket});}}/>:null}
     onEvidence={m=>{setHelpOpen(false);evidence({from:m.from||recentWindow().from,to:m.to||HISTORY_THROUGH,category:m.category,basket:m.basket});}}
     onAction={action=>{setHelpOpen(false);if(action.type==='lesson')openLesson(lessons.findIndex(l=>l.id===action.lessonId));else setCoachPreview(action);}}
