@@ -14,6 +14,7 @@ import { journeyContextSchema, defaultContext, journeyActions, coachJourneyConte
 import { basketContext } from '@/lib/coach/context';
 import { calculatedAnswer,calculatedContext } from '@/lib/coach/calculated';
 import { historySchema,historyContext,resolveFollowUp } from '@/lib/coach/history';
+import { answerActions } from '@/lib/coach/actions';
 import { CALCULATING_STEP,type CoachProgress } from '@/lib/coach/progress';
 import { learnedFacts,memoryContext,rememberRequest } from '@/lib/memory/memory';
 import { visitorId } from '@/lib/memory/scope';
@@ -33,13 +34,15 @@ export async function coachResponse(request:Request,{onProgress,signal,onAdmitte
     const context=body.context ?? defaultContext;
     const f=forecast(transactions,a,CLOCK,persona.customerId);
     const actions=journeyActions(context,q,!f.blocked&&a.connected);
+    // Refined once the calculated intent is known (below); validation replies keep the base actions.
+    let shownActions=actions;
     // Plain wording for the badge: the S-Bank Junction dataset is synthetic by design.
     const source={dataset:'S-Bank Junction 2026 dataset (synthetic)',customerLabel:`Customer ${persona.customerId.replace(/^CUST/,'')}`};
     // When the agent is configured but down, the calculated answers below still reply, with a note.
     let agentNote='';
     // Validation replies also use kind:'help'; preserve their actionable text during outages.
     let unsupported=false;
-    const respond=(payload:Record<string,unknown>)=>Response.json({...payload,...(agentNote&&payload.mode==='demo'?{text:payload.kind==='help'?(unsupported?'The AI coach is not available right now.':payload.text):`${agentNote} ${payload.text}`,agentUnavailable:true}:{}),persona:persona.view,source,context,actions});
+    const respond=(payload:Record<string,unknown>)=>Response.json({...payload,...(agentNote&&payload.mode==='demo'?{text:payload.kind==='help'?(unsupported?'The AI coach is not available right now.':payload.text):`${agentNote} ${payload.text}`,agentUnavailable:true}:{}),persona:persona.view,source,context,actions:shownActions});
     if(!a.connected)return respond({text:'Your demo source is disconnected. Reconnect it in Your data to explore transactions.',mode:'demo',kind:'help',evidence:[]});
     const recent=recentWindow();const profile=basketProfile(transactions);
     const readiness=loanReadiness({forecast:f,assumptions:a,mortgage:persona.view.mortgage,marketRate:latestMortgageRate(CLOCK)});
@@ -47,6 +50,7 @@ export async function coachResponse(request:Request,{onProgress,signal,onAdmitte
     // The app's own answer, when it can calculate one. The demo coach replies with it; the agent quotes it.
     // A short follow-up ("and in July?") borrows the previous question's topic when it has none of its own.
     const {calc}=resolveFollowUp(body.question,history,question=>calculatedAnswer({question,transactions,customerId:persona.customerId,assumptions:a,forecast:f,profile,readiness,mortgage:persona.view.mortgage,comparison,context,actions}));
+    shownActions=answerActions(actions,calc.intent,q);
     // "Remember that …" is saved only after the person confirms it in the app.
     const remember=rememberRequest(body.question);
     if(remember) return respond({text:`Want me to remember this? “${remember}” You can see or remove it any time under What Pesä knows.`,kind:'remember',mode:'demo',rememberSuggestion:remember,evidence:[]});

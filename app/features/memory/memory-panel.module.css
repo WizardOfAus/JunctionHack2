@@ -8,7 +8,7 @@
 .chips li{display:grid;gap:1px;padding:8px 12px;border-radius:14px;background:#eef2e8;font-size:var(--type-label);line-height:1.4;max-width:100%}
 .chips li small{color:var(--muted);font-size:12px}
 .chips li.told{display:flex;align-items:center;gap:8px;background:var(--lilac)}
-.told button{border:0;background:none;padding:2px;border-radius:50%;display:grid;place-items:center;color:var(--muted)}
+.told button{border:0;background:none;padding:6px;border-radius:50%;display:grid;place-items:center;color:var(--muted)}
 .told button:hover{background:var(--lilac);color:var(--ink)}
 .add{display:flex;gap:8px;border:1px solid var(--line);border-radius:14px;padding:4px 4px 4px 12px}
 .add input{flex:1;border:0;outline:0;background:none;font-size:var(--type-context);min-width:0}

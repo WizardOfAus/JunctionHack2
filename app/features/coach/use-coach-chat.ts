@@ -53,5 +53,14 @@ export function useCoachChat(request: { personaId: string; assumptions: unknown;
   }, []);
 
   const reset = useCallback(() => { cancel(); setMessages([]); }, [cancel]);
-  return { messages, busy, progress, startedAt, ask, cancel, reset };
+  /** Asks the last question again after an error, without duplicating it in the thread. */
+  const retry = useCallback(() => {
+    const list = messagesRef.current, at = list.map(m => m.role).lastIndexOf('user');
+    if (at < 0 || controller.current) return;
+    const text = list[at].text;
+    messagesRef.current = list.slice(0, at);
+    setMessages(list.slice(0, at));
+    void ask(text);
+  }, [ask]);
+  return { messages, busy, progress, startedAt, ask, cancel, reset, retry };
 }
