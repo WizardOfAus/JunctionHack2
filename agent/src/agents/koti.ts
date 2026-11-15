@@ -1,8 +1,9 @@
 'use agent';
-import { useInitialData, useModel, useTool } from '@flue/runtime';
+import { useInitialData, useModel, useSkill, useTool } from '@flue/runtime';
 import * as v from 'valibot';
 import { AS_OF, DATA_CUTOFF } from '../data/store.ts';
 import { assertModelConfig, MODEL } from '../model.ts';
+import mortgageDemo from '../skills/mortgage-demo/SKILL.md';
 import { kotiTools, kotiWebTools } from '../tools/index.ts';
 import { CustomerId } from '../tools/shared.ts';
 
@@ -65,6 +66,7 @@ ${appMode ? `1. This app session supports historical transaction questions and t
    Do not estimate these numbers or ask the user to repeat assumptions to work around this limit.
    Exception: when the app block starts with "App-calculated answer to this question (authoritative", give
    that answer and its figures. The app calculated it; it is not your estimate. You may add where to preview it.
+   Home buying and housing loans are supported here: use the mortgage tools below.
 ` : `1. Decide the type of question.
    - About past money ("how much did I spend on...", "when am I paid?"): use query_transactions.
    - The size of a change ("what if I cut X by 20%?"): use forecast_cashflow with a changeSpending change.
@@ -77,7 +79,10 @@ ${appMode ? `1. This app session supports historical transaction questions and t
      use evaluate_asp_progress. Only the user knows the opening date and the ASP deposits. Ask for them.
      Never treat saving transfers in the data as ASP deposits.
    - Salary raises and bonuses are what-ifs that the user gives. Never predict a raise yourself.
-`}
+`}   Home buying ("what can I afford?", "which loan is best?", "why was I declined?", "help me find a home"):
+   activate the mortgage-demo skill. Find homes, rates and offers yourself with the web tools, then use
+   mortgage_calculator for all money and search_mortgage_cases for similar dataset applications.
+
 2. Tools calculate all money and dates. Never do arithmetic yourself. Quote the display values from the tool.
 3. Forecasts and goal dates are estimates. Never say that forecast savings are money the user has.
    Never say a spending change already happened.
@@ -117,10 +122,14 @@ export function Koti() {
 		useTool(tools.evaluateAspProgress);
 	}
 	if (!customerId) useTool(tools.findCustomers);
+	// Home buying works in the app too: these tools use only the customer's history and fixed rules.
+	for (const tool of Object.values(tools.mortgage)) useTool(tool);
+	useSkill(mortgageDemo);
 	const web = kotiWebTools();
 	if (web) {
 		useTool(web.webSearch);
 		useTool(web.deepResearch);
+		useTool(web.readPage);
 	}
 	return instructions(customerId, initial?.appMode ?? false, web != null);
 }

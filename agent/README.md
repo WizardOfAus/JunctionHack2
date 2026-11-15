@@ -24,7 +24,7 @@ Do not commit `.env`. See `.env.example` for all variables:
 | Variable | Default | Use |
 |---|---|---|
 | `OPENAI_API_KEY` | none | OpenAI API key. Required. See [Model](#model). |
-| `EXA_API_KEY` | none | [Exa](https://exa.ai) key. Turns on `web_search` and `deep_research`. Without it the agent has no web search. |
+| `EXA_API_KEY` | none | [Exa](https://exa.ai) key. Turns on `web_search`, `deep_research` and `read_page`. Without it the agent has no web search. |
 | `KOTI_DB_PATH` | `data/koti.db` | Path to the imported dataset. |
 | `KOTI_DATA_CUTOFF` | shared demo clock | Last day of history the agent can see; an earlier override runs a backtest. |
 | `KOTI_AGENT_TOKEN` | none | When set, `/agents/*` requires `Authorization: Bearer <token>`. |
@@ -105,6 +105,11 @@ Server: `npm run dev`, then `POST /agents/koti/<conversation-id>` (see `src/app.
 | `deep_research` | Dig deep: find a specific discount, the exact current rule, or a hard answer | Exa `type: "deep"`: several searches and a short answer with sources (`citations`). Slower (about 4 to 15 s) and costs more, so the agent uses it only when `web_search` is not enough. Timeout 40 s. Needs `EXA_API_KEY`. |
 | `evaluate_asp_progress` | "How many ASP months do I have?", "Does EUR 40 count?" | Versioned ASP rules (`asp-2026-06-01`). Counts qualifying months from the opening date and the verified monthly deposits that the user gives, never from the transaction data. Optional: compares savings with 5% and 10% of a home price, and projects a fixed monthly deposit. Accounts opened before 1 June 2026 get a transition explanation, not a count. |
 | `find_customers` | Pick synthetic customers to study | Analyst mode only (no `customerId` in `initialData`). Not for browsing customers. |
+| `read_page` | Read one page in full (a listing, a bank price page) | Exa `/contents`, up to 8,000 characters. Use after `web_search` when the highlights are not enough. Needs `EXA_API_KEY`. |
+| `mortgage_calculator` | "What can I afford?", "Which loan is best?" | The agent passes homes (prices, charges), loan offers (margin, term, fees, months without repayment, campaign margin) and the 12-month Euribor it found. The tool reads income, rent and savings from the customer's history. Returns limits (FIN-FSA 60% at 6%, and the stricter dataset rule), a verdict per home, and the offers ranked by interest and fees over the planned stay, with the loan left and warnings. |
+| `search_mortgage_cases` | "What happened to people like me?" | Nearest of the 200 synthetic applications by price and loan, outcome counts and reasons. Not a prediction. |
+
+The mortgage tools and the `mortgage-demo` skill (`src/skills/mortgage-demo/`) run in coaching, app and analyst mode. The agent finds homes, rates and offers itself with Exa. The skill gives the steps and holds checked demo data (`HOMES.md`, `OFFERS.md`, `RULES.md`, `SEARCH.md`), which the model reads only when it needs it. The tools calculate. See [the demo script](../docs/demo-mortgage.md).
 
 ## Data rules
 

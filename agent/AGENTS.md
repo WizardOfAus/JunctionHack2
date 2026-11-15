@@ -7,7 +7,11 @@ Read the repository `AGENTS.md` first. Setup and environment variables are in `R
 
 - `src/agents/koti.ts` — the Koti agent (`'use agent'`). `initialData.customerId` locks a conversation to one customer.
 - `src/tools/` — Flue tools: `query_transactions`, `forecast_cashflow`, `project_goal`, `evaluate_asp_progress`, `find_customers`,
-  and the Exa web tools `web_search` and `deep_research` (`web-search.ts`, only when `EXA_API_KEY` is set).
+  and the Exa web tools `web_search`, `deep_research` and `read_page` (`web-search.ts`, only when `EXA_API_KEY` is set).
+  `mortgage.ts`: `mortgage_calculator` and `search_mortgage_cases`.
+- `src/mortgage/` — pure mortgage code: loan maths (`calc.ts`), affordability, and the 200 synthetic applications
+  (`applications.json`, built by `scripts/build-mortgage-cases.py`).
+- `src/skills/mortgage-demo/` — the home-buying skill (`useSkill`): the procedure, and checked demo listings, offers, rules and Exa searches.
 - `src/finance/` — pure finance code (integer cents, dates, dataset vocabulary). No I/O.
   `forecast.ts` is the Monte Carlo engine, `goal.ts` the goal projection, `asp.ts` the versioned ASP rules, `history.ts` the shared
   statistics both use (`RECENT_MONTHS` = 6).
@@ -21,6 +25,8 @@ Read the repository `AGENTS.md` first. Setup and environment variables are in `R
 
 - Money is integer cents. Tools calculate; the model never does arithmetic.
 - Never let data after `KOTI_DATA_CUTOFF` (default from `app/data/demo-clock.json`) reach the agent, the forecast or the goal projection.
+  Exception: the mortgage demo data (`src/skills/mortgage-demo/`) is a dated market snapshot (listings, Euribor, bank terms from
+  November 2026). It is public market context, not customer data, and every figure has its date. Do not use it in a backtest.
 - No arbitrary SQL. Add new filters or groupings as fixed, parameterised SQL.
 - Basket rules live only in `app/lib/finance.ts`. The app sends basket figures with each question; never copy the rules here.
 - Without `customerId` the agent is in analyst mode over synthetic data only.
