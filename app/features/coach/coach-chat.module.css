@@ -2,12 +2,15 @@
 .chat[data-variant=sheet]{min-height:0;max-width:none}
 .empty{align-items:center;justify-content:center;text-align:center;gap:14px;padding:40px 0 24px}
 .empty h2{font-size:28px;letter-spacing:-.035em;margin-top:6px}
-.chat[data-variant=sheet].empty h2{font-size:21px}
+.chat[data-variant=sheet].empty{align-items:stretch;text-align:left;padding:4px 0 8px;gap:8px}
+.chat[data-variant=sheet].empty h2{font-size:19px;margin-top:0}
 .lead{color:var(--muted);font-size:var(--type-context);max-width:46ch}
 .empty .composer{margin-top:14px}
 
-.composer{position:relative;display:flex;align-items:flex-end;gap:10px;width:100%;padding:10px 10px 10px 20px;background:#fff;border:1px solid var(--line);border-radius:26px;box-shadow:0 1px 2px #183f320d,0 8px 28px #183f320f;transition:border-color 160ms var(--ease),box-shadow 160ms var(--ease)}
-.composer:focus-within{border-color:#b9cca8;box-shadow:0 1px 2px #183f3212,0 10px 32px #183f321a}
+.composer{position:relative;display:flex;align-items:flex-end;gap:10px;width:100%;padding:8px 8px 8px 18px;background:#fff;border:1px solid #d6dfcd;border-radius:24px;transition:border-color 160ms var(--ease)}
+.composer:hover{border-color:#c2d0b6}
+/* The shared keyboard focus: a 3px olive outline (DESIGN.md). */
+.composer:focus-within{border-color:var(--green);outline:3px solid #739b47;outline-offset:3px}
 .composer textarea{flex:1;border:0;outline:0;resize:none;background:transparent;font:inherit;font-size:16px;line-height:1.5;padding:9px 0;max-height:180px;color:var(--ink)}
 .composer textarea::placeholder{color:#8a968a}
 .send{width:40px;height:40px;border-radius:50%;border:0;display:grid;place-items:center;background:var(--forest);color:#fff;flex-shrink:0;transition:transform 140ms var(--ease),background 140ms ease,opacity 140ms ease}
@@ -15,10 +18,12 @@
 .send:active:not(:disabled){transform:scale(.94)}
 .send:disabled{opacity:.25}
 
-.suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:100%;margin-top:10px}
-.suggestions button{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;text-align:left;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:#fff;font-size:var(--type-context);color:var(--ink);line-height:1.45;transition:border-color 140ms ease,transform 140ms var(--ease),box-shadow 140ms ease}
-.suggestions button svg{color:var(--muted);margin-top:2px}
-.suggestions button:hover:not(:disabled){border-color:#c7d6b8;box-shadow:0 4px 14px #183f3212;transform:translateY(-1px)}
+.suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:100%;margin-top:10px}
+.chat[data-variant=sheet] .suggestions{grid-template-columns:1fr}
+.suggestions button{display:flex;align-items:center;gap:12px;text-align:left;padding:12px 14px;min-height:48px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:var(--type-context);color:var(--ink);line-height:1.45;transition:border-color 140ms ease,background 140ms ease}
+.suggestions button svg{color:var(--green);flex-shrink:0}
+.suggestions button:hover:not(:disabled){border-color:#c7d6b8;background:#f6f9f1}
+.suggestions button:active:not(:disabled){transform:scale(.99)}
 
 .thread{flex:1;display:flex;flex-direction:column;gap:26px;padding:12px 0 24px}
 .user{align-self:flex-end;max-width:78%;background:var(--mint);border-radius:20px 20px 6px 20px;padding:10px 16px;animation:rise 220ms var(--ease) both}

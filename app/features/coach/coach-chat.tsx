@@ -2,7 +2,7 @@
 // The coach conversation: a centred column, a large composer and live progress while Pesä works.
 // The shell passes the actions it owns (source rows, lessons, plan previews, answer visuals).
 import { useEffect, useId, useRef, useState, type ReactNode, type Ref } from 'react';
-import { ArrowRight, ArrowUp, ArrowUpRight, Calculator, Sparkles, Square } from 'lucide-react';
+import { ArrowRight, ArrowUp, ArrowUpRight, BookOpen, Calculator, Home, PieChart, PiggyBank, ShoppingBasket, Sparkles, Square, Users, Utensils, Wallet, type LucideIcon } from 'lucide-react';
 import type { CoachAction } from '@/lib/journey/context';
 import { PesaEgg } from '@/features/pesa/pesa-egg';
 import { PesaThinking, SourceChips } from '@/features/pesa/pesa-thinking';
@@ -23,6 +23,13 @@ type Props = {
   actionLabel: (action: CoachAction) => string;
   actionDisabled: (action: CoachAction, message: CoachMessage) => boolean;
 };
+
+/** A small icon that says what kind of question a suggestion is. */
+function suggestionIcon(text: string): LucideIcon {
+  const t = text.toLowerCase();
+  return /eat|restaurant/.test(t) ? Utensils : /compare|people like/.test(t) ? Users : /grocer/.test(t) ? ShoppingBasket : /basket/.test(t) ? PieChart
+    : /learn/.test(t) ? BookOpen : /save|reserve|bill/.test(t) ? PiggyBank : /home|mortgage|loan/.test(t) ? Home : /balance|available/.test(t) ? Wallet : Sparkles;
+}
 
 const paragraphs = (text: string) => text.split(/\n{2,}/).map((p, i) => <p key={i}>{p}</p>);
 
@@ -49,11 +56,11 @@ export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, sc
 
   if (empty) return (
     <section className={`${styles.chat} ${styles.empty}`} data-variant={variant}>
-      <PesaEgg state={draft ? 'listening' : 'idle'} size={variant === 'page' ? 68 : 52} />
+      {variant === 'page' ? <PesaEgg state={draft ? 'listening' : 'idle'} size={68} /> : null}
       <h2>Hei! What should we look at?</h2>
       <p className={styles.lead}>I read your account through {dataThrough} and calculate from your actual transactions.</p>
       {composer}
-      <div className={styles.suggestions}>{suggestions.map(s => <button key={s} onClick={() => send(s)} disabled={disabled}>{s}<ArrowUpRight size={15} aria-hidden="true" /></button>)}</div>
+      <div className={styles.suggestions}>{suggestions.map(s => { const Icon = suggestionIcon(s); return <button key={s} onClick={() => send(s)} disabled={disabled}><Icon size={16} aria-hidden="true" /><span>{s}</span></button>; })}</div>
     </section>
   );
 
