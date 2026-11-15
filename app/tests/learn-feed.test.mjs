@@ -33,7 +33,7 @@ test('cards use the person’s own figures, with exactly one right answer',()=>{
   const stress=cardsFor('stress',d)[0];
   assert.equal(stress.options.find(o=>o.correct).label,euro(d.readiness.payments.stress.monthlyCents));
   const room=cardsFor('room',d)[0];
-  assert.equal(room.answerCents,Math.max(0,d.forecast.remainingCents));assert.equal(room.maxCents,d.forecast.balanceCents);
+  assert.equal(room.answerCents,Math.max(0,d.forecast.remainingCents));assert.ok(room.maxCents>=room.answerCents);
   for(const id of Object.keys(concepts)) for(const card of cardsFor(id,d)) if(card.kind==='quiz') assert.equal(new Set(card.options.map(o=>o.label)).size,card.options.length,id);
 });
 
@@ -50,4 +50,13 @@ test('mastery moves up on a right answer, back to zero on a miss, and mastered t
 
 test('a guess within 20% (or €20) counts as close',()=>{
   assert.ok(closeEnough(110000,100000));assert.ok(!closeEnough(130000,100000));assert.ok(closeEnough(1500,0));
+});
+
+
+test('room guesses remain reachable with incoming income and deposit wording states the illustration',()=>{
+ const d=data('reference');
+ const room=cardsFor('room',{...d,forecast:{...d.forecast,balanceCents:10000,remainingCents:50000}})[0];
+ assert.equal(room.maxCents,50000);
+ const cap=cardsFor('loan-cap',data('home-rejected-income'))[0];
+ assert.match(cap.prompt,/no extra collateral/);assert.match(cap.explain,/not a universal cash deposit/);
 });

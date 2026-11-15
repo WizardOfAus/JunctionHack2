@@ -19,7 +19,7 @@ const ORDER: Record<Goal, ConceptId[]> = {
 export type Option = { label: string; correct: boolean };
 export type Card =
   | { id: string; conceptId: ConceptId; kind: 'predict'; title: string; prompt: string; answerCents: number; maxCents: number; explain: string }
-  | { id: string; conceptId: ConceptId; kind: 'quiz'; title: string; prompt: string; options: Option[]; explain: string }
+  | { id: string; conceptId: ConceptId; kind: 'quiz'; title: string; prompt: string; options: Option[]; explain: string; sourceUrl?: string }
   | { id: string; conceptId: ConceptId; kind: 'concept'; title: string; body: string; source: string; sourceUrl: string };
 
 /** Leitner box per concept: 0 new or missed, 3 mastered. */
@@ -42,7 +42,7 @@ export function cardsFor(conceptId: ConceptId, d: { forecast: Forecast; comparis
   const { forecast: f, comparison, readiness: r, format } = d;
   switch (conceptId) {
     case 'room': return f.balanceCents > 0 ? [{ id: 'room-predict', conceptId, kind: 'predict', title: 'Balance vs spending room',
-      prompt: `Your balance is ${format(f.balanceCents)}. Guess how much of it is free to use over the next ${f.horizonDays} days.`, answerCents: Math.max(0, f.remainingCents), maxCents: f.balanceCents,
+      prompt: `Your balance is ${format(f.balanceCents)}. Including expected income and costs, guess your spending room over the next ${f.horizonDays} days.`, answerCents: Math.max(0, f.remainingCents), maxCents: Math.max(f.balanceCents, f.remainingCents),
       explain: `After the costs the app expects and your protected reserve of ${format(f.protectedCents)}, about ${format(Math.max(0, f.remainingCents))} is free. A balance is not the same as room to spend.` }] : [];
     case 'reserve': {
       const essentials = f.baskets.regular;
@@ -67,11 +67,14 @@ export function cardsFor(conceptId: ConceptId, d: { forecast: Forecast; comparis
     }
     case 'loan-cap': {
       if (!r || r.basis.priceCents <= 0) return [];
+      const deposit=r.checks.find(c=>c.id==='deposit');
+      if (!deposit || typeof deposit.targetCents !== 'number') return [];
       const p = r.basis.priceCents, pct = (n: number) => format(Math.ceil(p * n / 100));
       return [{ id: 'loan-cap-quiz', conceptId, kind: 'quiz', title: 'The 95% loan cap',
-        prompt: `For a ${format(p)} home, what is the least you need from your own funds under Finland's 95% loan cap?`,
-        options: options(pct(5), [pct(10), pct(15), pct(20)]),
-        explain: `A housing loan can cover at most 95% of the price, so at least 5% (${pct(5)}) must come from your own funds or extra collateral.` }];
+        prompt: `For this ${format(p)} home, the app assumes the home's collateral value equals its price and you provide no extra collateral. What own-funds amount does its 95% illustration use?`,
+        options: options(format(deposit.targetCents), [pct(10), pct(15), pct(20)]),
+        sourceUrl: deposit.source,
+        explain: `The app's illustration uses ${format(deposit.targetCents)} of own funds. Finland's loan cap relates the loan to accepted collateral value, not a universal cash deposit. Extra collateral and the bank's valuation can change what is needed. Education, not a credit decision.` }];
     }
     case 'stress': {
       if (!r || r.basis.loanCents <= 0) return [];
@@ -79,7 +82,7 @@ export function cardsFor(conceptId: ConceptId, d: { forecast: Forecast; comparis
       return [{ id: 'stress-quiz', conceptId, kind: 'quiz', title: 'The stress-test rate',
         prompt: `Lenders check you could still pay if rates rose. At 6% over 25 years, the monthly payment on a ${format(r.basis.loanCents)} loan is about…`,
         options: options(format(s), [format(Math.round(s * 0.6)), format(Math.round(s * 1.4)), format(Math.round(s * 0.8))]),
-        explain: `About ${format(s)} a month at 6%.${r.payments.market ? ` At today's average new-loan rate of ${r.payments.market.annualPercent}% it would be about ${format(r.payments.market.monthlyCents)}.` : ''} The test asks whether you could cope with the higher figure.` }];
+        explain: `About ${format(s)} a month at 6%.${r.payments.market ? ` At the Bank of Finland's ${r.payments.market.month} average new-loan rate of ${r.payments.market.annualPercent}%, the app calculates ${format(r.payments.market.monthlyCents)}. This is a dated observation, not a live quote.` : ''} The test asks whether you could cope with the higher figure.` }];
     }
     case 'asp': return [{ id: 'asp-concept', conceptId, kind: 'concept', title: 'ASP home saving',
       body: 'ASP is Finland’s state-supported way to save for a first home. You save regularly into an ASP account, and when you buy you can get an ASP loan with a state guarantee and interest support. The rules were renewed on 1 June 2026, so check the current terms before you start.',

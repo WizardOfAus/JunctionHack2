@@ -11,7 +11,7 @@ import { PesaEgg } from '@/features/pesa/pesa-egg';
 import styles from './learn-feed.module.css';
 
 const storageKey = (personaId: string) => `koti-mastery:${personaId}`;
-function loadMastery(personaId: string): Mastery { try { return JSON.parse(localStorage.getItem(storageKey(personaId)) ?? '{}') as Mastery; } catch { return {}; } }
+function loadMastery(personaId: string): Mastery { try { const value=JSON.parse(localStorage.getItem(storageKey(personaId)) ?? '{}'); return value && typeof value==='object' && !Array.isArray(value) ? Object.fromEntries(Object.entries(value).filter(([id,v])=>Object.hasOwn(concepts,id) && v && typeof v==='object' && 'box' in v && Number.isInteger(v.box) && Number(v.box)>=0 && Number(v.box)<=MASTERED && 'seenAt' in v && typeof v.seenAt==='number' && Number.isFinite(v.seenAt))) as Mastery : {}; } catch { return {}; } }
 function saveMastery(personaId: string, m: Mastery) { try { localStorage.setItem(storageKey(personaId), JSON.stringify(m)); } catch { /* storage unavailable */ } }
 
 type Props = { personaId: string; goal: Goal; forecast: Forecast; comparison: Benchmarks | null; readiness: LoanReadiness | null; format: (cents: number) => string; unavailable?: boolean; onAsk: (question: string) => void };
@@ -20,7 +20,7 @@ const noop = () => () => {};
 /** Mastery lives in browser storage, so the feed renders only after hydration. */
 export function LearnFeed(props: Props) {
   const client = useSyncExternalStore(noop, () => true, () => false);
-  return client ? <Feed {...props} /> : <section className={styles.learn}><header className={styles.header}><div><h2>Learn with Pesä</h2><p>Short cards built from your own numbers.</p></div></header></section>;
+  return client && !props.unavailable ? <Feed key={JSON.stringify([props.personaId,props.goal,props.forecast,props.comparison,props.readiness])} {...props} /> : <section className={styles.learn}><header className={styles.header}><div><h2>Learn with Pesä</h2><p>{props.unavailable ? 'Learning cards pause while your figures update.' : 'Short cards built from your own numbers.'}</p></div></header></section>;
 }
 
 function Feed(props: Props) {
@@ -90,6 +90,7 @@ function CardView({ card, format, onResult, onNext, onAsk }: { card: Card; forma
         {card.kind !== 'concept' ? <strong>{correct ? (card.kind === 'predict' ? 'Close!' : 'That’s right.') : 'Not quite.'}</strong> : null}
         {card.kind !== 'concept' ? <p>{card.explain}</p> : null}
       </div> : null}
+      {card.kind === 'quiz' && card.sourceUrl ? <a className={styles.source} href={card.sourceUrl} target="_blank" rel="noreferrer">Official source<ArrowUpRight size={13} /></a> : null}
       <footer className={styles.footer}>
         <button className={styles.ask} onClick={onAsk}><MessageCircle size={14} />Ask Pesä about this</button>
         {card.kind === 'concept' ? <button className="button" onClick={() => { onResult(true); onNext(); }}>Got it<ArrowRight size={16} /></button>
