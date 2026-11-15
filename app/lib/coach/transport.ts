@@ -2,6 +2,7 @@
 import { createFlueClient, FlueApiError, FlueExecutionError, FetchError, FetchBackoffAbortError } from '@flue/sdk';
 import { freshAgentRequest } from './request';
 import type { AgentConfig } from './agent';
+import { progressMapper, type CoachProgress } from './progress';
 
 const REPLY_TIMEOUT_MS = 60_000;
 export class AgentUnavailableError extends Error {}
@@ -24,21 +25,27 @@ export function isAgentOutage(error: unknown, signal: AbortSignal): boolean {
  * `appContext` is text that the app server calculates (see context.ts). It goes after the question
  * in a <koti_app_context> block, so the agent can tell it apart from the user's words.
  */
-export async function askAgent(config: AgentConfig, input: { customerId: string; question: string; appContext?: string }) {
+export async function askAgent(config: AgentConfig, input: { customerId: string; question: string; appContext?: string },
+  options: { onProgress?: (event: CoachProgress) => void; signal?: AbortSignal } = {}) {
   const request = freshAgentRequest(input.customerId, input.question, input.appContext);
   const conversation = createFlueClient({
     url: `${config.url}/${encodeURIComponent(request.conversationId)}`,
     token: config.token,
   });
-  const signal = AbortSignal.timeout(REPLY_TIMEOUT_MS);
+  const timeout = AbortSignal.timeout(REPLY_TIMEOUT_MS);
+  // The caller can cancel (the browser left); that is not an outage, so it never triggers the fallback.
+  const signal = options.signal ? AbortSignal.any([timeout, options.signal]) : timeout;
+  const map = progressMapper();
+  const onEvent = options.onProgress ? (chunk: Parameters<typeof map>[0]) => { for (const event of map(chunk)) options.onProgress!(event); } : undefined;
   try {
     const admission = await conversation.send({
       ...request.options,
       signal,
     });
-    const reply = await conversation.read(admission, { signal });
+    const reply = await conversation.read(admission, { signal, onEvent });
     return { text: reply.text.trim(), submissionId: reply.submissionId, conversationId: request.conversationId };
   } catch (error) {
+    if (options.signal?.aborted) throw error;
     if (isAgentOutage(error, signal)) throw new AgentUnavailableError('The AI coach is temporarily unavailable.', { cause: error });
     throw error;
   }
