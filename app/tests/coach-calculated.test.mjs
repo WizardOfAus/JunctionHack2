@@ -59,3 +59,36 @@ test('the agent context marks authority and leaves unsupported questions alone',
   const hello=ask('hello');
   assert.equal(hello.intent,'unsupported');assert.equal(calculatedContext(hello),'');
 });
+
+test('general advice and unmatched parameters never become authoritative app answers',()=>{
+  const questions=[
+    'What is a typical mortgage term?', 'Is it normal to feel anxious about money?',
+    'What will I spend on groceries next month?', 'What happens next after I apply for a mortgage?',
+    'What is a mortgage?', 'How does a variable rate mortgage work?', 'Should I get a fixed or variable mortgage?',
+    'What if I spent 20% less on groceries?', 'How can I spend less on groceries?',
+    'What if I spent 20% less on taxis?', 'Should I take a taxi in September?',
+    'What if I spent 20% eating out?', 'Compare restaurants in August and September',
+    'How can I reduce my flexible basket by 20%?', 'What is an emergency buffer?',
+    'Should I increase my investment deposits?',
+  ];
+  for(const id of ['reference','home-rejected-income'])for(const question of questions){
+    const r=ask(question,id);
+    assert.equal(r.authoritative,false,`${id}: ${question}`);
+    assert.doesNotMatch(calculatedContext(r),/^App-calculated answer/);
+  }
+});
+
+test('explicit supported requests retain authoritative figures and source rows',()=>{
+  for(const question of ['Restaurants last month','What is my balance?','Taxi spending in August','How much did I spend on groceries last month?']){
+    const r=ask(question);assert.equal(r.authoritative,true,question);assert.ok(r.evidence.length,question);
+  }
+  assert.equal(ask('What should I learn next?').authoritative,true);
+  assert.equal(ask('How does my restaurant spending compare with other people?').authoritative,true);
+});
+
+test('out-of-range restaurant percentages retain validation without a reduction keyword',()=>{
+  for(const question of ['What if I spent 150% eating out?','What if I spent 1500% less eating out?','What if I spent -20% less eating out?']){
+    const r=ask(question);assert.equal(r.intent,'validation',question);assert.equal(r.authoritative,true);
+    assert.equal(r.text,'Choose a spending reduction between 0% and 100%.');
+  }
+});

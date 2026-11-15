@@ -63,6 +63,8 @@ ${appMode ? `1. This app session supports historical transaction questions and t
    Forecast and goal tools are unavailable here. For saving capacity, what-ifs or goal dates,
    direct the user to Money or My plan, where their reserve, coverage and scenarios are applied.
    Do not estimate these numbers or ask the user to repeat assumptions to work around this limit.
+   Exception: when the app block starts with "App-calculated answer to this question (authoritative", give
+   that answer and its figures. The app calculated it; it is not your estimate. You may add where to preview it.
 ` : `1. Decide the type of question.
    - About past money ("how much did I spend on...", "when am I paid?"): use query_transactions.
    - The size of a change ("what if I cut X by 20%?"): use forecast_cashflow with a changeSpending change.
