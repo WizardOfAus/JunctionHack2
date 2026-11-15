@@ -61,15 +61,18 @@ The raw CSVs and the database are in `data/`, which Git ignores.
 
 `POST /api/coach` (`app/app/api/coach/route.ts`) then sends the question to the agent through
 `app/lib/coach/agent.ts` and returns `mode: "agent"`. The app server sets the customer
-(`CUST04859`, from `app/lib/server-data.ts`); the browser cannot choose it. If the agent fails or
-takes more than 60 seconds, the route returns HTTP 502. Without `KOTI_AGENT_URL`, the route keeps
+from the allowlisted `personaId` via `app/lib/personas/request.ts`; the browser cannot supply a raw customer ID.
+Network outages, timeouts, failed agent executions and HTTP408/429/5xx responses use a labelled
+calculated fallback (`mode: "demo"`, `agentUnavailable: true`). Unsupported questions receive an
+unavailability message, not a claimed calculation. Authentication/configuration failures such as
+401/403/404 and unexpected programming errors return HTTP502 without a fallback. Without `KOTI_AGENT_URL`, the route keeps
 the deterministic demo answers (`mode: "demo"`).
 
 ### App bridge boundaries
 
 App questions are stateless: the server creates a fresh conversation and sends `uid: null`, so an existing analyst/other-customer instance is never resumed. Browser-supplied `conversationId` is rejected. A server-owned session binding is required before adding conversation continuity.
 
-The bridge sets `appMode: true`. These sessions expose historical queries and app-calculated basket explanations only. Monte Carlo and goal tools remain available when using the agent directly, but are not registered for app sessions until a validated contract carries coverage, reserves, existing allocations and scenarios. Use Money / My plan for the app's projections. This avoids substituting an unrelated six-month forecast for the app's current calculation. The live coach mode label/evidence UI is still an integration follow-up.
+The bridge sets `appMode: true`. These sessions expose historical queries and the app-calculated journey, forecast, basket, loan-readiness and benchmark context. Monte Carlo and goal tools remain available when using the agent directly, but are not registered for app sessions until a validated contract carries coverage, reserves, existing allocations and scenarios. Use Money / My plan for the app's projections. This avoids substituting an unrelated six-month forecast for the app's current calculation. The UI labels replies as AI or demo mode. Source-row inspection and validated plan previews remain app-controlled. Payment-table quotes cover only2.00–6.00%; outside that range the agent must say the table does not cover it.
 
 ## Talk to the agent directly
 

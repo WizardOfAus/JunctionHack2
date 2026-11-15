@@ -50,3 +50,14 @@ for(const personaId of ['unknown','CUST04859']){
 await post('/api/coach',{question:'hi',assumptions:defaults,context:{goal:'home',completedLessonIds:['invented'],screen:'coach'}},400);
 await post('/api/coach',{question:'hi',assumptions:defaults,context:{goal:'home',completedLessonIds:[],screen:'coach',customerId:'CUST00001'}},400);
 console.log('Journey API: all 8 personas isolated; context, lesson actions, scenario previews, unknown identities and forged context verified.');
+
+// Topic routing must not turn affordability/card/period questions into mortgages or population benchmarks.
+const dining=await post('/api/coach',{question:'Can I afford to eat out more at restaurants?',assumptions:defaults});
+assert.equal(dining.kind,'scenario');assert.equal(dining.category,'Restaurants');
+const card=await post('/api/coach',{question:'Why was my card declined?',assumptions:defaults});
+assert.equal(card.kind,'help');assert.doesNotMatch(card.text,/mortgage|application record/);
+const periods=await post('/api/coach',{question:'Compare restaurants in August and September',assumptions:defaults});
+assert.notEqual(periods.kind,'benchmark');assert.notEqual(periods.kind,'readiness');assert.equal(periods.category,'Restaurants');
+const noApplication=await post('/api/coach',{question:'Why was my mortgage declined?',assumptions:defaults,personaId:'flexible-spender'});
+assert.equal(noApplication.kind,'readiness');assert.match(noApplication.text,/no home loan application on record/);assert.doesNotMatch(noApplication.text,/price up to €0(?:\D|$)/);
+console.log('Coach routing: restaurant affordability, card decline, period comparison and missing application verified.');

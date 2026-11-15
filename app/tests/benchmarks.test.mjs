@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {readCsv} from './read-csv.mjs';
 import {clocks,forecast,defaults,historyOnly,isConsumption} from '../lib/finance.ts';
-import {benchmarks} from '../lib/benchmarks.ts';
+import {benchmarks,benchmarkContext,benchmarkAnswer} from '../lib/benchmarks.ts';
+import {euro} from '../lib/finance.ts';
 
 const read=path=>JSON.parse(readFileSync(new URL(path,import.meta.url),'utf8'));
 const tables={overall:readCsv('../data/insights/benchmarks_overall.csv'),byIncome:readCsv('../data/insights/benchmarks_by_income_quintile.csv'),
@@ -46,4 +47,23 @@ test('averages use whole months of this customer\'s own spending only',()=>{
   assert.ok(b.categories.every(c=>Number.isInteger(c.youCents)&&Number.isInteger(c.dataset.p50)));
   assert.match(b.label,/not advice/);
   assert.ok(!b.categories.some(c=>c.category==='Invest Deposit'));
+});
+
+test('the coach gets every category with the same figures as the finance response',()=>{
+  const b=run('flexible-spender'),text=benchmarkContext(b,c=>euro(c));
+  for(const c of b.categories) assert.ok(text.includes(`- ${c.category}: you ${euro(c.youCents)} a month; synthetic customers' median ${euro(c.dataset.p50)}`),c.category);
+  assert.match(text,/do not recalculate/);assert.match(text,/per consumption unit/);
+});
+
+test('the demo coach names the categories furthest above typical, or the one asked about',()=>{
+  const b=run('flexible-spender'),r=cat(b,'Restaurants');
+  assert.ok(benchmarkAnswer(b,undefined,c=>euro(c)).startsWith(`Compared with people like you, these categories stand out most. Restaurants: ${euro(r.youCents)} a month, higher than about 9 in 10 people`));
+  const one=benchmarkAnswer(b,'Groceries',c=>euro(c));
+  assert.ok(one.startsWith('Groceries:'));assert.doesNotMatch(one,/Restaurants/);assert.match(one,/not advice/);
+});
+
+test('national coaching comparison uses consumption units and explicit 2022 prices',()=>{
+  const text=benchmarkAnswer(run('flexible-spender'),'Restaurants',c=>String(c));
+  assert.match(text,/per consumption unit in 2022 \(2022 prices\)/);
+  assert.doesNotMatch(text,/per adult/);
 });

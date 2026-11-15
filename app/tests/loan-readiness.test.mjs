@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {clocks,defaults,forecast} from '../lib/finance.ts';
+import {clocks,defaults,euro,forecast} from '../lib/finance.ts';
 import {mortgageAt,REQUIRED_INCOME_PER_LOAN_EURO} from '../lib/personas/view.ts';
-import {annuityCents,loanReadiness,readinessContext,LOAN_CAP_LTV} from '../lib/loan-readiness.ts';
+import {annuityCents,loanReadiness,readinessContext,readinessAnswer,paymentTable,LOAN_CAP_LTV} from '../lib/loan-readiness.ts';
 
 const read=path=>JSON.parse(readFileSync(new URL(path,import.meta.url),'utf8'));
 const records=read('../data/personas/records.json').personas;
@@ -86,4 +86,37 @@ test('the coach context quotes the record and the app figures for the agent',()=
   assert.match(text,/Application record C0137: rejected on 2026-05-12 \(reason: insufficient income\)/);
   assert.ok(text.includes(`extra own funds EUR ${(r.whatItWouldTake.extraEquityCents/100).toFixed(2)}`));
   assert.match(text,/do not recalculate/);assert.match(text,/not a bank rule/);
+});
+
+test('the payment table maps a web rate to a payment for the actual loan without model arithmetic',()=>{
+  const {r}=readiness('home-rejected-income');
+  const table=paymentTable(r.basis.loanCents);
+  assert.equal(table.at(-1).monthlyCents,r.payments.stress.monthlyCents);
+  assert.ok(table.every((row,i)=>i===0||row.monthlyCents>table[i-1].monthlyCents));
+  assert.ok(readinessContext(r,mortgageAt(records['home-rejected-income'].mortgage,clocks.current),c=>euro(c)).includes(`4.00% ${euro(annuityCents(r.basis.loanCents,0.04,25))}`));
+});
+
+test('the demo coach explains a declined application with the app figures',()=>{
+  const {r}=readiness('home-rejected-income');
+  const text=readinessAnswer(r,mortgageAt(records['home-rejected-income'].mortgage,clocks.current),c=>euro(c));
+  assert.match(text,/was declined \(recorded reason: insufficient income\)/);
+  assert.ok(text.includes(`yours is ${euro(r.basis.incomeCents)}`));
+  assert.ok(text.includes(`price up to ${euro(r.whatItWouldTake.maxPriceCents)}`));
+  assert.match(text,/not a credit decision/);assert.doesNotMatch(text,/odds|chance|likely/i);
+});
+
+test('the demo coach does not suggest closing a gap when the checks are met',()=>{
+  const {r}=readiness('home-approved');
+  const text=readinessAnswer(r,mortgageAt(records['home-approved'].mortgage,clocks.current),c=>euro(c));
+  assert.match(text,/was approved/);assert.match(text,/passes the 6% stress test/);assert.doesNotMatch(text,/To close the gap/);
+});
+
+test('no application record is explicit in both coach paths and zero-price alternatives are omitted',()=>{
+  const {r}=readiness('flexible-spender');
+  for(const render of [readinessAnswer,readinessContext]) {
+    const text=render(r,null,c=>euro(c));
+    assert.match(text,/no home loan application on record.*use your assumptions/);
+    assert.doesNotMatch(text,/price up to €0(?:\D|$)/);
+  }
+  assert.match(readinessContext(r,null,c=>euro(c)),/outside 2.00–6.00%.*do not estimate/);
 });
