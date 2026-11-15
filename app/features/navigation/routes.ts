@@ -3,6 +3,7 @@ export const workspaceRoutes = {
   learn: { href: '/learn', title: 'Your learning · Koti' },
   coach: { href: '/coach', title: 'Money coach · Koti' },
   plan: { href: '/plan', title: 'Your plan · Koti' },
+  accounts: { href: '/accounts', title: 'Accounts · Koti' },
 } as const;
 
 export type WorkspaceTab = keyof typeof workspaceRoutes;

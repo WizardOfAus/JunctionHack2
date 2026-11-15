@@ -25,6 +25,8 @@ import { MoneyOverview } from '@/features/money-overview/money-overview';
 import { BalanceLesson } from '@/features/learning/balance-lesson';
 import contextStyles from '@/features/journey/context.module.css';
 import { CoachHelp } from '@/features/journey/coach-help';
+import { AccountsScreen } from '@/features/accounts/accounts-screen';
+import { MoneyTabs } from '@/features/accounts/money-tabs';
 import { GrowSavings } from '@/features/products/grow-savings';
 import { CoachAnswerVisual } from '@/features/journey/coach-answer-visual';
 import { CoachChat } from '@/features/coach/coach-chat';
@@ -53,6 +55,8 @@ export default function KotiApp({initialForecast,personas}:{initialForecast:Fore
   const pathname=usePathname();
   const router=useRouter();
   const tab=tabForPath(pathname);
+  // Accounts is part of Money, so the Money navigation item stays active there.
+  const navTab=tab==='accounts'?'today':tab;
   const [a,setA]=useState<Assumptions>(defaults);
   const [f,setF]=useState(initialForecast);
   const [comparison,setComparison]=useState<Benchmarks|null>(null);
@@ -83,7 +87,7 @@ export default function KotiApp({initialForecast,personas}:{initialForecast:Fore
   const goalId=journey?.goal ?? 'understand';
   const personaId=journey?.personaId ?? DEFAULT_PERSONA_ID;
   const persona=personas.find(p=>p.id===personaId)!;
-  const context:JourneyContext={goal:goalId,completedLessonIds:completed as JourneyContext['completedLessonIds'],screen:tab==='today'?'money':tab};
+  const context:JourneyContext={goal:goalId,completedLessonIds:completed as JourneyContext['completedLessonIds'],screen:tab==='today'||tab==='accounts'?'money':tab};
   const scopeKey=JSON.stringify({personaId,goal:goalId,completed,a});
   const scopeRef=useRef(scopeKey);scopeRef.current=scopeKey;
   // Coach chat state; a scope change cancels the answer in flight.
@@ -151,7 +155,7 @@ export default function KotiApp({initialForecast,personas}:{initialForecast:Fore
     <aside className="sidebar">
       <Link className="brand" href="/money" aria-label="Koti home"><span className="brand-symbol"><Home size={23} strokeWidth={2.4}/></span>koti<span className="brand-period">.</span></Link>
       <p className="brand-caption">Little steps. More possibilities.</p>
-      <nav aria-label="Main navigation">{navigation.map(({id,label,icon:Icon})=><Link key={id} href={workspaceRoutes[id].href} className={`nav-link ${navigationStyles.link} ${tab===id?'active':''}`} aria-current={tab===id?'page':undefined}><Icon size={21}/><span>{label}</span>{tab===id?<span className="nav-dot"/>:null}</Link>)}</nav>
+      <nav aria-label="Main navigation">{navigation.map(({id,label,icon:Icon})=><Link key={id} href={workspaceRoutes[id].href} className={`nav-link ${navigationStyles.link} ${navTab===id?'active':''}`} aria-current={navTab===id?'page':undefined}><Icon size={21}/><span>{label}</span>{tab===id?<span className="nav-dot"/>:null}</Link>)}</nav>
       <div className="sidebar-note"><Sprout size={31}/><p>Good with money.<br/><strong>Better, little by little.</strong></p><span>Learn at your own pace.</span></div>
       <div className="sidebar-bottom"><button className="nav-link" onClick={()=>setDrawer('data')}><Link2 size={19}/>Your data</button><button className="nav-link" onClick={()=>setDrawer('settings')}><Settings2 size={19}/>Your preferences</button><div className="profile"><span className="avatar">K</span><div><strong>{persona.label}</strong><small>Synthetic demo account</small></div></div></div>
     </aside>
@@ -164,6 +168,8 @@ export default function KotiApp({initialForecast,personas}:{initialForecast:Fore
         <div className={contextStyles.context}><button className="text-button" onClick={()=>setDrawer('data')}>{persona.label}<ChevronRight size={15}/></button><span className="footnote">{a.unexpectedCents||a.incomeDelayDays||a.restaurantReduction?'Scenario in your plan':null}</span>{tab==='coach'?<details><summary>What the coach knows</summary><p>{goals[goalId].title} · {completed.length} completed discoveries. It uses this account and your current reserves, coverage and plan assumptions.</p><p>Current scenario: {euro(a.unexpectedCents)} unexpected cost, {a.incomeDelayDays}-day salary delay, {a.restaurantReduction}% restaurant reduction. Changes remain simulations.</p></details>:null}{tab==='learn'?<div className="data-actions">{recommendedLesson&&recommendedLesson!=='balance'?<button className="text-button" onClick={()=>openLesson(lessons.findIndex(l=>l.id===recommendedLesson))}>Next discovery: {lessons.find(l=>l.id===recommendedLesson)?.title}<ArrowRight size={15}/></button>:null}</div>:null}</div>
         {tab==='today'&&!busy&&!error&&f.salarySweepCents>0?<p className="inline-warning">{f.warnings.find(w=>w.startsWith('Most of your salary'))}</p>:null}
         <div className={`content-grid ${tab!=='plan'?sliceStyles.learningLayout:''}`}><div className="primary-column">
+          {tab==='today'||tab==='accounts'?<MoneyTabs active={tab}/>:null}
+          {tab==='accounts'?<AccountsScreen key={personaId} personaId={personaId} assumptions={a} forecast={f} mortgage={persona.mortgage} readiness={readiness} format={euro} dateLabel={dateLabel} onAsk={question=>{setHelpOpen(true);void coach.ask(question);}}/>:null}
           {tab==='today'?<MoneyOverview key={personaId} personaId={personaId} forecast={f} goal={goalId} busy={busy} failed={!!error} connected={a.connected} lessonComplete={completed.includes('balance')} onLesson={()=>go('learn')} onPlan={()=>go('plan')} onCalculation={()=>setDrawer('calculation')} onSettings={()=>setDrawer(a.connected?'settings':'data')} onEvidence={basket=>evidence({basket})} assumptions={a} onApplyScenario={patch=>{update(patch);go('plan');}} onCoach={question=>{if(!helpOpen)go('coach');void coach.ask(question);}}/>:null}
           {tab==='today'&&comparison&&!busy&&!error&&a.connected&&!f.blocked?<SpendingComparison key={`benchmarks:${personaId}`} data={comparison}/>:null}
           {tab==='learn'?<LearnFeed key={`${personaId}:${goalId}`} personaId={personaId} goal={goalId} forecast={f} comparison={comparison} readiness={readiness} format={c=>euro(c)} unavailable={busy||!!error||!a.connected||f.blocked} onAsk={question=>{go('coach');void coach.ask(question);}}/>:null}
@@ -187,7 +193,7 @@ export default function KotiApp({initialForecast,personas}:{initialForecast:Fore
         <footer className="app-footer"><span>Made for your next chapter.</span><span>Koti · independent hackathon concept · synthetic data</span></footer>
       </main>
     </div>
-    <nav className="mobile-nav" aria-label="Mobile navigation">{navigation.map(({id,label,icon:Icon})=>id==='coach'&&tab!=='coach'?<button key={id} className={navigationStyles.mobileLink} onClick={()=>setHelpOpen(true)} aria-haspopup="dialog" aria-expanded={helpOpen}><Icon size={21}/><span>Ask Pesä</span></button>:<Link key={id} className={navigationStyles.mobileLink} href={workspaceRoutes[id].href} aria-current={tab===id?'page':undefined}><Icon size={21}/><span>{label}</span></Link>)}</nav>
+    <nav className="mobile-nav" aria-label="Mobile navigation">{navigation.map(({id,label,icon:Icon})=>id==='coach'&&tab!=='coach'?<button key={id} className={navigationStyles.mobileLink} onClick={()=>setHelpOpen(true)} aria-haspopup="dialog" aria-expanded={helpOpen}><Icon size={21}/><span>Ask Pesä</span></button>:<Link key={id} className={navigationStyles.mobileLink} href={workspaceRoutes[id].href} aria-current={navTab===id?'page':undefined}><Icon size={21}/><span>{label}</span></Link>)}</nav>
     {tab!=='coach'?<CoachHelp open={helpOpen} onOpen={()=>setHelpOpen(true)} onClose={()=>setHelpOpen(false)} screen={tab==='learn'?'your lesson':tab==='plan'?'your plan':'your money'}>{coachPanel}</CoachHelp>:null}
     {toast?<div className="toast" role="status"><CheckCircle2 size={19}/>{toast}</div>:null}
     {lesson!==null?<Lesson restaurantCents={f.restaurantCents} periodLabel={f.recentPeriod} index={lesson} completed={completed.includes(lessons[lesson].id)} onClose={()=>setLesson(null)} onComplete={()=>finishLesson(lesson)} onNext={()=>setLesson(lesson<2?lesson+1:null)}/>:null}
