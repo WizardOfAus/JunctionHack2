@@ -1,0 +1,31 @@
+.panel { margin-top:24px; border-block:1px solid var(--line); }
+.summary { display:flex; justify-content:space-between; align-items:center; gap:20px; cursor:pointer; padding:22px 0; list-style:none; }
+.summary::-webkit-details-marker { display:none; }
+.summary strong { display:block; font-size:20px; letter-spacing:-.025em; }
+.summary span>span { display:block; margin-top:5px; font-size:13px; color:var(--muted); }
+.summary>svg { flex-shrink:0; }
+.panel[open]>.summary>svg { transform:rotate(180deg); }
+.summary:hover strong { color:var(--green); }
+.content { padding:0 0 24px; }
+.intro,.position,.note,.sources { color:var(--muted); font-size:13px; line-height:1.7; }
+.field { display:grid; gap:8px; margin:20px 0 28px; max-width:350px; font-size:13px; font-weight:700; }
+.field select { min-height:46px; width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px; background:var(--surface,#fffefa); color:var(--ink); font:inherit; font-size:16px; }
+.heading { font-size:18px; }
+.position { margin-top:6px; }
+.comparisons { margin:22px 0 16px; }
+.comparisons>div { display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:24px; padding:16px 0; border-bottom:1px solid var(--line); }
+.comparisons dt { font-size:14px; }
+.comparisons dt small { display:block; margin-top:3px; color:var(--muted); font-size:12px; }
+.comparisons dd { margin:0; text-align:right; }
+.comparisons strong { font-size:18px; font-variant-numeric:tabular-nums; }
+.own dt>span,.own strong { font-weight:750; color:var(--forest); }
+.track { display:block; height:6px; background:var(--line); border-radius:4px; margin-top:9px; overflow:hidden; }
+.track>span { display:block; height:100%; background:#a4b59a; border-radius:4px; }
+.own .track>span { background:var(--green); }
+.sources { margin-top:24px; }
+.sources summary { cursor:pointer; min-height:44px; display:list-item; align-content:center; color:var(--green); font-weight:700; }
+.sources p { margin:12px 0; }
+.sources ul { padding-left:20px; }
+.sources li { margin:8px 0; }
+.sources a { display:inline-block; padding-block:12px; color:var(--green); text-underline-offset:3px; overflow-wrap:anywhere; }
+@media(max-width:740px) { .summary strong { font-size:18px; } .comparisons>div { grid-template-columns:minmax(0,1fr) minmax(105px,.75fr); gap:16px; } .comparisons strong { font-size:16px; } }
