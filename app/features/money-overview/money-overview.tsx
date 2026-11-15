@@ -25,6 +25,7 @@ export function MoneyOverview({ personaId, forecast: f, goal, busy, failed, conn
   const pending = busy || failed;
   const paused = f.blocked || !connected;
   const unavailable = pending || paused;
+  const scenarioActive = Boolean(assumptions && (assumptions.unexpectedCents || assumptions.incomeDelayDays || assumptions.restaurantReduction));
   const signal = outlook(f);
   const period = analysisPeriod(f);
   const total = Object.values(f.baskets).reduce((sum, value) => sum + value, 0);
@@ -51,7 +52,7 @@ export function MoneyOverview({ personaId, forecast: f, goal, busy, failed, conn
     {failed || paused || signal.kind === 'attention' ? briefing : null}
     <div className={styles.outlookGrid}>
       <section className={styles.hero} aria-labelledby="money-title" aria-busy={busy}>
-        <div className={styles.heroLabel}><h2 id="money-title">Estimated extra room</h2><span>{f.horizonDays}-day forecast</span></div>
+        <div className={styles.heroLabel}><h2 id="money-title">Estimated extra room</h2><span>{scenarioActive ? 'Scenario · ' : ''}{f.horizonDays}-day forecast</span></div>
         <strong className={styles.heroAmount}>{pending ? '—' : paused ? 'Paused' : euro(f.remainingCents, 2)}</strong>
         <p className={styles.heroDescription}>{paused ? 'Review your data to resume the forecast.' : f.allocationCents>0?'After expected costs, reserve and home allocation.':'After expected costs and your protected reserve.'}</p>
         <ActionButton className={styles.heroAction} disabled={pending} onClick={paused ? onSettings : openScenario}>{paused ? 'Review your assumptions' : 'Explore a what-if'}<ArrowRight size={18}/></ActionButton>

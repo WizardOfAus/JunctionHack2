@@ -41,7 +41,7 @@ export type FullPicture = ReturnType<typeof fullPicture>;
 /** Plain-text block for the coach agent. */
 export function fullPictureContext(p: FullPicture, format: (cents: number) => string) {
   const lines = [`${p.label} (quote these figures; each has a source; do not recalculate):`];
-  for (const a of p.accounts) lines.push(`- ${a.bank} ${a.name}: ${a.balanceCents === null ? 'balance not shared' : format(a.balanceCents)} (${a.source})`);
+  for (const a of p.accounts) lines.push(`- ${a.bank} ${a.name}: ${a.balanceCents === null ? 'balance not shared' : a.currency === 'EUR' ? format(a.balanceCents) : `${(a.balanceCents / 100).toFixed(2)} ${a.currency} (excluded from EUR totals)`} (${a.source})`);
   lines.push(`- Cash visible across accounts: ${format(p.cashCents)}. Card balance owed: ${format(p.cardOwedCents)}. Card spending about ${format(p.cardMonthlySpendCents)} a month.`);
   if (p.deposit) lines.push(`- Illustrative own-funds target (not a lending decision): ${format(p.deposit.neededCents)}; visible cash ${p.deposit.coveredByVisibleCash ? 'covers it' : 'does not cover it yet'}.`);
   if (p.simulated) lines.push('- The Demo bank is simulated. Say so whenever you use its figures.');

@@ -79,13 +79,14 @@ test('production credentials cannot be presented as a sandbox',async()=>{
 });
 
 test('full picture excludes other currencies, pending spending and dates after the snapshot',async()=>{
- const {fullPicture}=await import('../lib/open-banking/full-picture.ts');
+ const {fullPicture,fullPictureContext}=await import('../lib/open-banking/full-picture.ts');
  const demo=demoConnection('reference',clocks.current,new Date('2026-10-01'));
  demo.accounts=[{id:'usd',currency:'USD',type:'savings',balanceCents:999999},{id:'card',currency:'EUR',type:'card',balanceCents:-3000}];
  demo.transactions=[{accountId:'card',date:'2026-09-20',amountCents:-3000,status:'booked',description:'Purchase'},
  {accountId:'card',date:'2026-09-21',amountCents:-9000,status:'pending',description:'Purchase'},
  {accountId:'card',date:'2026-10-20',amountCents:-9000,status:'booked',description:'Purchase'}];
  const p=fullPicture({forecast:{balanceCents:10000},connections:[demo],readiness:null,asOf:'2026-09-30'});
+ assert.match(fullPictureContext(p,c=>`€${c/100}`),/9999.99 USD \(excluded from EUR totals\)/);
  assert.equal(p.cashCents,10000);assert.equal(p.cardMonthlySpendCents,1000);assert.equal(p.cardOwedCents,3000);
 });
 
