@@ -15,6 +15,7 @@ import { basketContext } from '@/lib/coach/context';
 import { calculatedAnswer,calculatedContext } from '@/lib/coach/calculated';
 import { historySchema,historyContext,resolveFollowUp } from '@/lib/coach/history';
 import { answerActions } from '@/lib/coach/actions';
+import { answerVisual } from '@/lib/coach/visuals';
 import { CALCULATING_STEP,type CoachProgress } from '@/lib/coach/progress';
 import { learnedFacts,memoryContext,rememberRequest } from '@/lib/memory/memory';
 import { visitorId } from '@/lib/memory/scope';
@@ -51,6 +52,9 @@ export async function coachResponse(request:Request,{onProgress,signal,onAdmitte
     // A short follow-up ("and in July?") borrows the previous question's topic when it has none of its own.
     const {calc}=resolveFollowUp(body.question,history,question=>calculatedAnswer({question,transactions,customerId:persona.customerId,assumptions:a,forecast:f,profile,readiness,mortgage:persona.view.mortgage,comparison,context,actions}));
     shownActions=answerActions(actions,calc.intent,q);
+    // A small chart from the same calculation, shown inside the chat.
+    const visual=answerVisual({calc,forecast:f,comparison,readiness,months:3,transactions,format:c=>euro(c),
+      window:transactions.filter(t=>t.tx_date>=recent.from&&isConsumption(t)).map(t=>({category:t.category,basket:basketOf(t,a.corrections,profile),spentCents:-t.amountCents}))});
     // "Remember that …" is saved only after the person confirms it in the app.
     const remember=rememberRequest(body.question);
     if(remember) return respond({text:`Want me to remember this? “${remember}” You can see or remove it any time under What Pesä knows.`,kind:'remember',mode:'demo',rememberSuggestion:remember,evidence:[]});
@@ -74,7 +78,7 @@ export async function coachResponse(request:Request,{onProgress,signal,onAdmitte
         const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext:[historyContext(history),calculatedContext(calc),appContext,readinessContext(readiness,persona.view.mortgage,c=>euro(c)),benchmarkContext(comparison,c=>euro(c)),memory,connectedContext].filter(Boolean).join('\n\n')},{onProgress,signal,onAdmitted});
         // Source rows stay inspectable when the agent quotes an authoritative app calculation.
         const evidence=calc.authoritative?{evidence:calc.evidence,category:calc.category,basket:calc.basket,from:calc.from,to:calc.to}:{evidence:[]};
-        return respond({text:reply.text,kind:'answer',mode:'agent',intent:calc.intent,...evidence,conversationId:reply.conversationId,account:provenance.accountId,dataThrough:HISTORY_THROUGH});
+        return respond({text:reply.text,kind:'answer',mode:'agent',intent:calc.intent,visual:calc.authoritative?visual:null,...evidence,conversationId:reply.conversationId,account:provenance.accountId,dataThrough:HISTORY_THROUGH});
       } catch(e) {
         if(signal?.aborted) throw e;
         if(!(e instanceof AgentUnavailableError)) {
@@ -88,6 +92,6 @@ export async function coachResponse(request:Request,{onProgress,signal,onAdmitte
     if(calc.intent==='unsupported') unsupported=true;
     // The demo reply shows the calculation itself; intent and authority are agent-context details.
     const shown:Partial<typeof calc>={...calc};delete shown.intent;delete shown.authoritative;
-    return respond({...shown,mode:'demo',version:VERSION,account:provenance.accountId,dataThrough:HISTORY_THROUGH});
+    return respond({...shown,visual,mode:'demo',version:VERSION,account:provenance.accountId,dataThrough:HISTORY_THROUGH});
   }catch(error){if(error instanceof DemoDataUnavailableError)return demoDataUnavailable(error);return Response.json({error:'That question could not be processed. Shorten it and try again.'},{status:400});}
 }

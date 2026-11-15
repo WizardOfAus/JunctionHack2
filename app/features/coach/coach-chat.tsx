@@ -7,6 +7,7 @@ import type { CoachAction } from '@/lib/journey/context';
 import { PesaEgg } from '@/features/pesa/pesa-egg';
 import { PesaThinking, SourceChips } from '@/features/pesa/pesa-thinking';
 import type { CoachMessage, useCoachChat } from './use-coach-chat';
+import { AnswerVisualView } from './answer-visual';
 import styles from './coach-chat.module.css';
 
 type Props = {
@@ -35,6 +36,7 @@ function suggestionIcon(text: string): LucideIcon {
     : /learn/.test(t) ? BookOpen : /save|reserve|bill/.test(t) ? PiggyBank : /home|mortgage|loan/.test(t) ? Home : /balance|available/.test(t) ? Wallet : Sparkles;
 }
 
+const formatEuro = (cents: number) => new Intl.NumberFormat('en-IE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(cents / 100);
 const paragraphs = (text: string) => text.split(/\n{2,}/).map((p, i) => <p key={i}>{p}</p>);
 
 export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, scopeKey, disabled, inputRef, renderVisual, onEvidence, onAction, actionLabel, actionDisabled, memory, onRemember }: Props) {
@@ -79,9 +81,9 @@ export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, sc
         {chat.messages.map((m, i) => m.role === 'user'
           ? <div key={i} className={styles.user}><p>{m.text}</p></div>
           : <div key={i} className={styles.coach}>
-              <PesaEgg state={m.agentUnavailable ? 'sleepy' : 'idle'} size={26} />
+              <PesaEgg state={m.agentUnavailable ? "sleepy" : "idle"} size={32} />
               <div className={styles.answer}>
-                {renderVisual?.(m) ?? paragraphs(m.text)}
+                {(() => { const custom = renderVisual?.(m); return custom ?? <>{paragraphs(m.text)}{m.visual ? <AnswerVisualView visual={m.visual} format={c => formatEuro(c)} /> : null}</>; })()}
                 {m.kind === 'error' && i === lastCoach ? <div className={styles.actions}><button onClick={chat.retry} disabled={chat.busy}>Try again<ArrowRight size={13} aria-hidden="true" /></button></div> : null}
                 {m.kind !== 'error' ? <div className={styles.meta}>
                   <span className={styles.badge}>{m.mode === 'agent' ? <><Sparkles size={12} aria-hidden="true" />AI coach</> : <><Calculator size={12} aria-hidden="true" />Calculated</>}</span>
@@ -99,7 +101,7 @@ export function CoachChat({ chat, variant = 'page', suggestions, dataThrough, sc
             </div>)}
         {chat.busy ? <div className={styles.coach}>
           {chat.progress.text
-            ? <><PesaEgg state="answering" size={26} /><div className={`${styles.answer} ${styles.streaming}`}>{paragraphs(chat.progress.text)}<SourceChips domains={chat.progress.sources} /></div></>
+            ? <><PesaEgg state="answering" size={32} /><div className={`${styles.answer} ${styles.streaming}`}>{paragraphs(chat.progress.text)}<SourceChips domains={chat.progress.sources} /></div></>
             : <PesaThinking progress={chat.progress} startedAt={chat.startedAt} />}
         </div> : null}
         <div ref={end} className={styles.end} />
