@@ -1,0 +1,318 @@
+{
+ "source": "Exa search of s-pankki.fi",
+ "retrievedAt": "2026-11-15",
+ "note": "Cached copy of a live search; terms may have changed. Check s-pankki.fi.",
+ "output": {
+  "content": {
+   "products": [
+    {
+     "conditions": "Tarkoitettu ensiasuntoa säästäville. Säästettävä 50-1 500 €/kk. Korkotuettu ASP-laina vaatii vähintään 20 hyväksyttyä kuukausitalletusta. Talletuskorko 1 %, 4 % lisäkorko asunnon oston tai rakentamisen yhteydessä. Verovapaa.",
+     "kind": "ASP-tili",
+     "rate_or_fee": "1 % talletuskorko + 4 % lisäkorko (verovapaa)",
+     "url": "https://www.s-pankki.fi/fi/tilit/asp-tili/",
+     "product": "ASP-tili"
+    },
+    {
+     "kind": "Säästötili",
+     "conditions": "Turvallinen ja riskitön tili. Korko kasvaa portaittain talletusmäärän mukaan. Maksuton asiakasomistajille. Ei nostorajoituksia tai kuluja.",
+     "product": "S-Tuottotili",
+     "url": "https://www.s-pankki.fi/fi/tilit/s-tuottotili/",
+     "rate_or_fee": "0,01 % – 1,75 % (riippuen talletussummasta, S-Prime 2 %)"
+    },
+    {
+     "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+     "kind": "Määräaikaistili",
+     "rate_or_fee": "Parempi korko kuin perus säästötilillä (tarkka korko sopimuskohtainen)",
+     "conditions": "Säästöturvallinen tili, jossa varat sidottu sovituksi määräajaksi.",
+     "product": "Määräaikaistili"
+    },
+    {
+     "url": "https://www.s-pankki.fi/fi/saastaminen-ja-sijoittaminen/saastamisen-sanakirja/osakesaastotili/",
+     "rate_or_fee": "Ei tarjolla",
+     "conditions": "S-Pankki ei tarjoa osakesäästötilejä.",
+     "product": "Osakesäästötili",
+     "kind": "Osakesäästötili"
+    },
+    {
+     "product": "Rahastot",
+     "rate_or_fee": "Ei yksilöityä korkoa/kulua, vaihtelee rahastoittain",
+     "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+     "conditions": "Sijoittaminen rahastoihin on mahdollista ilman osakesäästötiliä. Helppo säästää kuukausittain tai kerralla. Rahastosäästäminen voi olla tilisäästämistä tuottavampaa.",
+     "kind": "Rahastosäästäminen"
+    }
+   ]
+  },
+  "grounding": [
+   {
+    "field": "products[0].conditions",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/asp-tili/",
+      "title": "ASP-tili | ASP-säästämällä kohti ensimmäistä asuntoa | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[0].kind",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/asp-tili/",
+      "title": "ASP-tili | ASP-säästämällä kohti ensimmäistä asuntoa | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[0].rate_or_fee",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/asp-tili/",
+      "title": "ASP-tili | ASP-säästämällä kohti ensimmäistä asuntoa | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[0].url",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/asp-tili/",
+      "title": "ASP-tili | ASP-säästämällä kohti ensimmäistä asuntoa | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[0].product",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/asp-tili/",
+      "title": "ASP-tili | ASP-säästämällä kohti ensimmäistä asuntoa | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[1].kind",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+      "title": "Säästötilit ja talletussäästäminen | S-Pankki"
+     },
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/s-tuottotili/",
+      "title": "S-Tuottotili | Säästötili | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[1].conditions",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/s-tuottotili/",
+      "title": "S-Tuottotili | Säästötili | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[1].product",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/s-tuottotili/",
+      "title": "S-Tuottotili | Säästötili | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[1].url",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/s-tuottotili/",
+      "title": "S-Tuottotili | Säästötili | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[1].rate_or_fee",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/s-tuottotili/",
+      "title": "S-Tuottotili | Säästötili | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[2].url",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+      "title": "Säästötilit ja talletussäästäminen | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[2].kind",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+      "title": "Säästötilit ja talletussäästäminen | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[2].rate_or_fee",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+      "title": "Säästötilit ja talletussäästäminen | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[2].conditions",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+      "title": "Säästötilit ja talletussäästäminen | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[2].product",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+      "title": "Säästötilit ja talletussäästäminen | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[3].url",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/saastaminen-ja-sijoittaminen/saastamisen-sanakirja/osakesaastotili/",
+      "title": "osakesäästötili | Säästäjän sanakirja | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[3].rate_or_fee",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/saastaminen-ja-sijoittaminen/saastamisen-sanakirja/osakesaastotili/",
+      "title": "osakesäästötili | Säästäjän sanakirja | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[3].conditions",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/saastaminen-ja-sijoittaminen/saastamisen-sanakirja/osakesaastotili/",
+      "title": "osakesäästötili | Säästäjän sanakirja | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[3].product",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/saastaminen-ja-sijoittaminen/saastamisen-sanakirja/osakesaastotili/",
+      "title": "osakesäästötili | Säästäjän sanakirja | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[3].kind",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/saastaminen-ja-sijoittaminen/saastamisen-sanakirja/osakesaastotili/",
+      "title": "osakesäästötili | Säästäjän sanakirja | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[4].product",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+      "title": "Säästötilit ja talletussäästäminen | S-Pankki"
+     },
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/s-tuottotili/",
+      "title": "S-Tuottotili | Säästötili | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[4].rate_or_fee",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+      "title": "Säästötilit ja talletussäästäminen | S-Pankki"
+     },
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/s-tuottotili/",
+      "title": "S-Tuottotili | Säästötili | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[4].url",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+      "title": "Säästötilit ja talletussäästäminen | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[4].conditions",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+      "title": "Säästötilit ja talletussäästäminen | S-Pankki"
+     },
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/s-tuottotili/",
+      "title": "S-Tuottotili | Säästötili | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   },
+   {
+    "field": "products[4].kind",
+    "citations": [
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/saastotilit/",
+      "title": "Säästötilit ja talletussäästäminen | S-Pankki"
+     },
+     {
+      "url": "https://www.s-pankki.fi/fi/tilit/s-tuottotili/",
+      "title": "S-Tuottotili | Säästötili | S-Pankki"
+     }
+    ],
+    "confidence": "high"
+   }
+  ]
+ }
+}

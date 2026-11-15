@@ -1,0 +1,29 @@
+.section{display:grid;gap:16px;margin-top:34px}
+.section header h2{font-size:22px;letter-spacing:-.03em}
+.section header p{color:var(--muted);font-size:var(--type-context);margin-top:4px}
+.list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.card{display:grid;gap:10px;padding:20px;border-radius:20px;background:#fff;border:1px solid var(--line)}
+.card[data-first=true]{border-color:#bfd5a6;box-shadow:0 8px 26px #183f3212}
+.head{display:flex;align-items:center;gap:12px}
+.head h3{font-size:17px}
+.head small{color:var(--muted);font-size:var(--type-meta)}
+.rank{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--mint);color:var(--green);font-weight:750;font-size:var(--type-label);flex-shrink:0}
+.risk{margin-left:auto;padding:3px 10px;border-radius:999px;font-size:var(--type-meta);font-weight:700;background:#eef4e6;color:var(--green);white-space:nowrap}
+.risk[data-risk=medium]{background:#fbf0e3;color:#8a5a2b}
+.risk[data-risk=high]{background:var(--peach);color:#8a4b25}
+.reason{font-weight:650;color:var(--forest);font-size:var(--type-context)}
+.card>p{font-size:var(--type-context);max-width:68ch}
+.card dl{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0}
+.card dl div{padding:10px 12px;border-radius:12px;background:#f5f7f1}
+.card dt{font-size:var(--type-meta);color:var(--muted);font-weight:700}
+.card dd{margin:2px 0 0;font-size:var(--type-label);line-height:1.5}
+.live{display:grid;gap:6px;padding:12px 14px;border-radius:14px;background:#f1ecf8}
+.live p{display:flex;gap:8px;align-items:flex-start;font-size:var(--type-label);line-height:1.5}
+.live svg{color:#6c55a0;margin-top:3px;flex-shrink:0}
+.live a,.source{display:inline-flex;align-items:center;gap:3px;color:var(--green);font-weight:700;font-size:var(--type-meta)}
+.note{color:var(--muted);font-size:var(--type-meta)}
+.skeleton{display:grid;gap:10px}
+.skeleton span{height:120px;border-radius:20px;background:linear-gradient(90deg,#eef1ea 25%,#f7f9f4 50%,#eef1ea 75%);background-size:200% 100%;animation:shimmer 1.4s linear infinite}
+@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
+@media(max-width:740px){.card dl{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){.skeleton span{animation:none}}
