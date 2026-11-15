@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { ArrowUpRight, MessageCircle, X } from 'lucide-react';
-import Link from 'next/link';
+import Link from '@/features/navigation/workspace-link';
 import styles from './coach-help.module.css';
 
 export function CoachHelp({ open, onOpen, onClose, screen, children }: {

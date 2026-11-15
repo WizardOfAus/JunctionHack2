@@ -6,3 +6,4 @@
 @media(max-width:740px) { .context { gap:0 12px; padding-bottom:12px; } }
 
 @media(min-width:1151px) { .context>div { display:none; } }
+@media(max-width:740px) { .mobileQuiet { display:none; } .context>button { display:none; } }
