@@ -14,6 +14,8 @@ import { journeyContextSchema, defaultContext, journeyActions, coachJourneyConte
 import { basketContext } from '@/lib/coach/context';
 import { calculatedAnswer,calculatedContext } from '@/lib/coach/calculated';
 import { historySchema,historyContext,resolveFollowUp } from '@/lib/coach/history';
+import { sBankTerms } from '@/lib/products/live';
+import { productsContext } from '@/lib/products/catalogue';
 import { CALCULATING_STEP,type CoachProgress } from '@/lib/coach/progress';
 import { learnedFacts,memoryContext,rememberRequest } from '@/lib/memory/memory';
 import { visitorId } from '@/lib/memory/scope';
@@ -67,7 +69,10 @@ export async function coachResponse(request:Request,{onProgress,signal,onAdmitte
         const bankSession=sessionId(request);
         const connections=bankSession?listConnections(bankSession,personaKey):[];
         const connectedContext=connections.length?fullPictureContext(fullPicture({forecast:f,connections,readiness,asOf:HISTORY_THROUGH}),c=>euro(c)):'';
-        const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext:[historyContext(history),calculatedContext(calc),appContext,readinessContext(readiness,persona.view.mortgage,c=>euro(c)),benchmarkContext(comparison,c=>euro(c)),memory,connectedContext].filter(Boolean).join('\n\n')},{onProgress,signal,onAdmitted});
+        // For saving and investing questions, the neutral options plus S-Bank's cited terms (cached per day).
+        const savingTopic=/\b(sav(e|ing|ings)|asp|funds?|rahasto|osake\w*|invest\w*|interest|korko|isa|pension)\b/i.test(body.question);
+        const productBlock=savingTopic?productsContext(await sBankTerms().catch(()=>null)):'';
+        const reply=await askAgent(agent,{customerId:provenance.customerId,question:body.question,appContext:[historyContext(history),calculatedContext(calc),appContext,readinessContext(readiness,persona.view.mortgage,c=>euro(c)),benchmarkContext(comparison,c=>euro(c)),memory,connectedContext,productBlock].filter(Boolean).join('\n\n')},{onProgress,signal,onAdmitted});
         // Source rows stay inspectable when the agent quotes an authoritative app calculation.
         const evidence=calc.authoritative?{evidence:calc.evidence,category:calc.category,basket:calc.basket,from:calc.from,to:calc.to}:{evidence:[]};
         return respond({text:reply.text,kind:'answer',mode:'agent',intent:calc.intent,...evidence,conversationId:reply.conversationId,account:provenance.accountId,dataThrough:HISTORY_THROUGH});

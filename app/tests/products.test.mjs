@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {liveProducts,productKind,products,suggest} from '../lib/products/catalogue.ts';
+import {liveProducts,productKind,products,productsContext,suggest} from '../lib/products/catalogue.ts';
 
 const cached=JSON.parse(readFileSync(new URL('../data/products/s-pankki-cached.json',import.meta.url),'utf8'));
 
@@ -24,4 +24,11 @@ test('only cited products from s-pankki.fi survive, using the dated real Exa res
   assert.ok(live.some(p=>p.kind==='asp'&&/4 %/.test(p.rateOrFee)));
   const forged=liveProducts({content:{products:[{product:'Scam',url:'https://evil.example/x'},{product:'Uncited',url:'https://www.s-pankki.fi/x'}]},grounding:[{field:'products[0].product',citations:[{url:'https://evil.example/x'}]}]});
   assert.deepEqual(forged,[]);
+});
+
+test('the coach block lists neutral options and dated, cited S-Bank terms',()=>{
+  const text=productsContext({products:liveProducts(cached.output),checkedAt:'2026-11-15',source:'cached'});
+  assert.match(text,/not investment advice/);assert.match(text,/Osakesäästötili/);
+  assert.match(text,/S-Bank terms from a cached check on 2026-11-15/);assert.match(text,/ASP-tili: .*\(https:\/\/www\.s-pankki\.fi/);
+  assert.doesNotMatch(productsContext(null),/S-Bank terms/);
 });

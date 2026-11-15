@@ -54,3 +54,14 @@ export function liveProducts(output: ExaOutput, domain = 's-pankki.fi'): LivePro
     return [{ kind: productKind(`${p.kind ?? ''} ${p.product}`), product: p.product, rateOrFee: p.rate_or_fee ?? '', conditions: p.conditions ?? '', url: p.url!, citations }];
   });
 }
+
+/** Plain-text block for the coach agent: neutral options plus the provider's cited terms with their date. */
+export function productsContext(terms: { products: LiveProduct[]; checkedAt: string; source: 'live' | 'cached' } | null) {
+  const lines = ['Savings options in Finland (information, not investment advice; never recommend a specific product or predict returns):'];
+  for (const p of Object.values(products)) lines.push(`- ${p.name} (${p.finnish}): ${p.what} Tax: ${p.tax} Limits: ${p.limits}`);
+  if (terms?.products.length) {
+    lines.push(`S-Bank terms ${terms.source === 'live' ? 'checked live' : 'from a cached check'} on ${terms.checkedAt} (quote with the source; terms can change):`);
+    for (const p of terms.products) lines.push(`- ${p.product}: ${p.rateOrFee}${p.conditions ? `. ${p.conditions}` : ''} (${p.citations[0]})`);
+  }
+  return lines.join('\n');
+}
