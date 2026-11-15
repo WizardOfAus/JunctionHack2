@@ -15,7 +15,8 @@ export function CoachHelp({ open, onOpen, onClose, screen, children }: {
     const element = dialog.current;
     if (open) {
       element?.showModal();
-      element?.querySelector<HTMLInputElement>('#coach-question')?.focus();
+      // The composer's id is generated, so focus its textarea directly.
+      element?.querySelector<HTMLTextAreaElement>('textarea')?.focus();
     } else element?.close();
     return () => element?.close();
   }, [open]);

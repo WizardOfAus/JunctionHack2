@@ -20,6 +20,7 @@
 .live{display:grid;gap:6px;padding:12px 14px;border-radius:14px;background:var(--lilac)}
 .live p{display:flex;gap:8px;align-items:flex-start;font-size:var(--type-label);line-height:1.5}
 .live svg{color:var(--green);margin-top:3px;flex-shrink:0}
+.live p a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
 .live a,.source{display:inline-flex;align-items:center;gap:3px;color:var(--green);font-weight:700;font-size:var(--type-meta)}
 .note{color:var(--muted);font-size:var(--type-meta)}
 .skeleton{display:grid;gap:10px}
@@ -27,3 +28,4 @@
 @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
 @media(max-width:740px){.card dl{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.skeleton span{animation:none}}
+.card>p,.card dd{text-wrap:pretty}
