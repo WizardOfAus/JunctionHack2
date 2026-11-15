@@ -3,7 +3,7 @@
 .section header p{color:var(--muted);font-size:var(--type-context);margin-top:4px}
 .list{list-style:none;margin:0;padding:0;display:grid;gap:12px}
 .card{display:grid;gap:10px;padding:20px;border-radius:20px;background:#fff;border:1px solid var(--line)}
-.card[data-first=true]{border-color:#bfd5a6;box-shadow:0 8px 26px #183f3212}
+.card[data-first=true]{border-color:#9cc276;background:#fbfdf7}
 .head{display:flex;align-items:center;gap:12px}
 .head h3{font-size:17px}
 .head small{color:var(--muted);font-size:var(--type-meta)}
